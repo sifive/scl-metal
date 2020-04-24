@@ -65,7 +65,11 @@ struct __trng_func
 
 typedef struct __metal_scl
 {
-    const uintptr_t hca_base;
+#if __riscv_xlen == 64
+    const uint64_t hca_base;
+#elif __riscv_xlen == 32
+    const uint32_t hca_base;
+#endif
     const struct __aes_func aes_func;
     const struct __hash_func hash_func;
     const struct __trng_func trng_func;
