@@ -1,14 +1,38 @@
-/* Copyright 2020 SiFive, Inc */
-/* SPDX-License-Identifier: Apache-2.0 */
+/****************************************************************************** 
+ *
+ * SiFive Cryptographic Library (SCL)
+ *
+ ******************************************************************************
+ * Copyright 2020 SiFive, Inc
+ * SPDX-License-Identifier: MIT
+ ******************************************************************************
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ ******************************************************************************/
 
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
 
 #include <metal/io.h>
 #include <metal/machine/platform.h>
 
-#include <api/scl_api.h>
+#include <crypto_cfg.h>
+#include <api/scl_hca.h>
 #include <api/sifive_hca-0.5.x.h>
 
 #ifndef __riscv_xlen
@@ -27,6 +51,11 @@
 #define GET_UNIT32(data, k)     ( (*(data + k + 3) << 24) + (*(data + k + 2) << 16) + (*(data + k + 1) << 8) + (*(data + k)) )
 #define GET_UNIT64(data, k)     ( (((uint64_t)GET_UNIT32(data, (k+4))) << 32) + (uint64_t)GET_UNIT32(data, k) )
 
+typedef enum {
+    SCL_HCA_AES_MODE = 0,
+    SCL_HCA_SHA_MODE = 1
+} scl_hca_mode_t;
+
 static __inline__ void scl_hca_setfield32(metal_scl_t *scl, 
                                         uint32_t reg, uint32_t value, 
                                         char offset, uint32_t mask) {
@@ -35,9 +64,9 @@ static __inline__ void scl_hca_setfield32(metal_scl_t *scl,
 }
 
 int scl_hca_aes_setkey(metal_scl_t *scl, 
-                        scl_aes_key_size_t size, uint64_t* key) {
+                        scl_aes_key_type_t type, uint64_t* key) CRYPTO_FUNCTION {
    // set the key size
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, size, HCA_REGISTER_AES_CR_KEYSZ_OFFSET,
+    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, type, HCA_REGISTER_AES_CR_KEYSZ_OFFSET,
                        HCA_REGISTER_AES_CR_KEYSZ_MASK);
 
     METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_KEY) = key[0];
@@ -48,7 +77,7 @@ int scl_hca_aes_setkey(metal_scl_t *scl,
     return SCL_OK;
 }
 
-int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t* initvec) {
+int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t* initvec) CRYPTO_FUNCTION {
     // Set Init Vec
     METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_INITV) = initvec[0];
     METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_AES_INITV + sizeof(uint64_t))) = initvec[1];
@@ -57,10 +86,10 @@ int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t* initvec) {
 }
 
 int scl_hca_aes_cipher(metal_scl_t *scl, 
-                    scl_aes_mode_t aes_mode, scl_aes_process_t aes_process, 
-                    scl_hca_endianness_t data_endianness,
+                    scl_aes_mode_t aes_mode, scl_process_t aes_process, 
+                    scl_endianness_t data_endianness,
                     uint32_t NbBlocks128, 
-                    uint8_t* data_in, uint8_t* data_out) {
+                    uint8_t* data_in, uint8_t* data_out) CRYPTO_FUNCTION {
 
 #if __riscv_xlen == 64
     uint64_t    *in64 = (uint64_t *)data_in;
@@ -74,7 +103,7 @@ int scl_hca_aes_cipher(metal_scl_t *scl,
     int k;
     register int i;
 
-    if ( aes_mode > SCL_HCA_AES_CTR )
+    if ( aes_mode > SCL_AES_CTR )
         return SCL_INVALID_MODE;
 
      // Set MODE
@@ -93,7 +122,7 @@ int scl_hca_aes_cipher(metal_scl_t *scl,
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness, HCA_REGISTER_CR_ENDIANNESS_OFFSET,
                        HCA_REGISTER_CR_ENDIANNESS_MASK);
 
-    if ( aes_mode != SCL_HCA_AES_ECB ) {
+    if ( aes_mode != SCL_AES_ECB ) {
         // Set INIT
         scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 1, HCA_REGISTER_AES_CR_INIT_OFFSET,
                             HCA_REGISTER_AES_CR_INIT_MASK);
@@ -197,12 +226,12 @@ int scl_hca_aes_cipher(metal_scl_t *scl,
 }
 
 int scl_hca_aes_auth(metal_scl_t *scl,
-                    scl_aes_mode_t aes_mode, scl_aes_process_t aes_process, 
-                    scl_hca_endianness_t data_endianness,
+                    scl_aes_mode_t aes_mode, scl_process_t aes_process, 
+                    scl_endianness_t data_endianness,
                     uint32_t auth_option, 
                     uint64_t aad_len, uint64_t* aad,
                     uint64_t data_len, uint8_t* data_in, 
-                    uint8_t* data_out, uint64_t* tag) {
+                    uint8_t* data_out, uint64_t* tag) CRYPTO_FUNCTION {
 #if __riscv_xlen == 64
     uint64_t    *in64 = (uint64_t *)data_in;
     uint64_t    *out64 = (uint64_t *)data_out;
@@ -218,7 +247,7 @@ int scl_hca_aes_auth(metal_scl_t *scl,
     register int i;
     uint64_t NbBlocks128;
 
-    if ( (aes_mode < SCL_HCA_AES_GCM) || (aes_mode > SCL_HCA_AES_CCM) )
+    if ( (aes_mode < SCL_AES_GCM) || (aes_mode > SCL_AES_CCM) )
         return SCL_INVALID_MODE;
 
      // Set MODE
@@ -247,7 +276,7 @@ int scl_hca_aes_auth(metal_scl_t *scl,
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 0, HCA_REGISTER_AES_CR_DTYPE_OFFSET,
                        HCA_REGISTER_AES_CR_DTYPE_MASK);
 
-     if ( aes_mode == SCL_HCA_AES_CCM) {
+     if ( aes_mode == SCL_AES_CCM) {
         // Set CCMT
         scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, auth_option, HCA_REGISTER_AES_CR_CCMT_OFFSET,
                         HCA_REGISTER_AES_CR_CCMT_MASK);
@@ -405,9 +434,9 @@ int scl_hca_aes_auth(metal_scl_t *scl,
 
 int scl_hca_sha(metal_scl_t *scl, 
                     scl_hash_mode_t hash_mode,
-                    scl_hca_endianness_t data_endianness,
+                    scl_endianness_t data_endianness,
                     uint32_t NbBlocks512, 
-                    uint8_t* data_in, uint8_t* data_out) {
+                    uint8_t* data_in, uint8_t* data_out) CRYPTO_FUNCTION {
 #if __riscv_xlen == 64
     uint64_t    *in64 = (uint64_t *)data_in;
 #elif __riscv_xlen == 32
@@ -422,7 +451,7 @@ int scl_hca_sha(metal_scl_t *scl,
         return SCL_INVALID_INPUT;
     }
 
-    if( (NbBlocks512 & 0x1) && (hash_mode >= SCL_HCA_HASH_SHA384) ) {
+    if( (NbBlocks512 & 0x1) && (hash_mode >= SCL_HASH_SHA384) ) {
         // nb block should be even to have 1024bits
         return SCL_INVALID_INPUT;
     }
@@ -509,7 +538,7 @@ int scl_hca_sha(metal_scl_t *scl,
         }
 #endif
 
-        if(hash_mode >= SCL_HCA_HASH_SHA384){
+        if(hash_mode >= SCL_HASH_SHA384){
             // Need to have 1024bits before SHA end performing.
             if (k & 0x1) {
                 // Wait for SHABUSY is cleared
@@ -541,14 +570,14 @@ int scl_hca_sha(metal_scl_t *scl,
         data_out[11] = (uint8_t)(val >> 24); 
         val = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH + 3*sizeof(uint64_t)));
 
-        if (hash_mode == SCL_HCA_HASH_SHA224) {
+        if (hash_mode == SCL_HASH_SHA224) {
             data_out[12] = (uint8_t)val; 
             data_out[13] = (uint8_t)(val >> 8); 
             return SCL_OK;
         }
         data_out[14] = (uint8_t)(val >> 16); 
         data_out[15] = (uint8_t)(val >> 24); 
-        if (hash_mode > SCL_HCA_HASH_SHA256) {
+        if (hash_mode > SCL_HASH_SHA256) {
             val = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH + 4*sizeof(uint64_t)));
             data_out[16] = (uint8_t)val; 
             data_out[17] = (uint8_t)(val >> 8); 
@@ -560,7 +589,7 @@ int scl_hca_sha(metal_scl_t *scl,
             data_out[22] = (uint8_t)(val >> 16); 
             data_out[23] = (uint8_t)(val >> 24); 
         }
-        if (hash_mode > SCL_HCA_HASH_SHA384) {
+        if (hash_mode > SCL_HASH_SHA384) {
             val = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH + 6*sizeof(uint64_t)));
             data_out[24] = (uint8_t)val; 
             data_out[25] = (uint8_t)(val >> 8); 
@@ -578,16 +607,16 @@ int scl_hca_sha(metal_scl_t *scl,
         *out64++ = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH + 2*sizeof(uint64_t)));
         val = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH + 3*sizeof(uint64_t)));
 
-        if (hash_mode == SCL_HCA_HASH_SHA224) {
+        if (hash_mode == SCL_HASH_SHA224) {
             *out64 = val & 0xFFFFFFFF;
             return SCL_OK;
         }
         *out64++ = val;
-        if (hash_mode > SCL_HCA_HASH_SHA256) {
+        if (hash_mode > SCL_HASH_SHA256) {
             *out64++ = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH + 4*sizeof(uint64_t)));
             *out64++ = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH + 5*sizeof(uint64_t)));
         }
-        if (hash_mode > SCL_HCA_HASH_SHA384) {
+        if (hash_mode > SCL_HASH_SHA384) {
             *out64++ = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH + 6*sizeof(uint64_t)));
             *out64++ = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH + 7*sizeof(uint64_t)));
         }
@@ -596,7 +625,7 @@ int scl_hca_sha(metal_scl_t *scl,
 	return SCL_OK;
 }
 
-int scl_hca_trng_init(metal_scl_t *scl) {
+int scl_hca_trng_init(metal_scl_t *scl) CRYPTO_FUNCTION {
 
     int ret = SCL_OK;
 
@@ -626,7 +655,7 @@ int scl_hca_trng_init(metal_scl_t *scl) {
 }
 
 int scl_hca_trng_getdata(metal_scl_t *scl, 
-                    uint32_t* data_out) {
+                        uint32_t* data_out) CRYPTO_FUNCTION {
     // Poll for RNDRDY bit
     while( ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >> HCA_REGISTER_TRNG_SR_RNDRDY_OFFSET) & HCA_REGISTER_TRNG_SR_RNDRDY_MASK) == 0 );
     
