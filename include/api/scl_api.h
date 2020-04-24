@@ -21,14 +21,14 @@ struct __aes_func {
                     scl_aes_mode_t aes_mode, scl_aes_process_t aes_process, 
                     scl_hca_endianness_t data_endianness,
                     uint32_t NbBlocks128, 
-                    uint64_t* data_in, uint64_t* data_out);
+                    uint8_t* data_in, uint8_t* data_out);
     int (*auth)(metal_scl_t *scl,
                     scl_aes_mode_t aes_mode, scl_aes_process_t aes_process, 
                     scl_hca_endianness_t data_endianness,
                     uint32_t auth_option, 
                     uint64_t aad_len, uint64_t* aad,
-                    uint64_t data_len, uint64_t* data_in, 
-                    uint64_t* data_out, uint64_t* tag);
+                    uint64_t data_len, uint8_t* data_in, 
+                    uint8_t* data_out, uint64_t* tag);
 };
 
 struct __hash_func {
@@ -36,7 +36,7 @@ struct __hash_func {
                 scl_hash_mode_t hash_mode,
                 scl_hca_endianness_t data_endianness,
                 uint32_t NbBlocks, 
-                uint64_t* data_in, uint64_t* data_out);
+                uint8_t* data_in, uint8_t* data_out);
 };
 
 struct __trng_func {
@@ -65,7 +65,7 @@ static __inline__ int default_aes_cipher(metal_scl_t *scl,
                                         scl_aes_mode_t aes_mode, scl_aes_process_t aes_process, 
                                         scl_hca_endianness_t data_endianness,
                                         uint32_t NbBlocks128, 
-                                        uint64_t* data_in, uint64_t* data_out) {
+                                        uint8_t* data_in, uint8_t* data_out) {
     return SCL_ERROR;
 }
 
@@ -74,8 +74,8 @@ static __inline__ int default_aes_auth(metal_scl_t *scl,
                                         scl_hca_endianness_t data_endianness,
                                         uint32_t auth_option, 
                                         uint64_t aad_len, uint64_t* aad,
-                                        uint64_t data_len, uint64_t* data_in, 
-                                        uint64_t* data_out, uint64_t* tag) {
+                                        uint64_t data_len, uint8_t* data_in, 
+                                        uint8_t* data_out, uint64_t* tag) {
     return SCL_ERROR;
 }
 
@@ -83,7 +83,7 @@ static __inline__ int default_sha(metal_scl_t *scl,
                                     scl_hash_mode_t hash_mode,
                                     scl_hca_endianness_t data_endianness,
                                     uint32_t NbBlocks, 
-                                    uint64_t* data_in, uint64_t* data_out) {
+                                    uint8_t* data_in, uint8_t* data_out) {
     return SCL_ERROR;
 }
 
@@ -96,27 +96,29 @@ static __inline__ int default_trng_getdata(metal_scl_t *scl,
     return SCL_ERROR;
 }
 
-int scl_hca_aes_setkey(metal_scl_t *scl, scl_aes_key_size_t size, uint64_t* key);
-int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t* initvec);
+static __inline__ void scl_hca_setfield32(metal_scl_t *scl, uint32_t reg, uint32_t value, char offset, uint32_t mask);
+
+static __inline__ int scl_hca_aes_setkey(metal_scl_t *scl, scl_aes_key_size_t size, uint64_t* key);
+static __inline__ int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t* initvec);
 
 int scl_hca_aes_cipher(metal_scl_t *scl, 
                     scl_aes_mode_t aes_mode, scl_aes_process_t aes_process, 
                     uint32_t NbBlocks128, 
                     scl_hca_endianness_t data_endianness, 
-                    uint64_t* data_in, uint64_t* data_out);
+                    uint8_t* data_in, uint8_t* data_out);
 int scl_hca_aes_auth(metal_scl_t *scl,
                     scl_aes_mode_t aes_mode, scl_aes_process_t aes_process, 
                     scl_hca_endianness_t data_endianness,
                     uint32_t auth_option, 
                     uint64_t aad_len, uint64_t* aad,
-                    uint64_t data_len, uint64_t* data_in, 
-                    uint64_t* data_out, uint64_t* tag);
+                    uint64_t data_len, uint8_t* data_in,
+                    uint8_t* data_out, uint64_t* tag);
 
 int scl_hca_sha(metal_scl_t *scl, 
                     scl_hash_mode_t hash_mode,
                     scl_hca_endianness_t data_endianness,
                     uint32_t NbBlocks, 
-                    uint64_t* data_in, uint64_t* data_out);
+                    uint8_t* data_in, uint8_t* data_out);
 
 int scl_hca_trng_init(metal_scl_t *scl);
 
