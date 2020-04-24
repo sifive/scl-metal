@@ -34,16 +34,16 @@
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
 
-typedef struct __metal_scl metal_scl_t;
+struct __metal_scl;
 
 struct __aes_func
 {
-    int (*setkey)(metal_scl_t *scl, scl_aes_key_type_t type, uint64_t *key);
-    int (*setiv)(metal_scl_t *scl, uint64_t *initvec);
-    int (*cipher)(metal_scl_t *scl, scl_aes_mode_t aes_mode,
+    int (*setkey)(struct __metal_scl *scl, scl_aes_key_type_t type, uint64_t *key);
+    int (*setiv)(struct __metal_scl *scl, uint64_t *initvec);
+    int (*cipher)(struct __metal_scl *scl, scl_aes_mode_t aes_mode,
                   scl_process_t aes_process, scl_endianness_t data_endianness,
                   uint32_t NbBlocks128, uint8_t *data_in, uint8_t *data_out);
-    int (*auth)(metal_scl_t *scl, scl_aes_mode_t aes_mode,
+    int (*auth)(struct __metal_scl *scl, scl_aes_mode_t aes_mode,
                 scl_process_t aes_process, scl_endianness_t data_endianness,
                 uint32_t auth_option, uint64_t aad_len, uint8_t *aad,
                 uint64_t data_len, uint8_t *data_in, uint8_t *data_out,
@@ -52,15 +52,15 @@ struct __aes_func
 
 struct __hash_func
 {
-    int (*sha)(metal_scl_t *scl, scl_hash_mode_t hash_mode,
+    int (*sha)(struct __metal_scl *scl, scl_hash_mode_t hash_mode,
                scl_endianness_t data_endianness, uint32_t NbBlocks,
                uint8_t *data_in, uint8_t *data_out);
 };
 
 struct __trng_func
 {
-    int (*init)(metal_scl_t *scl);
-    int (*get_data)(metal_scl_t *scl, uint32_t *data_out);
+    int (*init)(struct __metal_scl *scl);
+    int (*get_data)(struct __metal_scl *scl, uint32_t *data_out);
 };
 
 typedef struct __metal_scl
