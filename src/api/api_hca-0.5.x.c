@@ -34,6 +34,7 @@
 #include <api/scl_hca.h>
 #include <crypto_cfg.h>
 
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 #ifndef __riscv_xlen
 #error __riscv_xlen is not defined
 #endif
@@ -842,3 +843,4 @@ int scl_hca_trng_getdata(metal_scl_t *scl, uint32_t *data_out)
 
     return SCL_OK;
 }
+#endif
