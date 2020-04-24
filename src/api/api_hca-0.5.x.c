@@ -33,7 +33,6 @@
 
 #include <crypto_cfg.h>
 #include <api/scl_hca.h>
-#include <api/sifive_hca-0.5.x.h>
 
 #ifndef __riscv_xlen
 	#error __riscv_xlen is not defined
@@ -64,7 +63,7 @@ static __inline__ void scl_hca_setfield32(metal_scl_t *scl,
 }
 
 int scl_hca_aes_setkey(metal_scl_t *scl, 
-                        scl_aes_key_type_t type, uint64_t* key) CRYPTO_FUNCTION {
+                        scl_aes_key_type_t type, uint64_t* key) {
    // set the key size
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, type, HCA_REGISTER_AES_CR_KEYSZ_OFFSET,
                        HCA_REGISTER_AES_CR_KEYSZ_MASK);
@@ -77,7 +76,7 @@ int scl_hca_aes_setkey(metal_scl_t *scl,
     return SCL_OK;
 }
 
-int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t* initvec) CRYPTO_FUNCTION {
+int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t* initvec) {
     // Set Init Vec
     METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_INITV) = initvec[0];
     METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_AES_INITV + sizeof(uint64_t))) = initvec[1];
@@ -89,7 +88,7 @@ int scl_hca_aes_cipher(metal_scl_t *scl,
                     scl_aes_mode_t aes_mode, scl_process_t aes_process, 
                     scl_endianness_t data_endianness,
                     uint32_t NbBlocks128, 
-                    uint8_t* data_in, uint8_t* data_out) CRYPTO_FUNCTION {
+                    uint8_t* data_in, uint8_t* data_out) {
 
 #if __riscv_xlen == 64
     uint64_t    *in64 = (uint64_t *)data_in;
@@ -231,11 +230,11 @@ int scl_hca_aes_auth(metal_scl_t *scl,
                     uint32_t auth_option, 
                     uint64_t aad_len, uint64_t* aad,
                     uint64_t data_len, uint8_t* data_in, 
-                    uint8_t* data_out, uint64_t* tag) CRYPTO_FUNCTION {
+                    uint8_t* data_out, uint64_t* tag) {
 #if __riscv_xlen == 64
     uint64_t    *in64 = (uint64_t *)data_in;
     uint64_t    *out64 = (uint64_t *)data_out;
-    uint64_t    *aad64 = (uint32_t *)aad;
+    uint64_t    *aad64 = (uint64_t *)aad;
     register uint64_t    val;
 #elif __riscv_xlen == 32
     uint32_t    *in32 = (uint32_t *)data_in;
@@ -436,7 +435,7 @@ int scl_hca_sha(metal_scl_t *scl,
                     scl_hash_mode_t hash_mode,
                     scl_endianness_t data_endianness,
                     uint32_t NbBlocks512, 
-                    uint8_t* data_in, uint8_t* data_out) CRYPTO_FUNCTION {
+                    uint8_t* data_in, uint8_t* data_out) {
 #if __riscv_xlen == 64
     uint64_t    *in64 = (uint64_t *)data_in;
 #elif __riscv_xlen == 32
@@ -625,7 +624,7 @@ int scl_hca_sha(metal_scl_t *scl,
 	return SCL_OK;
 }
 
-int scl_hca_trng_init(metal_scl_t *scl) CRYPTO_FUNCTION {
+int scl_hca_trng_init(metal_scl_t *scl) {
 
     int ret = SCL_OK;
 
@@ -655,7 +654,7 @@ int scl_hca_trng_init(metal_scl_t *scl) CRYPTO_FUNCTION {
 }
 
 int scl_hca_trng_getdata(metal_scl_t *scl, 
-                        uint32_t* data_out) CRYPTO_FUNCTION {
+                        uint32_t* data_out) {
     // Poll for RNDRDY bit
     while( ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >> HCA_REGISTER_TRNG_SR_RNDRDY_OFFSET) & HCA_REGISTER_TRNG_SR_RNDRDY_MASK) == 0 );
     

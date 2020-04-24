@@ -36,6 +36,10 @@
 
 #define HCA_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
 
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0,5,0)
+#include <api/sifive_hca-0.5.x.h>
+#endif
+
 /**
  * @brief load AES key into Hardware Crypto Accelerator
  * 
