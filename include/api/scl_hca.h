@@ -55,8 +55,8 @@ int scl_hca_aes_setkey(metal_scl_t *scl, scl_aes_key_type_t type,
 int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t *initvec) CRYPTO_FUNCTION;
 
 int scl_hca_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
-                       scl_process_t aes_process, uint32_t NbBlocks128,
-                       scl_endianness_t data_endianness, uint8_t *data_in,
+                       scl_process_t aes_process, scl_endianness_t data_endianness, 
+                       uint32_t NbBlocks128, uint8_t *data_in,
                        uint8_t *data_out) CRYPTO_FUNCTION;
 
 int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,

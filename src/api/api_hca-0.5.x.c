@@ -375,10 +375,10 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
         else
         {
             i = k << 2;
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = add32[i];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = add32[i + 1];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = add32[i + 2];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = add32[i + 3];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = aad32[i];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = aad32[i + 1];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = aad32[i + 2];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = aad32[i + 3];
         }
 #endif
     }
