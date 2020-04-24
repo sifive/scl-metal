@@ -4,8 +4,6 @@ override SOURCE_DIR := $(CURRENT_DIR)/src
 override BUILD_DIR ?= $(CURRENT_DIR)/build
 override INCLUDE_DIR := $(CURRENT_DIR)/include
 
-
-
 override SOURCE_DIRS := \
 		$(SOURCE_DIR)/api 
 
@@ -59,13 +57,17 @@ endif
 #                                RULES
 ################################################################################
 
-libscl.a: $(OBJS)
-	$(HIDE) $(HIDE) mkdir -p $(BUILD_DIR)/lib
+libscl.a: $(OBJS) err
+	$(HIDE) mkdir -p $(BUILD_DIR)/lib
 	$(HIDE) $(AR) $(ARFLAGS) $(BUILD_DIR)/lib/libscl.a $(OBJS)
 
-$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
+$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c err
 	$(HIDE) mkdir -p $(dir $@)
 	$(HIDE) $(CC) $(CFLAGS) -c -o $@ $<
+
+.PHONY: err
+err: 
+	$(ERR)
 
 .PHONY : clean
 clean:
