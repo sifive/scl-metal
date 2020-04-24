@@ -45,7 +45,7 @@ struct __aes_func
                   uint32_t NbBlocks128, uint8_t *data_in, uint8_t *data_out);
     int (*auth)(metal_scl_t *scl, scl_aes_mode_t aes_mode,
                 scl_process_t aes_process, scl_endianness_t data_endianness,
-                uint32_t auth_option, uint64_t aad_len, uint64_t *aad,
+                uint32_t auth_option, uint64_t aad_len, uint8_t *aad,
                 uint64_t data_len, uint8_t *data_in, uint8_t *data_out,
                 uint64_t *tag);
 };
@@ -93,7 +93,7 @@ default_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
 static __inline__ int
 default_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
                  scl_process_t aes_process, scl_endianness_t data_endianness,
-                 uint32_t auth_option, uint64_t aad_len, uint64_t *aad,
+                 uint32_t auth_option, uint64_t aad_len, uint8_t *aad,
                  uint64_t data_len, uint8_t *data_in, uint8_t *data_out,
                  uint64_t *tag)
 {

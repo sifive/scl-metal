@@ -62,7 +62,7 @@ int scl_hca_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
 int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
                      scl_process_t aes_process,
                      scl_endianness_t data_endianness, uint32_t auth_option,
-                     uint64_t aad_len, uint64_t *aad, uint64_t data_len,
+                     uint64_t aad_len, uint8_t *aad, uint64_t data_len,
                      uint8_t *data_in, uint8_t *data_out,
                      uint64_t *tag) CRYPTO_FUNCTION;
 
