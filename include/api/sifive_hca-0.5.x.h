@@ -1,5 +1,29 @@
-/* Copyright 2020 SiFive, Inc */
-/* SPDX-License-Identifier: Apache-2.0 */
+/******************************************************************************
+ *
+ * SiFive Cryptographic Library (SCL)
+ *
+ ******************************************************************************
+ * Copyright 2020 SiFive, Inc
+ * SPDX-License-Identifier: MIT
+ ******************************************************************************
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ ******************************************************************************/
 
 #ifndef SIFIVE_HCA_0_5_X_H
 #define SIFIVE_HCA_0_5_X_H
@@ -8,16 +32,16 @@
 #define HCA_HAS_AES
 // hasAESMAC
 #define HCA_HAS_AESMAC
-// hasSHA 
+// hasSHA
 #define HCA_HAS_SHA
 // hasTRNG
 #define HCA_HAS_TRNG
 
-// METAL_<REGISTER_NAME>_<FIELD_NAME>_OFFSET => number of bits into <REGISTER_NAME>
-// METAL_<REGISTER_NAME>_<FIELD_NAME>_MASK => bit width
+// METAL_<REGISTER_NAME>_<FIELD_NAME>_OFFSET => number of bits into
+// <REGISTER_NAME> METAL_<REGISTER_NAME>_<FIELD_NAME>_MASK => bit width
 
 /*
- * HCA_REGISTER_CR 
+ * HCA_REGISTER_CR
  */
 #define HCA_REGISTER_CR_IFIFOTGT_OFFSET 0UL
 #define HCA_REGISTER_CR_IFIFOTGT_MASK 1UL
