@@ -693,66 +693,103 @@ int scl_hca_sha(metal_scl_t *scl, scl_hash_mode_t hash_mode,
     }
 
     // Read hash
-    // Get tag
+#if __riscv_xlen == 64
+    if ((uint64_t)data_out & 0x7)
+#elif __riscv_xlen == 32
     if ((uint32_t)data_out & 0x7)
+#endif
     {
         val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_HASH);
         data_out[0] = (uint8_t)val;
         data_out[1] = (uint8_t)(val >> 8);
         data_out[2] = (uint8_t)(val >> 16);
         data_out[3] = (uint8_t)(val >> 24);
+        data_out[4] = (uint8_t)(val >> 32);
+        data_out[5] = (uint8_t)(val >> 40);
+        data_out[6] = (uint8_t)(val >> 48);
+        data_out[7] = (uint8_t)(val >> 56);
         val = METAL_REG64(scl->hca_base,
                           (METAL_SIFIVE_HCA_HASH + sizeof(uint64_t)));
-        data_out[4] = (uint8_t)val;
-        data_out[5] = (uint8_t)(val >> 8);
-        data_out[6] = (uint8_t)(val >> 16);
-        data_out[7] = (uint8_t)(val >> 24);
-        val = METAL_REG64(scl->hca_base,
-                          (METAL_SIFIVE_HCA_HASH + 2 * sizeof(uint64_t)));
         data_out[8] = (uint8_t)val;
         data_out[9] = (uint8_t)(val >> 8);
         data_out[10] = (uint8_t)(val >> 16);
         data_out[11] = (uint8_t)(val >> 24);
+        data_out[12] = (uint8_t)(val >> 32);
+        data_out[13] = (uint8_t)(val >> 40);
+        data_out[14] = (uint8_t)(val >> 48);
+        data_out[15] = (uint8_t)(val >> 56);
+        val = METAL_REG64(scl->hca_base,
+                          (METAL_SIFIVE_HCA_HASH + 2 * sizeof(uint64_t)));
+        data_out[16] = (uint8_t)val;
+        data_out[17] = (uint8_t)(val >> 8);
+        data_out[18] = (uint8_t)(val >> 16);
+        data_out[19] = (uint8_t)(val >> 24);
+        data_out[20] = (uint8_t)(val >> 32);
+        data_out[21] = (uint8_t)(val >> 40);
+        data_out[22] = (uint8_t)(val >> 48);
+        data_out[23] = (uint8_t)(val >> 56);
         val = METAL_REG64(scl->hca_base,
                           (METAL_SIFIVE_HCA_HASH + 3 * sizeof(uint64_t)));
+        data_out[24] = (uint8_t)val;
+        data_out[25] = (uint8_t)(val >> 8);
+        data_out[26] = (uint8_t)(val >> 16);
+        data_out[27] = (uint8_t)(val >> 24);
 
         if (hash_mode == SCL_HASH_SHA224)
         {
-            data_out[12] = (uint8_t)val;
-            data_out[13] = (uint8_t)(val >> 8);
             return SCL_OK;
         }
-        data_out[14] = (uint8_t)(val >> 16);
-        data_out[15] = (uint8_t)(val >> 24);
+
+        data_out[28] = (uint8_t)(val >> 32);
+        data_out[29] = (uint8_t)(val >> 40);
+        data_out[30] = (uint8_t)(val >> 48);
+        data_out[31] = (uint8_t)(val >> 56);
+
         if (hash_mode > SCL_HASH_SHA256)
         {
             val = METAL_REG64(scl->hca_base,
                               (METAL_SIFIVE_HCA_HASH + 4 * sizeof(uint64_t)));
-            data_out[16] = (uint8_t)val;
-            data_out[17] = (uint8_t)(val >> 8);
-            data_out[18] = (uint8_t)(val >> 16);
-            data_out[19] = (uint8_t)(val >> 24);
+            data_out[32] = (uint8_t)val;
+            data_out[33] = (uint8_t)(val >> 8);
+            data_out[34] = (uint8_t)(val >> 16);
+            data_out[35] = (uint8_t)(val >> 24);
+            data_out[36] = (uint8_t)(val >> 32);
+            data_out[37] = (uint8_t)(val >> 40);
+            data_out[38] = (uint8_t)(val >> 48);
+            data_out[39] = (uint8_t)(val >> 56);
             val = METAL_REG64(scl->hca_base,
                               (METAL_SIFIVE_HCA_HASH + 5 * sizeof(uint64_t)));
-            data_out[20] = (uint8_t)val;
-            data_out[21] = (uint8_t)(val >> 8);
-            data_out[22] = (uint8_t)(val >> 16);
-            data_out[23] = (uint8_t)(val >> 24);
+            data_out[40] = (uint8_t)val;
+            data_out[41] = (uint8_t)(val >> 8);
+            data_out[42] = (uint8_t)(val >> 16);
+            data_out[43] = (uint8_t)(val >> 24);
+            data_out[44] = (uint8_t)(val >> 32);
+            data_out[45] = (uint8_t)(val >> 40);
+            data_out[46] = (uint8_t)(val >> 48);
+            data_out[47] = (uint8_t)(val >> 56);
         }
         if (hash_mode > SCL_HASH_SHA384)
         {
             val = METAL_REG64(scl->hca_base,
                               (METAL_SIFIVE_HCA_HASH + 6 * sizeof(uint64_t)));
-            data_out[24] = (uint8_t)val;
-            data_out[25] = (uint8_t)(val >> 8);
-            data_out[26] = (uint8_t)(val >> 16);
-            data_out[27] = (uint8_t)(val >> 24);
+            data_out[48] = (uint8_t)val;
+            data_out[49] = (uint8_t)(val >> 8);
+            data_out[50] = (uint8_t)(val >> 16);
+            data_out[51] = (uint8_t)(val >> 24);
+            data_out[52] = (uint8_t)(val >> 32);
+            data_out[53] = (uint8_t)(val >> 40);
+            data_out[54] = (uint8_t)(val >> 48);
+            data_out[55] = (uint8_t)(val >> 56);
             val = METAL_REG64(scl->hca_base,
                               (METAL_SIFIVE_HCA_HASH + 7 * sizeof(uint64_t)));
-            data_out[28] = (uint8_t)val;
-            data_out[29] = (uint8_t)(val >> 8);
-            data_out[30] = (uint8_t)(val >> 16);
-            data_out[31] = (uint8_t)(val >> 24);
+            data_out[56] = (uint8_t)val;
+            data_out[57] = (uint8_t)(val >> 8);
+            data_out[58] = (uint8_t)(val >> 16);
+            data_out[59] = (uint8_t)(val >> 24);
+            data_out[60] = (uint8_t)(val >> 32);
+            data_out[61] = (uint8_t)(val >> 40);
+            data_out[62] = (uint8_t)(val >> 48);
+            data_out[63] = (uint8_t)(val >> 56);
         }
     }
     else
