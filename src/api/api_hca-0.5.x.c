@@ -71,6 +71,12 @@ static __inline__ void scl_hca_setfield32(metal_scl_t *scl, uint32_t reg,
 
 int scl_hca_aes_setkey(metal_scl_t *scl, scl_aes_key_type_t type, uint64_t *key)
 {
+    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
+    {
+        // revision of AES is Zero so the AES is not present.
+        return SCL_ERROR;
+    }
+
     // set the key size
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, type,
                        HCA_REGISTER_AES_CR_KEYSZ_OFFSET,
@@ -89,6 +95,12 @@ int scl_hca_aes_setkey(metal_scl_t *scl, scl_aes_key_type_t type, uint64_t *key)
 
 int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t *initvec)
 {
+    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
+    {
+        // revision of AES is Zero so the AES is not present.
+        return SCL_ERROR;
+    }
+
     // Set Init Vec
     METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_INITV) = initvec[0];
     METAL_REG64(scl->hca_base,
@@ -114,6 +126,12 @@ int scl_hca_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
 #endif
     int k;
     register int i;
+
+    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
+    {
+        // revision of AES is Zero so the AES is not present.
+        return SCL_ERROR;
+    }
 
     if (aes_mode > SCL_AES_CTR)
         return SCL_INVALID_MODE;
@@ -287,8 +305,32 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     register int i;
     uint64_t NbBlocks128;
 
+    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
+    {
+        // revision of AES is Zero so the AES is not present.
+        return SCL_ERROR;
+    }
+
     if ((aes_mode < SCL_AES_GCM) || (aes_mode > SCL_AES_CCM))
         return SCL_INVALID_MODE;
+
+    // Set AES_ALEN
+    METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_ALEN) = aad_len;
+
+    if (aad_len != METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_ALEN))
+    {
+        // we can not write add_len value, so the AES AUTH do not exist.
+        return SCL_ERROR;
+    }
+
+    // Set AES_PLDLEN
+    METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_PDLEN) = data_len;
+    if (data_len != METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_PDLEN))
+    {
+        // we can not write pdlen value, so the AES AUTH do not exist.
+        return SCL_ERROR;
+    }
+
 
     // Set MODE
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
@@ -309,12 +351,7 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
                        HCA_REGISTER_CR_ENDIANNESS_OFFSET,
                        HCA_REGISTER_CR_ENDIANNESS_MASK);
-
-    // Set AES_ALEN
-    METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_ALEN) = aad_len;
-    // Set AES_PLDLEN
-    METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_PDLEN) = data_len;
-
+  
     // AAD
     // Set DTYPE
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 0,
@@ -538,6 +575,12 @@ int scl_hca_sha(metal_scl_t *scl, scl_hash_mode_t hash_mode,
     register uint64_t val;
     int k;
     register int i;
+
+    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_SHA_REV))
+    {
+        // revision of SHA is Zero so the SHA is not present.
+        return SCL_ERROR;
+    }
 
     if (NbBlocks512 == 0)
     {
@@ -832,6 +875,12 @@ int scl_hca_trng_init(metal_scl_t *scl)
 
     int ret = SCL_OK;
 
+    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_REV))
+    {
+        // revision of TRNG is Zero so the TRNG is not present.
+        return SCL_ERROR;
+    }
+
     // Lock Trim Value
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_TRIM, 1,
                        HCA_REGISTER_TRNG_TRIM_LOCK_OFFSET,
@@ -845,18 +894,21 @@ int scl_hca_trng_init(metal_scl_t *scl)
     while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>
             HCA_REGISTER_TRNG_SR_HTR_OFFSET) &
            HCA_REGISTER_TRNG_SR_HTR_MASK)
-        ;
+    {
+        // test that all 0's are read back from TRNG_DATA during startup health test
+        if (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_DATA) != 0)
+        {
+            if ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >> HCA_REGISTER_TRNG_SR_HTR_OFFSET) & HCA_REGISTER_TRNG_SR_HTR_MASK )
+                return SCL_RNG_ERROR;
+        }
+
+    }
+
 
     // Test Heath test status
     if (((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>
           HCA_REGISTER_TRNG_SR_HTS_OFFSET) &
          HCA_REGISTER_TRNG_SR_HTS_MASK) != 0)
-    {
-        ret = SCL_RNG_ERROR;
-    }
-
-    // test that all 0's are read back from TRNG_DATA during startup health test
-    if (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_DATA) != 0)
     {
         ret = SCL_RNG_ERROR;
     }
@@ -869,6 +921,12 @@ int scl_hca_trng_init(metal_scl_t *scl)
 
 int scl_hca_trng_getdata(metal_scl_t *scl, uint32_t *data_out)
 {
+    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_REV))
+    {
+        // revision of TRNG is Zero so the TRNG is not present.
+        return SCL_ERROR;
+    }
+
     // Poll for RNDRDY bit
     while (((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>
              HCA_REGISTER_TRNG_SR_RNDRDY_OFFSET) &
