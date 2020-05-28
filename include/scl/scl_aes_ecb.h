@@ -4,7 +4,7 @@
  *
  ******************************************************************************
  * @file scl_aes_ecb.h
- * @brief defines the AES for the ECB mode. 
+ * @brief defines the AES for the ECB mode.
  * AES is NIST FIPS-197, ECB is SP800-38A
  * 
  * @copyright Copyright (c) 2020 SiFive, Inc

@@ -3,9 +3,9 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_retdefs.h
- * @brief defines the values returned by the functions: that's mainly error 
- * codes
+ * @file scl_hash_sha224.h
+ * @brief contains definitions of structures and primitives used for SHA224 and
+ * HMAC-SHA224 implementation
  * 
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -30,27 +30,41 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef SCL_RETDEFS_H
-#define SCL_RETDEFS_H
+#ifndef _SCL_SHA224_H
+#define _SCL_SHA224_H
+#ifdef __cplusplus
+extern "C" {
+#endif //__cplusplus
 
-#define SCL_TRUE 1
-#define SCL_FALSE 0
+#include <scl/scl_defs.h>
+#include <scl/scl_retdefs.h>
+#include <scl/scl_types.h>
+#include <scl/scl_init.h>
+#include <scl/scl_hash.h>
+  
+//because SHA224 is a truncation of SHA256
+#include <scl/scl_hash_sha256.h>
 
-#define SCL_OK 0
-#define SCL_ERROR -1
-#define SCL_INVALID_INPUT -2
-#define SCL_INVALID_OUTPUT -3
-#define SCL_INVALID_MODE -4
-#define SCL_INVALID_LENGTH -5
-#define SCL_STACK_OVERFLOW -6
-#define SCL_STACK_NOT_INITIALIZED -7
-#define SCL_STACK_ALREADY_INITIALIZED -8
-#define SCL_ALREADY_INITIALIZED -9
-#define SCL_STACK_INIT_ERROR -10
-#define SCL_STACK_FREE_ERROR -11
-#define SCL_STACK_ERROR -12
-#define SCL_RNG_ERROR -13
-#define SCL_RESEED_REQUIRED -14
-#define SCL_IGNORED -15
+typedef struct scl_sha256_ctx scl_sha224_ctx_t;
 
-#endif // _SCL_RETDEFS_H
+#define SCL_SHA224_BYTE_BLOCKSIZE 64
+#define SCL_SHA224_ID 4
+#define SCL_SHA224_BYTE_HASHSIZE 28
+  //the nb of bytes for storing the size in the last block
+#define SCL_SHA224_BYTE_SIZE_BLOCKSIZE 8
+
+int scl_sha224(uint8_t *hash, uint8_t *data, word_type data_byte_len);
+int scl_sha224_init(scl_sha224_ctx_t *context);
+int scl_sha224_core(scl_sha224_ctx_t *context, uint8_t *data, word_type data_byte_len);
+int scl_sha224_finish(uint8_t *hash, scl_sha224_ctx_t *context);
+  
+int scl_hmac_sha224(uint8_t *mac, word_type mac_byte_len, uint8_t *message, word_type message_byte_len, uint8_t *key, word_type key_byte_len);
+int scl_hmac_sha224_init(scl_sha224_ctx_t *context , uint8_t *key, word_type key_byte_len);
+int scl_hmac_sha224_core(scl_sha224_ctx_t *context, uint8_t *message, word_type message_byte_len);
+int scl_hmac_sha224_finish(uint8_t *mac, word_type mac_byteLen, scl_sha224_ctx_t *context, uint8_t *key, word_type key_byte_len);
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+
+#endif//_SCL_SHA224_H

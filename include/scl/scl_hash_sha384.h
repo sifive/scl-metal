@@ -3,9 +3,9 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_retdefs.h
- * @brief defines the values returned by the functions: that's mainly error 
- * codes
+ * @file scl_hash_sha384.h
+ * @brief contains definitions of structures and primitives used for SHA384 and
+ * HMAC-SHA384 implementation
  * 
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -30,27 +30,38 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef SCL_RETDEFS_H
-#define SCL_RETDEFS_H
+#ifndef _SCL_SHA384_H
+#define _SCL_SHA384_H
 
-#define SCL_TRUE 1
-#define SCL_FALSE 0
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
-#define SCL_OK 0
-#define SCL_ERROR -1
-#define SCL_INVALID_INPUT -2
-#define SCL_INVALID_OUTPUT -3
-#define SCL_INVALID_MODE -4
-#define SCL_INVALID_LENGTH -5
-#define SCL_STACK_OVERFLOW -6
-#define SCL_STACK_NOT_INITIALIZED -7
-#define SCL_STACK_ALREADY_INITIALIZED -8
-#define SCL_ALREADY_INITIALIZED -9
-#define SCL_STACK_INIT_ERROR -10
-#define SCL_STACK_FREE_ERROR -11
-#define SCL_STACK_ERROR -12
-#define SCL_RNG_ERROR -13
-#define SCL_RESEED_REQUIRED -14
-#define SCL_IGNORED -15
+#include <scl/scl_defs.h>
+#include <scl/scl_retdefs.h>
+#include <scl/scl_types.h>
+#include <scl/scl_init.h>
+#include <scl/scl_hash.h>
 
-#endif // _SCL_RETDEFS_H
+  //because SHA384 is a truncation of SHA512
+#include <scl/scl_hash_sha512.h>
+typedef struct scl_sha512_ctx scl_sha384_ctx_t;
+  
+#define SCL_SHA384_BYTE_BLOCKSIZE 128
+#define SCL_SHA384_ID 2
+#define SCL_SHA384_BYTE_HASHSIZE 48
+#define SCL_SHA384_BYTE_SIZE_BLOCKSIZE 16
+
+    int scl_sha384(uint8_t *hash, uint8_t *data, int data_byte_len);
+    int scl_sha384_init(scl_sha384_ctx_t *context);
+    int scl_sha384_core(scl_sha384_ctx_t *context, uint8_t *data, int data_byte_len);
+    int scl_sha384_finish(uint8_t *hash, scl_sha384_ctx_t *context);
+    int scl_hmac_sha384(uint8_t *mac,int mac_byte_len, uint8_t *message,int message_byte_len, uint8_t *key,int key_byte_len);
+    int scl_hmac_sha384_init(scl_sha384_ctx_t *context , uint8_t *key, int key_byte_len);
+    int scl_hmac_sha384_core(scl_sha384_ctx_t *context, uint8_t *data, int byte_len);
+    int scl_hmac_sha384_finish(uint8_t *mac, int mac_byte_len, scl_sha384_ctx_t *context, uint8_t *key, int key_byte_len);
+    #ifdef __cplusplus
+}
+#endif // __cplusplus
+
+#endif//_SCL_SHA384_H
