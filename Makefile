@@ -2,16 +2,37 @@ override CURRENT_DIR := $(patsubst %/,%, $(dir $(abspath $(firstword $(MAKEFILE_
 
 override SOURCE_DIR := $(CURRENT_DIR)/src
 override BUILD_DIR ?= $(CURRENT_DIR)/build
+
 override INCLUDE_DIR := $(CURRENT_DIR)/include
 
-override SOURCE_DIRS := \
-		$(SOURCE_DIR)/api 
+override SOURCE_DIRS := $(SOURCE_DIR)
+# API
+override SOURCE_DIRS += \
+		$(SOURCE_DIR)/api \
+		$(SOURCE_DIR)/api/hardware  \
+		$(SOURCE_DIR)/api/soft \
+		$(SOURCE_DIR)/api/soft/hash \
+		$(SOURCE_DIR)/api/soft/bignumbers 
+# SCL
+override SOURCE_DIRS += \
+		$(SOURCE_DIR)/blockcipher \
+		$(SOURCE_DIR)/blockcipher/aes \
+		$(SOURCE_DIR)/hash \
+		$(SOURCE_DIR)/hash/sha
 
 
 SCL_DIR = $(CURRENT_DIR)
 include $(CURRENT_DIR)/scripts/scl.mk
 
-override INCLUDE_DIRS := $(SCL_INCLUDES)
+override INCLUDE_DIRS := $(SCL_INCLUDES) 
+ # API
+override INCLUDE_DIRS += \
+	$(CURRENT_DIR)/include/api \
+	$(CURRENT_DIR)/include/api/soft \
+	$(CURRENT_DIR)/include/api/soft/hash
+ # SCL
+override INCLUDE_DIRS += \
+	$(CURRENT_DIR)/include/scl
 
 # TARGET_DIRS := $(patsubst $(SOURCE_DIR)/%,$(BUILD_DIR)/%, $(SOURCE_DIRS))
 
@@ -25,7 +46,7 @@ override OBJS := $(subst $(SOURCE_DIR),$(BUILD_DIR),$(SOURCES:.c=.o))
 #                        COMPILATION FLAGS
 ################################################################################
 
-override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
+override CFLAGS += -I $(INCLUDE_DIR)
 
 override ASFLAGS = $(CFLAGS)
 
@@ -63,7 +84,11 @@ libscl.a: $(OBJS) err
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c err
 	$(HIDE) mkdir -p $(dir $@)
-	$(HIDE) $(CC) $(CFLAGS) -c -o $@ $<
+	$(HIDE) $(CC) $(CFLAGS) -ggdb3 -c -o $@ $<
+
+.PHONY : check-format
+check-format:
+	clang-format -i $(SOURCES) $(INCLUDES)
 
 .PHONY: err
 err: 

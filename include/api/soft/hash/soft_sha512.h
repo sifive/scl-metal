@@ -3,11 +3,8 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file sha_soft.c
- * @author Pierre-Henry Moussay (pierre-henry.moussay@sifive.com)
- * @brief 
- * @version 0.1
- * @date 2020-05-28
+ * @file soft_sha512.h
+ * @brief software sha512 implementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -31,3 +28,33 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+#ifndef _SOFT_SHA512_H
+#define _SOFT_SHA512_H
+
+#include <stdint.h>
+
+#include <crypto_cfg.h>
+
+#include <api/defs.h>
+#include <api/hash/sha.h>
+#include <api/hash/sha512.h>
+
+CRYPTO_FUNCTION int32_t sha512_block_soft(sha512_ctx_t *const ctx,
+                                          const uint8_t *const words);
+
+CRYPTO_FUNCTION int32_t sha512_init_soft(sha512_ctx_t *const ctx,
+                                         endianness_t data_endianness);
+
+CRYPTO_FUNCTION int32_t sha512_core_soft(sha512_ctx_t *const ctx,
+                                         const uint8_t *const data,
+                                         size_t data_byte_len);
+
+CRYPTO_FUNCTION int32_t sha512_finish_soft(sha512_ctx_t *const ctx,
+                                           uint8_t *const hash,
+                                           size_t *const hash_len);
+
+CRYPTO_FUNCTION void sha512_append_bit_len(uint8_t *const buffer,
+                                           uint64_t *const length);
+
+#endif /* _SOFT_SHA512_H */

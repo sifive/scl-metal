@@ -3,11 +3,10 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file sha_soft.c
- * @author Pierre-Henry Moussay (pierre-henry.moussay@sifive.com)
- * @brief 
+ * @file macro.h
+ * @brief
  * @version 0.1
- * @date 2020-05-28
+ * @date 2020-06-02
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -31,3 +30,22 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+#ifndef _MACRO_H
+#define _MACRO_H
+
+#include <machine/endian.h>
+
+#ifndef bswap16
+#define bswap16(x) __bswap16(x)
+#endif
+
+#ifndef bswap32
+#define bswap32(x) __bswap32(x)
+#endif
+
+#ifndef bswap64
+#define bswap64(x) __bswap64(x)
+#endif
+
+#endif /* _MACRO_H */

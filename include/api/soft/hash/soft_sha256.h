@@ -3,11 +3,8 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file sha_soft.c
- * @author Pierre-Henry Moussay (pierre-henry.moussay@sifive.com)
- * @brief 
- * @version 0.1
- * @date 2020-05-28
+ * @file soft_sha256.h
+ * @brief software sha256 implementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -31,3 +28,32 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+#ifndef _SOFT_SHA256_H
+#define _SOFT_SHA256_H
+
+#include <stdint.h>
+
+#include <crypto_cfg.h>
+
+#include <api/defs.h>
+#include <api/hash/sha256.h>
+
+CRYPTO_FUNCTION int32_t sha256_block_soft(sha256_ctx_t *const ctx,
+                                          const uint8_t *const words);
+
+CRYPTO_FUNCTION int32_t sha256_init_soft(sha256_ctx_t *const ctx,
+                                         endianness_t data_endianness);
+
+CRYPTO_FUNCTION int32_t sha256_core_soft(sha256_ctx_t *const ctx,
+                                         const uint8_t *const data,
+                                         size_t data_byte_len);
+
+CRYPTO_FUNCTION int32_t sha256_finish_soft(sha256_ctx_t *const ctx,
+                                           uint8_t *const hash,
+                                           size_t *hash_len);
+
+CRYPTO_FUNCTION void sha256_append_bit_len(uint8_t *const buffer,
+                                           uint64_t *const length);
+
+#endif /* _SOFT_SHA256_H */

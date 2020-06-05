@@ -3,15 +3,8 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file sha_soft.c
- * @author Pierre-Henry Moussay (pierre-henry.moussay@sifive.com)
- * @brief 
- * @version 0.1
- * @date 2020-05-28
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
+ * Copyright 2020 SiFive, Inc
+ * SPDX-License-Identifier: MIT
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -31,3 +24,17 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+#ifndef _SHA224_H
+#define _SHA224_H
+
+#include <stddef.h>
+#include <stdint.h>
+
+#include <api/hash/sha256.h>
+
+#define SHA224_BYTE_HASHSIZE 28
+
+typedef sha256_ctx_t sha224_ctx_t;
+
+#endif /* _SHA224_H */

@@ -3,11 +3,8 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file sha_soft.c
- * @author Pierre-Henry Moussay (pierre-henry.moussay@sifive.com)
- * @brief 
- * @version 0.1
- * @date 2020-05-28
+ * @file soft_sha224.h
+ * @brief software sha224 implementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -31,3 +28,26 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+#ifndef _SOFT_SHA224_H
+#define _SOFT_SHA224_H
+
+#include <stdint.h>
+
+#include <crypto_cfg.h>
+
+#include <api/defs.h>
+#include <api/hash/sha224.h>
+
+CRYPTO_FUNCTION int32_t sha224_init_soft(sha224_ctx_t *const ctx,
+                                         endianness_t data_endianness);
+
+CRYPTO_FUNCTION int32_t sha224_core_soft(sha224_ctx_t *const ctx,
+                                         const uint8_t *const data,
+                                         size_t data_byte_len);
+
+CRYPTO_FUNCTION int32_t sha224_finish_soft(sha224_ctx_t *const ctx,
+                                           uint8_t *const hash,
+                                           size_t *const hash_len);
+
+#endif /* _SOFT_SHA224_H */
