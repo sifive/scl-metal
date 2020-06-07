@@ -71,7 +71,6 @@ struct __aes_func
 
 struct __hash_func
 {
-
     int32_t (*sha_init)(metal_scl_t *const scl, sha_ctx_t *const ctx,
                         hash_mode_t hash_mode, endianness_t data_endianness);
     int32_t (*sha_core)(metal_scl_t *const scl, sha_ctx_t *const ctx,
