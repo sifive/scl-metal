@@ -29,5 +29,10 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+#ifndef _CRYPTO_CFG_H
+#define _CRYPTO_CFG_H
+
 #define CRYPTO_FUNCTION __attribute__((section("crypto_functions")))
 #define CRYPTO_DATA __attribute__((section("crypto_datas")))
+
+#endif /* _CRYPTO_CFG_H */

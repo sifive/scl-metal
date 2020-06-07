@@ -29,5 +29,10 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+#ifndef _SCL_CFG_H
+#define _SCL_CFG_H
+
 #define SCL_FUNCTION __attribute__((section("scl_functions")))
 #define SCL_DATA __attribute__((section("scl_datas")))
+
+#endif /* _SCL_CFG_H */
