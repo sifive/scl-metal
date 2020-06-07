@@ -231,8 +231,8 @@ int32_t sha256_finish_soft(sha256_ctx_t *const ctx, uint8_t *const hash,
     {
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
         block_buffer_index += block_remain - SHA256_BYTE_SIZE_BLOCKSIZE;
-        sha256_append_bit_len(&ctx->block_buffer[block_buffer_index],
-                              &ctx->bitlen);
+        sha256_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+                                   &ctx->bitlen);
         // this block is now complete,so it can be processed
         sha256_block_soft(ctx, ctx->block_buffer);
     }
@@ -250,8 +250,8 @@ int32_t sha256_finish_soft(sha256_ctx_t *const ctx, uint8_t *const hash,
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
 
         block_buffer_index += block_remain - SHA256_BYTE_SIZE_BLOCKSIZE;
-        sha256_append_bit_len(&ctx->block_buffer[block_buffer_index],
-                              &ctx->bitlen);
+        sha256_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+                                   &ctx->bitlen);
         // this block is now complete,so it can be processed
         sha256_block_soft(ctx, ctx->block_buffer);
     }
@@ -263,7 +263,7 @@ int32_t sha256_finish_soft(sha256_ctx_t *const ctx, uint8_t *const hash,
     return (SCL_OK);
 }
 
-void sha256_append_bit_len(uint8_t *const buffer, uint64_t *const length)
+void sha256_append_bit_len_soft(uint8_t *const buffer, uint64_t *const length)
 {
     size_t i;
     uint8_t *p_length = (uint8_t *)length;

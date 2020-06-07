@@ -116,8 +116,8 @@ int32_t sha384_finish_soft(sha384_ctx_t *const ctx, uint8_t *const hash,
     {
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
         block_buffer_index += block_remain - SHA512_BYTE_SIZE_BLOCKSIZE;
-        sha512_append_bit_len(&ctx->block_buffer[block_buffer_index],
-                              &ctx->bitlen);
+        sha512_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+                                   &ctx->bitlen);
         // this block is now complete,so it can be processed
         sha512_block_soft(ctx, ctx->block_buffer);
     }
@@ -135,8 +135,8 @@ int32_t sha384_finish_soft(sha384_ctx_t *const ctx, uint8_t *const hash,
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
 
         block_buffer_index += block_remain - SHA512_BYTE_SIZE_BLOCKSIZE;
-        sha512_append_bit_len(&ctx->block_buffer[block_buffer_index],
-                              &ctx->bitlen);
+        sha512_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+                                   &ctx->bitlen);
         // this block is now complete,so it can be processed
         sha512_block_soft(ctx, ctx->block_buffer);
     }
