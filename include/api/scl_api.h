@@ -38,11 +38,26 @@
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
 
+#include <api/hash/sha.h>
+
 struct __metal_scl;
+
+typedef struct __metal_scl
+{
+#if __riscv_xlen == 64
+    const uint64_t hca_base;
+#elif __riscv_xlen == 32
+    const uint32_t hca_base;
+#endif
+    const struct __aes_func aes_func;
+    const struct __hash_func hash_func;
+    const struct __trng_func trng_func;
+} metal_scl_t;
 
 struct __aes_func
 {
-    int (*setkey)(struct __metal_scl *scl, scl_aes_key_type_t type, uint64_t *key);
+    int (*setkey)(struct __metal_scl *scl, scl_aes_key_type_t type,
+                  uint64_t *key);
     int (*setiv)(struct __metal_scl *scl, uint64_t *initvec);
     int (*cipher)(struct __metal_scl *scl, scl_aes_mode_t aes_mode,
                   scl_process_t aes_process, scl_endianness_t data_endianness,
@@ -56,9 +71,13 @@ struct __aes_func
 
 struct __hash_func
 {
-    int (*sha)(struct __metal_scl *scl, scl_hash_mode_t hash_mode,
-               scl_endianness_t data_endianness, uint32_t NbBlocks,
-               uint8_t *data_in, uint8_t *data_out);
+
+    int32_t (*sha_init)(metal_scl_t *const scl, sha_ctx_t *const ctx,
+                        hash_mode_t hash_mode, endianness_t data_endianness);
+    int32_t (*sha_core)(metal_scl_t *const scl, sha_ctx_t *const ctx,
+                        const uint8_t *const data, size_t data_byte_len);
+    int32_t (*sha_finish)(metal_scl_t *const scl, sha_ctx_t *const ctx,
+                          uint8_t *const hash, size_t *const hash_len);
 };
 
 struct __trng_func
@@ -66,18 +85,6 @@ struct __trng_func
     int (*init)(struct __metal_scl *scl);
     int (*get_data)(struct __metal_scl *scl, uint32_t *data_out);
 };
-
-typedef struct __metal_scl
-{
-#if __riscv_xlen == 64
-    const uint64_t hca_base;
-#elif __riscv_xlen == 32
-    const uint32_t hca_base;
-#endif
-    const struct __aes_func aes_func;
-    const struct __hash_func hash_func;
-    const struct __trng_func trng_func;
-} metal_scl_t;
 
 static __inline__ int default_aes_setkey(metal_scl_t *scl,
                                          scl_aes_key_type_t type, uint64_t *key)
