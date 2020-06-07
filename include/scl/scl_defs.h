@@ -32,11 +32,10 @@
 #ifndef _SCL_DEFS_H
 #define _SCL_DEFS_H
 
-typedef enum
-{
-    SCL_LITTLE_ENDIAN_MODE = 0,
-    SCL_BIG_ENDIAN_MODE = 1
-} scl_endianness_t;
+#include <api/defs.h>
+#include <api/hash/sha.h>
+
+typedef endianness_t scl_endianness_t;
 
 // symmetric-crypto encryption mode
 typedef enum
@@ -83,16 +82,6 @@ typedef enum
     SCL_AES_CCM = 6
 } scl_aes_mode_t;
 
-typedef enum
-{
-    /*! @brief Define SHA224 mode */
-    SCL_HASH_SHA224 = 0,
-    /*! @brief Define SHA256 mode */
-    SCL_HASH_SHA256 = 1,
-    /*! @brief Define SHA384 mode */
-    SCL_HASH_SHA384 = 2,
-    /*! @brief Define SHA512 mode */
-    SCL_HASH_SHA512 = 3
-} scl_hash_mode_t;
+typedef hash_mode_t scl_hash_mode_t;
 
 #endif //_SCL_DEFS_H

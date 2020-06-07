@@ -3,11 +3,8 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file sha_soft.c
- * @author Pierre-Henry Moussay (pierre-henry.moussay@sifive.com)
- * @brief 
- * @version 0.1
- * @date 2020-05-28
+ * @file hca_macro.h
+ * @brief macro definition specific to hca
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -31,3 +28,32 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+#ifndef _HCA_MACRO_H
+#define _HCA_MACRO_H
+
+#include <metal/io.h>
+
+#include <api/scl_api.h>
+
+#define METAL_REG64(base, offset)                                              \
+    (__METAL_ACCESS_ONCE((uint64_t *)((base) + (offset))))
+#define METAL_REG32(base, offset)                                              \
+    (__METAL_ACCESS_ONCE((uint32_t *)((base) + (offset))))
+
+static __inline__ void scl_hca_setfield32(metal_scl_t *scl, uint32_t reg,
+                                          uint32_t value, char offset,
+                                          uint32_t mask)
+{
+    METAL_REG32(scl->hca_base, reg) &= ~(mask << offset);
+    METAL_REG32(scl->hca_base, reg) |= ((value & mask) << offset);
+}
+
+#define GET_UNIT32(data, k)                                                    \
+    ((*(data + k + 3) << 24) + (*(data + k + 2) << 16) +                       \
+     (*(data + k + 1) << 8) + (*(data + k)))
+#define GET_UNIT64(data, k)                                                    \
+    ((((uint64_t)GET_UNIT32(data, (k + 4))) << 32) +                           \
+     (uint64_t)GET_UNIT32(data, k))
+
+#endif

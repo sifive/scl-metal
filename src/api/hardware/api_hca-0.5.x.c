@@ -35,8 +35,10 @@
 #include <metal/io.h>
 #include <metal/machine/platform.h>
 
-#include <api/scl_hca.h>
+#include <api/hardware/scl_hca.h>
 #include <crypto_cfg.h>
+
+#include <api/hardware/hca_macro.h>
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 #ifndef __riscv_xlen
@@ -46,32 +48,6 @@
 #if ((__riscv_xlen != 64) && (__riscv_xlen != 32))
 #error "Unexpected __riscv_xlen"
 #endif
-
-#define METAL_REG64(base, offset)                                              \
-    (__METAL_ACCESS_ONCE((uint64_t *)((base) + (offset))))
-#define METAL_REG32(base, offset)                                              \
-    (__METAL_ACCESS_ONCE((uint32_t *)((base) + (offset))))
-
-#define GET_UNIT32(data, k)                                                    \
-    ((*(data + k + 3) << 24) + (*(data + k + 2) << 16) +                       \
-     (*(data + k + 1) << 8) + (*(data + k)))
-#define GET_UNIT64(data, k)                                                    \
-    ((((uint64_t)GET_UNIT32(data, (k + 4))) << 32) +                           \
-     (uint64_t)GET_UNIT32(data, k))
-
-typedef enum
-{
-    SCL_HCA_AES_MODE = 0,
-    SCL_HCA_SHA_MODE = 1
-} scl_hca_mode_t;
-
-static __inline__ void scl_hca_setfield32(metal_scl_t *scl, uint32_t reg,
-                                          uint32_t value, char offset,
-                                          uint32_t mask)
-{
-    METAL_REG32(scl->hca_base, reg) &= ~(mask << offset);
-    METAL_REG32(scl->hca_base, reg) |= ((value & mask) << offset);
-}
 
 int scl_hca_aes_setkey(metal_scl_t *scl, scl_aes_key_type_t type, uint64_t *key)
 {
@@ -138,7 +114,9 @@ int scl_hca_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     }
 
     if (aes_mode > SCL_AES_CTR)
+    {
         return SCL_INVALID_MODE;
+    }
 
     // Set MODE
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
@@ -217,9 +195,10 @@ int scl_hca_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
         while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
                 HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) &
                HCA_REGISTER_CR_OFIFOEMPTY_MASK)
-            ;
+        {
+        }
 
-            // Read AES result
+        // Read AES result
 #if __riscv_xlen == 64
         if ((uint64_t)data_out & 0x7)
         {
@@ -316,7 +295,9 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     }
 
     if ((aes_mode < SCL_AES_GCM) || (aes_mode > SCL_AES_CCM))
+    {
         return SCL_INVALID_MODE;
+    }
 
     // Set AES_ALEN
     METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_ALEN) = aad_len;
@@ -334,7 +315,6 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
         // we can not write pdlen value, so the AES AUTH do not exist.
         return SCL_ERROR;
     }
-
 
     // Set MODE
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
@@ -355,7 +335,7 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
                        HCA_REGISTER_CR_ENDIANNESS_OFFSET,
                        HCA_REGISTER_CR_ENDIANNESS_MASK);
-  
+
     // AAD
     // Set DTYPE
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 0,
@@ -442,7 +422,8 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
         while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
                 HCA_REGISTER_CR_IFIFOFULL_OFFSET) &
                HCA_REGISTER_CR_IFIFOFULL_MASK)
-            ;
+        {
+        }
 #if __riscv_xlen == 64
         if ((uint64_t)data_in & 0x7)
         {
@@ -485,8 +466,9 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
         while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
                 HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) &
                HCA_REGISTER_CR_OFIFOEMPTY_MASK)
-            ;
-            // Read AES result
+        {
+        }
+        // Read AES result
 #if __riscv_xlen == 64
         if ((uint64_t)data_out & 0x7)
         {
@@ -556,7 +538,8 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_CR) >>
             HCA_REGISTER_AES_CR_BUSY_OFFSET) &
            HCA_REGISTER_AES_CR_BUSY_MASK)
-        ;
+    {
+    }
 
     // Get tag
     *tag++ = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_AUTH);
@@ -624,7 +607,8 @@ int scl_hca_sha(metal_scl_t *scl, scl_hash_mode_t hash_mode,
         while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
                 HCA_REGISTER_CR_IFIFOFULL_OFFSET) &
                HCA_REGISTER_CR_IFIFOFULL_MASK)
-            ;
+        {
+        }
 #if __riscv_xlen == 64
         if ((uint64_t)data_in & 0x7)
         {
@@ -726,7 +710,8 @@ int scl_hca_sha(metal_scl_t *scl, scl_hash_mode_t hash_mode,
                 while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_SHA_CR) >>
                         HCA_REGISTER_SHA_CR_BUSY_OFFSET) &
                        HCA_REGISTER_SHA_CR_BUSY_MASK)
-                    ;
+                {
+                }
             }
         }
         else
@@ -735,7 +720,8 @@ int scl_hca_sha(metal_scl_t *scl, scl_hash_mode_t hash_mode,
             while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_SHA_CR) >>
                     HCA_REGISTER_SHA_CR_BUSY_OFFSET) &
                    HCA_REGISTER_SHA_CR_BUSY_MASK)
-                ;
+            {
+            }
         }
     }
 
@@ -899,15 +885,18 @@ int scl_hca_trng_init(metal_scl_t *scl)
             HCA_REGISTER_TRNG_SR_HTR_OFFSET) &
            HCA_REGISTER_TRNG_SR_HTR_MASK)
     {
-        // test that all 0's are read back from TRNG_DATA during startup health test
+        // test that all 0's are read back from TRNG_DATA during startup health
+        // test
         if (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_DATA) != 0)
         {
-            if ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >> HCA_REGISTER_TRNG_SR_HTR_OFFSET) & HCA_REGISTER_TRNG_SR_HTR_MASK )
+            if ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>
+                 HCA_REGISTER_TRNG_SR_HTR_OFFSET) &
+                HCA_REGISTER_TRNG_SR_HTR_MASK)
+            {
                 return SCL_RNG_ERROR;
+            }
         }
-
     }
-
 
     // Test Heath test status
     if (((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>

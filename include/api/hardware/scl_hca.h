@@ -41,8 +41,14 @@
 #define HCA_VERSION(a, b, c) (((a) << 16) + ((b) << 8) + (c))
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
-#include <api/sifive_hca-0.5.x.h>
+#include <api/hardware/sifive_hca-0.5.x.h>
 #endif
+
+typedef enum
+{
+    SCL_HCA_AES_MODE = 0,
+    SCL_HCA_SHA_MODE = 1
+} scl_hca_mode_t;
 
 /**
  * @brief load AES key into Hardware Crypto Accelerator
@@ -59,9 +65,9 @@ int scl_hca_aes_setkey(metal_scl_t *scl, scl_aes_key_type_t type,
 int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t *initvec) CRYPTO_FUNCTION;
 
 int scl_hca_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
-                       scl_process_t aes_process, scl_endianness_t data_endianness, 
-                       uint32_t NbBlocks128, uint8_t *data_in,
-                       uint8_t *data_out) CRYPTO_FUNCTION;
+                       scl_process_t aes_process,
+                       scl_endianness_t data_endianness, uint32_t NbBlocks128,
+                       uint8_t *data_in, uint8_t *data_out) CRYPTO_FUNCTION;
 
 int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
                      scl_process_t aes_process,
@@ -69,10 +75,6 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
                      uint64_t aad_len, uint8_t *aad, uint64_t data_len,
                      uint8_t *data_in, uint8_t *data_out,
                      uint64_t *tag) CRYPTO_FUNCTION;
-
-int scl_hca_sha(metal_scl_t *scl, scl_hash_mode_t hash_mode,
-                scl_endianness_t data_endianness, uint32_t NbBlocks,
-                uint8_t *data_in, uint8_t *data_out) CRYPTO_FUNCTION;
 
 int scl_hca_trng_init(metal_scl_t *scl) CRYPTO_FUNCTION;
 
