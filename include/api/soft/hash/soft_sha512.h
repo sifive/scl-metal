@@ -54,7 +54,7 @@ CRYPTO_FUNCTION int32_t sha512_finish_soft(sha512_ctx_t *const ctx,
                                            uint8_t *const hash,
                                            size_t *const hash_len);
 
-CRYPTO_FUNCTION void sha512_append_bit_len(uint8_t *const buffer,
-                                           uint64_t *const length);
+CRYPTO_FUNCTION void sha512_append_bit_len_soft(uint8_t *const buffer,
+                                                uint64_t *const length);
 
 #endif /* _SOFT_SHA512_H */
