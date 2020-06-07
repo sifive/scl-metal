@@ -3,12 +3,12 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file sha256.h
- * @brief sha256 implementation/wrapper
+ * @file hca_sha.h
+ * @brief hardware sha implementation/wrapper
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -29,31 +29,43 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef _SHA256_H
-#define _SHA256_H
+#ifndef _HCA_SHA_H
+#define _HCA_SHA_H
 
 #include <stddef.h>
 #include <stdint.h>
 
-#define SHA256_BYTE_BLOCKSIZE 64
-#define SHA256_BYTE_HASHSIZE 32
-#define SHA256_ROUNDS_NUMBER 64
-/* number of words (32 bits) in hash */
-#define SHA256_SIZE_WORDS 8
-/** number of word in one block */
-#define SHA256_BLOCK_WORDS 16
-/* the nb of bytes for storing the size in the last block */
-#define SHA256_BYTE_SIZE_BLOCKSIZE 8
+#include <crypto_cfg.h>
 
-typedef struct
-{
-    // intermediate state and then final hash
-    uint32_t h[SHA256_SIZE_WORDS];
-    // bits length
-    uint64_t bitlen;
-    // block buffer
-    uint8_t block_buffer[SHA256_BYTE_BLOCKSIZE] __attribute__((aligned(4)));
+#include <api/defs.h>
+#include <api/scl_api.h>
 
-} sha256_ctx_t;
+#include <api/hardware/hca_macro.h>
 
-#endif /* _SHA256_H */
+#include <scl/scl_retdefs.h>
+
+CRYPTO_FUNCTION int32_t sha_init_hca(metal_scl_t *const scl,
+                                     sha_ctx_t *const ctx,
+                                     hash_mode_t hash_mode,
+                                     endianness_t data_endianness);
+
+CRYPTO_FUNCTION int32_t sha_core_hca(metal_scl_t *const scl,
+                                     sha_ctx_t *const ctx,
+                                     const uint8_t *const data,
+                                     size_t data_byte_len);
+
+CRYPTO_FUNCTION int32_t sha_finish_hca(metal_scl_t *const scl,
+                                       sha_ctx_t *const ctx,
+                                       uint8_t *const hash,
+                                       size_t *const hash_len);
+
+CRYPTO_FUNCTION int32_t sha_block_hca(metal_scl_t *const scl,
+                                      hash_mode_t hash_mode,
+                                      uint32_t NbBlocks512,
+                                      const uint8_t *const data_in);
+
+CRYPTO_FUNCTION int32_t sha_read_hca(metal_scl_t *const scl,
+                                     hash_mode_t hash_mode,
+                                     uint8_t *const data_out);
+
+#endif /* _HCA_SHA_H */

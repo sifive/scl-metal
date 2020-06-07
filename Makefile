@@ -12,7 +12,9 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/api/hardware  \
 		$(SOURCE_DIR)/api/soft \
 		$(SOURCE_DIR)/api/soft/hash \
-		$(SOURCE_DIR)/api/soft/bignumbers 
+		$(SOURCE_DIR)/api/hardware \
+		$(SOURCE_DIR)/api/hardware/hash 
+
 # SCL
 override SOURCE_DIRS += \
 		$(SOURCE_DIR)/blockcipher \
@@ -29,7 +31,9 @@ override INCLUDE_DIRS := $(SCL_INCLUDES)
 override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/api \
 	$(CURRENT_DIR)/include/api/soft \
-	$(CURRENT_DIR)/include/api/soft/hash
+	$(CURRENT_DIR)/include/api/soft/hash \
+	$(CURRENT_DIR)/include/api/hardware \
+	$(CURRENT_DIR)/include/api/hardware/hash
  # SCL
 override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/scl
