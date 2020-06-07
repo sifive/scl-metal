@@ -44,27 +44,27 @@
 
 #include <scl/scl_retdefs.h>
 
-CRYPTO_FUNCTION int32_t sha_init_hca(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha_init_hca(const metal_scl_t *const scl,
                                      sha_ctx_t *const ctx,
                                      hash_mode_t hash_mode,
                                      endianness_t data_endianness);
 
-CRYPTO_FUNCTION int32_t sha_core_hca(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha_core_hca(const metal_scl_t *const scl,
                                      sha_ctx_t *const ctx,
                                      const uint8_t *const data,
                                      size_t data_byte_len);
 
-CRYPTO_FUNCTION int32_t sha_finish_hca(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha_finish_hca(const metal_scl_t *const scl,
                                        sha_ctx_t *const ctx,
                                        uint8_t *const hash,
                                        size_t *const hash_len);
 
-CRYPTO_FUNCTION int32_t sha_block_hca(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha_block_hca(const metal_scl_t *const scl,
                                       hash_mode_t hash_mode,
                                       uint32_t NbBlocks512,
                                       const uint8_t *const data_in);
 
-CRYPTO_FUNCTION int32_t sha_read_hca(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha_read_hca(const metal_scl_t *const scl,
                                      hash_mode_t hash_mode,
                                      uint8_t *const data_out);
 

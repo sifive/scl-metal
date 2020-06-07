@@ -54,7 +54,7 @@
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 
-int32_t sha_init_hca(metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t sha_init_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                      hash_mode_t hash_mode, endianness_t data_endianness)
 {
 
@@ -115,7 +115,7 @@ int32_t sha_init_hca(metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_OK);
 }
 
-int32_t sha_core_hca(metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t sha_core_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                      const uint8_t *const data, size_t data_byte_len)
 {
     if (NULL == ctx)
@@ -148,7 +148,7 @@ int32_t sha_core_hca(metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_ERROR);
 }
 
-int32_t sha_finish_hca(metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t sha_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                        uint8_t *const hash, size_t *const hash_len)
 {
     (void)scl;
@@ -181,7 +181,7 @@ int32_t sha_finish_hca(metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_ERROR);
 }
 
-int32_t sha_block_hca(metal_scl_t *const scl, hash_mode_t hash_mode,
+int32_t sha_block_hca(const metal_scl_t *const scl, hash_mode_t hash_mode,
                       uint32_t NbBlocks512, const uint8_t *const data_in)
 {
 #if __riscv_xlen == 64

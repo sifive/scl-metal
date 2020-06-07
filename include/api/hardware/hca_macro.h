@@ -41,9 +41,9 @@
 #define METAL_REG32(base, offset)                                              \
     (__METAL_ACCESS_ONCE((uint32_t *)((base) + (offset))))
 
-static __inline__ void scl_hca_setfield32(metal_scl_t *scl, uint32_t reg,
-                                          uint32_t value, char offset,
-                                          uint32_t mask)
+static __inline__ void scl_hca_setfield32(const metal_scl_t *const scl,
+                                          uint32_t reg, uint32_t value,
+                                          char offset, uint32_t mask)
 {
     METAL_REG32(scl->hca_base, reg) &= ~(mask << offset);
     METAL_REG32(scl->hca_base, reg) |= ((value & mask) << offset);

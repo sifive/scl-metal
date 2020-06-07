@@ -3,12 +3,8 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha224.h
- * @brief software sha224 implementation
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
+ * Copyright 2020 SiFive, Inc
+ * SPDX-License-Identifier: MIT
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -29,24 +25,26 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef _HCA_SHA224_H
-#define _HCA_SHA224_H
+/**
+ * @file scl_init.h
+ * @brief scl initialization functions
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ *
+ */
+
+#ifndef _SCL_INIT_H
+#define _SCL_INIT_H
 
 #include <stdint.h>
 
-#include <crypto_cfg.h>
+#include <scl_cfg.h>
+#include <api/scl_api.h>
 
-#include <api/defs.h>
-#include <api/hardware/hash/hca_sha.h>
-#include <api/hash/sha224.h>
+SCL_FUNCTION int scl_init(const metal_scl_t * const scl);
 
-CRYPTO_FUNCTION int32_t sha224_finish_hca(const metal_scl_t *const scl,
-                                          sha_ctx_t *const ctx,
-                                          uint8_t *const hash,
-                                          size_t *const hash_len);
+SCL_FUNCTION int scl_format_key(uint8_t *key, int key_byte_len,
+                                uint64_t *key_formated);
 
-CRYPTO_FUNCTION int32_t sha224_read_hca(const metal_scl_t *const scl,
-                                        hash_mode_t hash_mode,
-                                        uint8_t *const data_out);
-
-#endif /* _HCA_SHA224_H */
+#endif /* _SCL_INIT_H */

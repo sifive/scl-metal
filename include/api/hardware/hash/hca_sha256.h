@@ -40,12 +40,12 @@
 #include <api/hardware/hash/hca_sha.h>
 #include <api/hash/sha256.h>
 
-CRYPTO_FUNCTION int32_t sha256_core_hca(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha256_core_hca(const metal_scl_t *const scl,
                                         sha_ctx_t *const ctx,
                                         const uint8_t *const data,
                                         size_t data_byte_len);
 
-CRYPTO_FUNCTION int32_t sha256_finish_hca(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha256_finish_hca(const metal_scl_t *const scl,
                                           sha_ctx_t *const ctx,
                                           uint8_t *const hash,
                                           size_t *hash_len);
@@ -53,7 +53,7 @@ CRYPTO_FUNCTION int32_t sha256_finish_hca(metal_scl_t *const scl,
 CRYPTO_FUNCTION void sha256_append_bit_len_hca(uint8_t *const buffer,
                                                uint64_t *const length);
 
-CRYPTO_FUNCTION int32_t sha256_read_hca(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha256_read_hca(const metal_scl_t *const scl,
                                         hash_mode_t hash_mode,
                                         uint8_t *const data_out);
 

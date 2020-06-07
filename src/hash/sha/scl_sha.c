@@ -40,32 +40,41 @@
 extern metal_scl_t *scl_ctx;
 
 int32_t scl_sha(scl_hash_mode_t algo, const uint8_t *const data,
-                size_t data_len, uint8_t *const hash,
-                size_t *const hash_len)
+                size_t data_len, uint8_t *const hash, size_t *const hash_len)
 {
     int32_t result;
     scl_sha_ctx_t ctx;
 
-    result = scl_ctx->hash_func.sha_init(scl_ctx, &ctx, algo, SCL_BIG_ENDIAN_MODE);
-    if( SCL_OK != result) {
-        return(result);
+    if (NULL == scl_ctx)
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    result =
+        scl_ctx->hash_func.sha_init(scl_ctx, &ctx, algo, SCL_BIG_ENDIAN_MODE);
+    if (SCL_OK != result)
+    {
+        return (result);
     }
 
     result = scl_ctx->hash_func.sha_core(scl_ctx, &ctx, data, data_len);
-    if( SCL_OK != result) {
-        return(result);
+    if (SCL_OK != result)
+    {
+        return (result);
     }
 
     result = scl_ctx->hash_func.sha_finish(scl_ctx, &ctx, hash, hash_len);
-    if( SCL_OK != result) {
-        return(result);
+    if (SCL_OK != result)
+    {
+        return (result);
     }
 }
 
 int32_t scl_sha_init(scl_sha_ctx_t *const ctx, scl_hash_mode_t algo)
 {
-    if(NULL == ctx) {
-        return(SCL_INVALID_INPUT);
+    if (NULL == ctx)
+    {
+        return (SCL_INVALID_INPUT);
     }
 
     return (
@@ -75,8 +84,9 @@ int32_t scl_sha_init(scl_sha_ctx_t *const ctx, scl_hash_mode_t algo)
 int32_t scl_sha_core(scl_sha_ctx_t *const ctx, const uint8_t *const data,
                      size_t data_len)
 {
-    if(NULL == ctx) {
-        return(SCL_INVALID_INPUT);
+    if (NULL == scl_ctx)
+    {
+        return (SCL_INVALID_INPUT);
     }
 
     return (scl_ctx->hash_func.sha_core(scl_ctx, ctx, data, data_len));
@@ -85,8 +95,9 @@ int32_t scl_sha_core(scl_sha_ctx_t *const ctx, const uint8_t *const data,
 int32_t scl_sha_finish(scl_sha_ctx_t *const ctx, uint8_t *const hash,
                        size_t *const hash_len)
 {
-    if(NULL == ctx) {
-        return(SCL_INVALID_INPUT);
+    if (NULL == scl_ctx)
+    {
+        return (SCL_INVALID_INPUT);
     }
 
     return (scl_ctx->hash_func.sha_finish(scl_ctx, ctx, hash, hash_len));

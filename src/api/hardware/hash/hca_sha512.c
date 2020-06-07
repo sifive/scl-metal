@@ -43,7 +43,7 @@
 
 #include <api/hardware/hash/hca_sha512.h>
 
-int32_t sha512_core_hca(metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t sha512_core_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                         const uint8_t *const data, size_t data_byte_len)
 {
     size_t block_buffer_index;
@@ -105,7 +105,7 @@ int32_t sha512_core_hca(metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_OK);
 }
 
-int32_t sha512_finish_hca(metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t sha512_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                           uint8_t *const hash, size_t *hash_len)
 {
     size_t block_buffer_index;
@@ -209,7 +209,7 @@ void sha512_append_bit_len_hca(uint8_t *const buffer, uint64_t *const length)
     }
 }
 
-int32_t sha512_read_hca(metal_scl_t *const scl, hash_mode_t hash_mode,
+int32_t sha512_read_hca(const metal_scl_t *const scl, hash_mode_t hash_mode,
                         uint8_t *const data_out)
 {
     uint64_t *out64 = (uint64_t *)data_out;

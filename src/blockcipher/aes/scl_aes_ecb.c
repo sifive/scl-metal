@@ -30,7 +30,10 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+#if 0
 #include <scl_cfg.h>
+
+#include <api/scl_api.h>
 
 #include <scl/scl_aes_ecb.h>
 #include <scl/scl_defs.h>
@@ -123,3 +126,4 @@ int scl_aes_ecb(uint8_t *dst, uint8_t *src, int src_byte_len, uint8_t *key,
     }
     return (SCL_OK);
 }
+#endif

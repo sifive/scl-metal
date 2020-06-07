@@ -3,8 +3,9 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha224.h
- * @brief software sha224 implementation
+ * @file scl_sha.h
+ * @brief defines the generic hash function interface, where the hash function
+ * is transmitted as a parameter.
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -29,24 +30,43 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef _HCA_SHA224_H
-#define _HCA_SHA224_H
+#ifndef _SCL_SHA_H
+#define _SCL_SHA_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif // _ cplusplus
+
+#include <stddef.h>
 #include <stdint.h>
 
-#include <crypto_cfg.h>
+#include <scl_cfg.h>
 
-#include <api/defs.h>
-#include <api/hardware/hash/hca_sha.h>
-#include <api/hash/sha224.h>
+#include <scl/scl_defs.h>
+#include <scl/scl_retdefs.h>
 
-CRYPTO_FUNCTION int32_t sha224_finish_hca(const metal_scl_t *const scl,
-                                          sha_ctx_t *const ctx,
-                                          uint8_t *const hash,
-                                          size_t *const hash_len);
+#include <api/hash/sha.h>
+#include <api/scl_api.h>
 
-CRYPTO_FUNCTION int32_t sha224_read_hca(const metal_scl_t *const scl,
-                                        hash_mode_t hash_mode,
-                                        uint8_t *const data_out);
+    typedef sha_ctx_t scl_sha_ctx_t;
 
-#endif /* _HCA_SHA224_H */
+    SCL_FUNCTION int32_t scl_sha(scl_hash_mode_t algo,
+                                 const uint8_t *const data,
+                                 size_t data_byte_len, uint8_t *const hash,
+                                 size_t *const hash_len);
+    SCL_FUNCTION int32_t scl_sha_init(scl_sha_ctx_t *const ctx,
+                                      scl_hash_mode_t algo);
+    SCL_FUNCTION int32_t scl_sha_core(scl_sha_ctx_t *const ctx,
+                                      const uint8_t *const data,
+                                      size_t data_len);
+    SCL_FUNCTION int32_t scl_sha_finish(scl_sha_ctx_t *const ctx,
+                                        uint8_t *const hash,
+                                        size_t *const hash_len);
+    SCL_FUNCTION int32_t scl_valid_hash_digest_length(size_t inputlength);
+
+#ifdef __cplusplus
+}
+#endif // _ cplusplus
+
+#endif //_SCL_SHA_H

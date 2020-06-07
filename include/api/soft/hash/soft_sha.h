@@ -42,17 +42,17 @@
 
 #include <scl/scl_retdefs.h>
 
-CRYPTO_FUNCTION int32_t sha_init_soft(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha_init_soft(const metal_scl_t *const scl,
                                       sha_ctx_t *const ctx,
                                       hash_mode_t hash_mode,
                                       endianness_t data_endianness);
 
-CRYPTO_FUNCTION int32_t sha_core_soft(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha_core_soft(const metal_scl_t *const scl,
                                       sha_ctx_t *const ctx,
                                       const uint8_t *const data,
                                       size_t data_byte_len);
 
-CRYPTO_FUNCTION int32_t sha_finish_soft(metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha_finish_soft(const metal_scl_t *const scl,
                                         sha_ctx_t *const ctx,
                                         uint8_t *const hash,
                                         size_t *const hash_len);

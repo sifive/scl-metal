@@ -35,6 +35,8 @@
 #include <api/scl_api.h>
 #include <scl_cfg.h>
 
+#include <scl/scl_init.h>
+
 #define UINT32(data)                                                           \
     ((*(data + 3) << 24) + (*(data + 2) << 16) + (*(data + 1) << 8) + (*(data)))
 #define UINT64(data)                                                           \
@@ -42,17 +44,17 @@
 
 SCL_DATA metal_scl_t *scl_ctx = NULL;
 
-SCL_FUNCTION int scl_init(metal_scl_t *scl)
+int scl_init(const metal_scl_t * const scl)
 {
     if (NULL == scl)
         return SCL_ERROR;
 
-    scl_ctx = scl;
+    scl_ctx = (metal_scl_t *)scl;
 
     return SCL_OK;
 }
 
-SCL_FUNCTION int scl_format_key(uint8_t *key, int key_byte_len,
+int scl_format_key(uint8_t *key, int key_byte_len,
                                 uint64_t *key_formated)
 {
     if (NULL == key)

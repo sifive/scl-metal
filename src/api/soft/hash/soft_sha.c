@@ -42,7 +42,7 @@
 #include <api/soft/hash/soft_sha384.h>
 #include <api/soft/hash/soft_sha512.h>
 
-int32_t sha_init_soft(metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t sha_init_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                       hash_mode_t hash_mode, endianness_t data_endianness)
 {
     (void)scl;
@@ -77,7 +77,7 @@ int32_t sha_init_soft(metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_ERROR);
 }
 
-int32_t sha_core_soft(metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t sha_core_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                       const uint8_t *const data, size_t data_byte_len)
 {
     (void)scl;
@@ -110,7 +110,7 @@ int32_t sha_core_soft(metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_ERROR);
 }
 
-int32_t sha_finish_soft(metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t sha_finish_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                         uint8_t *const hash, size_t *const hash_len)
 {
     (void)scl;

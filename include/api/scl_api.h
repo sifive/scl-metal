@@ -42,17 +42,7 @@
 
 struct __metal_scl;
 
-typedef struct __metal_scl
-{
-#if __riscv_xlen == 64
-    const uint64_t hca_base;
-#elif __riscv_xlen == 32
-    const uint32_t hca_base;
-#endif
-    const struct __aes_func aes_func;
-    const struct __hash_func hash_func;
-    const struct __trng_func trng_func;
-} metal_scl_t;
+typedef struct __metal_scl metal_scl_t;
 
 struct __aes_func
 {
@@ -71,11 +61,12 @@ struct __aes_func
 
 struct __hash_func
 {
-    int32_t (*sha_init)(metal_scl_t *const scl, sha_ctx_t *const ctx,
+
+    int32_t (*sha_init)(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                         hash_mode_t hash_mode, endianness_t data_endianness);
-    int32_t (*sha_core)(metal_scl_t *const scl, sha_ctx_t *const ctx,
+    int32_t (*sha_core)(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                         const uint8_t *const data, size_t data_byte_len);
-    int32_t (*sha_finish)(metal_scl_t *const scl, sha_ctx_t *const ctx,
+    int32_t (*sha_finish)(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                           uint8_t *const hash, size_t *const hash_len);
 };
 
@@ -83,6 +74,18 @@ struct __trng_func
 {
     int (*init)(struct __metal_scl *scl);
     int (*get_data)(struct __metal_scl *scl, uint32_t *data_out);
+};
+
+struct __metal_scl
+{
+#if __riscv_xlen == 64
+    const uint64_t hca_base;
+#elif __riscv_xlen == 32
+    const uint32_t hca_base;
+#endif
+    const struct __aes_func aes_func;
+    const struct __hash_func hash_func;
+    const struct __trng_func trng_func;
 };
 
 static __inline__ int default_aes_setkey(metal_scl_t *scl,
