@@ -58,7 +58,7 @@ int scl_hca_aes_setkey(metal_scl_t *scl, scl_aes_key_type_t type, uint64_t *key)
     }
 
     // set the key size
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, type,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, type,
                        HCA_REGISTER_AES_CR_KEYSZ_OFFSET,
                        HCA_REGISTER_AES_CR_KEYSZ_MASK);
 
@@ -119,29 +119,29 @@ int scl_hca_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     }
 
     // Set MODE
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
                        HCA_REGISTER_CR_IFIFOTGT_OFFSET,
                        HCA_REGISTER_CR_IFIFOTGT_MASK);
 
     // Set aes_mode
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_mode,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_mode,
                        HCA_REGISTER_AES_CR_MODE_OFFSET,
                        HCA_REGISTER_AES_CR_MODE_MASK);
 
     // Set aes_process
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_process,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_process,
                        HCA_REGISTER_AES_CR_PROCESS_OFFSET,
                        HCA_REGISTER_AES_CR_PROCESS_MASK);
 
     // Set endianness
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
                        HCA_REGISTER_CR_ENDIANNESS_OFFSET,
                        HCA_REGISTER_CR_ENDIANNESS_MASK);
 
     if (aes_mode != SCL_AES_ECB)
     {
         // Set INIT
-        scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 1,
+        hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 1,
                            HCA_REGISTER_AES_CR_INIT_OFFSET,
                            HCA_REGISTER_AES_CR_INIT_MASK);
     }
@@ -317,39 +317,39 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     }
 
     // Set MODE
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
                        HCA_REGISTER_CR_IFIFOTGT_OFFSET,
                        HCA_REGISTER_CR_IFIFOTGT_MASK);
 
     // Set aes_mode
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_mode,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_mode,
                        HCA_REGISTER_AES_CR_MODE_OFFSET,
                        HCA_REGISTER_AES_CR_MODE_MASK);
 
     // Set aes_process
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_process,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_process,
                        HCA_REGISTER_AES_CR_PROCESS_OFFSET,
                        HCA_REGISTER_AES_CR_PROCESS_MASK);
 
     // Set endianness
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
                        HCA_REGISTER_CR_ENDIANNESS_OFFSET,
                        HCA_REGISTER_CR_ENDIANNESS_MASK);
 
     // AAD
     // Set DTYPE
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 0,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 0,
                        HCA_REGISTER_AES_CR_DTYPE_OFFSET,
                        HCA_REGISTER_AES_CR_DTYPE_MASK);
 
     if (aes_mode == SCL_AES_CCM)
     {
         // Set CCMT
-        scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, auth_option,
+        hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, auth_option,
                            HCA_REGISTER_AES_CR_CCMT_OFFSET,
                            HCA_REGISTER_AES_CR_CCMT_MASK);
         // Set CCMQ
-        scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, (auth_option >> 4),
+        hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, (auth_option >> 4),
                            HCA_REGISTER_AES_CR_CCMQ_OFFSET,
                            HCA_REGISTER_AES_CR_CCMQ_MASK);
     }
@@ -407,7 +407,7 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
 
     // PLD
     // Set DTYPE
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 1,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 1,
                        HCA_REGISTER_AES_CR_DTYPE_OFFSET,
                        HCA_REGISTER_AES_CR_DTYPE_MASK);
 
@@ -581,22 +581,22 @@ int scl_hca_sha(metal_scl_t *scl, scl_hash_mode_t hash_mode,
     }
 
     // Set HCA_MODE to SHA
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_SHA_MODE,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_SHA_MODE,
                        HCA_REGISTER_CR_IFIFOTGT_OFFSET,
                        HCA_REGISTER_CR_IFIFOTGT_MASK);
 
     // Set endianness
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
                        HCA_REGISTER_CR_ENDIANNESS_OFFSET,
                        HCA_REGISTER_CR_ENDIANNESS_MASK);
 
     // Set SHA mode
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_SHA_CR, hash_mode,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_SHA_CR, hash_mode,
                        HCA_REGISTER_SHA_CR_MODE_OFFSET,
                        HCA_REGISTER_SHA_CR_MODE_MASK);
 
     // Init SHA
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_SHA_CR, 1,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_SHA_CR, 1,
                        HCA_REGISTER_SHA_CR_INIT_OFFSET,
                        HCA_REGISTER_SHA_CR_INIT_MASK);
 
@@ -872,12 +872,12 @@ int scl_hca_trng_init(metal_scl_t *scl)
     }
 
     // Lock Trim Value
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_TRIM, 1,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_TRIM, 1,
                        HCA_REGISTER_TRNG_TRIM_LOCK_OFFSET,
                        HCA_REGISTER_TRNG_TRIM_LOCK_MASK);
 
     // start on-demand health test
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_CR, 1,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_CR, 1,
                        HCA_REGISTER_TRNG_CR_HTSTART_OFFSET,
                        HCA_REGISTER_TRNG_CR_HTSTART_MASK);
 
@@ -906,7 +906,7 @@ int scl_hca_trng_init(metal_scl_t *scl)
         ret = SCL_RNG_ERROR;
     }
 
-    scl_hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_CR, 0,
+    hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_CR, 0,
                        HCA_REGISTER_TRNG_CR_HTSTART_OFFSET,
                        HCA_REGISTER_TRNG_CR_HTSTART_MASK);
     return ret;
