@@ -38,7 +38,7 @@
 #include <api/macro.h>
 #include <api/utils.h>
 
-#include <api/soft/hash/soft_sha512.h>
+#include <api/software/hash/soft_sha512.h>
 
 #define ROTR_512(x, n) (((x) >> (n)) | ((x) << (64 - n)))
 #define SHR_512(x, n) ((x) >> (n))

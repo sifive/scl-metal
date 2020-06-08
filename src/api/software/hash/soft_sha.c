@@ -35,12 +35,12 @@
 #include <scl/scl_retdefs.h>
 
 #include <api/hash/sha.h>
-#include <api/soft/hash/soft_sha.h>
+#include <api/software/hash/soft_sha.h>
 
-#include <api/soft/hash/soft_sha224.h>
-#include <api/soft/hash/soft_sha256.h>
-#include <api/soft/hash/soft_sha384.h>
-#include <api/soft/hash/soft_sha512.h>
+#include <api/software/hash/soft_sha224.h>
+#include <api/software/hash/soft_sha256.h>
+#include <api/software/hash/soft_sha384.h>
+#include <api/software/hash/soft_sha512.h>
 
 int32_t soft_sha_init(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                       hash_mode_t hash_mode, endianness_t data_endianness)

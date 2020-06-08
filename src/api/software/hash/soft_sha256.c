@@ -38,7 +38,7 @@
 #include <api/macro.h>
 #include <api/utils.h>
 
-#include <api/soft/hash/soft_sha256.h>
+#include <api/software/hash/soft_sha256.h>
 
 #define ROTR(x, n) (((x) >> (n)) | ((x) << (32 - n)))
 #define SHR(x, n) ((x) >> (n))

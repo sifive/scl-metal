@@ -3,7 +3,7 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file soft_sha384.c
+ * @file soft_sha224.c
  * @brief
  * @version 0.1
  * @date 2020-06-02
@@ -31,8 +31,6 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#include <api/soft/hash/soft_sha512.h>
-
 #include <string.h>
 
 #include <scl/scl_retdefs.h>
@@ -40,15 +38,14 @@
 #include <api/macro.h>
 #include <api/utils.h>
 
-#include <api/soft/hash/soft_sha384.h>
-#include <api/soft/hash/soft_sha512.h>
+#include <api/software/hash/soft_sha224.h>
+#include <api/software/hash/soft_sha256.h>
 
-static const uint64_t h_init[SHA512_BYTE_HASHSIZE] = {
-    0xCBBB9D5DC1059ED8ULL, 0x629A292A367CD507ULL, 0x9159015A3070DD17ULL,
-    0x152FECD8F70E5939ULL, 0x67332667FFC00B31ULL, 0x8EB44A8768581511ULL,
-    0xDB0C2E0D64F98FA7ULL, 0x47B5481DBEFA4FA4ULL};
+static const uint32_t h_init[SHA256_SIZE_WORDS] = {
+    0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
+    0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4};
 
-int32_t soft_sha384_init(sha384_ctx_t *const ctx, endianness_t data_endianness)
+int32_t soft_sha224_init(sha224_ctx_t *const ctx, endianness_t data_endianness)
 {
     size_t i = 0;
 
@@ -65,7 +62,7 @@ int32_t soft_sha384_init(sha384_ctx_t *const ctx, endianness_t data_endianness)
 
     ctx->bitlen = 0;
 
-    for (i = 0; i < SHA512_SIZE_WORDS; i++)
+    for (i = 0; i < SHA256_SIZE_WORDS; i++)
     {
         ctx->h[i] = h_init[i];
     }
@@ -73,13 +70,13 @@ int32_t soft_sha384_init(sha384_ctx_t *const ctx, endianness_t data_endianness)
     return (SCL_OK);
 }
 
-int32_t soft_sha384_core(sha384_ctx_t *const ctx, const uint8_t *const data,
+int32_t soft_sha224_core(sha224_ctx_t *const ctx, const uint8_t *const data,
                          size_t data_byte_len)
 {
-    return (soft_sha512_core(ctx, data, data_byte_len));
+    return (soft_sha256_core(ctx, data, data_byte_len));
 }
 
-int32_t soft_sha384_finish(sha384_ctx_t *const ctx, uint8_t *const hash,
+int32_t soft_sha224_finish(sha224_ctx_t *const ctx, uint8_t *const hash,
                            size_t *const hash_len)
 {
     size_t block_buffer_index;
@@ -96,13 +93,13 @@ int32_t soft_sha384_finish(sha384_ctx_t *const ctx, uint8_t *const hash,
         return (SCL_INVALID_INPUT);
     }
 
-    if (*hash_len < SHA384_BYTE_HASHSIZE)
+    if (*hash_len < SHA224_BYTE_HASHSIZE)
     {
         return (SCL_INVALID_OUTPUT);
     }
 
     // currently used nb of bytes in the block buffer
-    block_buffer_index = (size_t)((ctx->bitlen >> 3) % SHA512_BYTE_BLOCKSIZE);
+    block_buffer_index = (size_t)((ctx->bitlen >> 3) % SHA256_BYTE_BLOCKSIZE);
 
     // add end of message
     ctx->block_buffer[block_buffer_index] = 0x80;
@@ -110,16 +107,16 @@ int32_t soft_sha384_finish(sha384_ctx_t *const ctx, uint8_t *const hash,
     block_buffer_index++;
 
     // compute the free remaining space in the block buffer (64-byte long)
-    block_remain = SHA512_BYTE_BLOCKSIZE - block_buffer_index;
+    block_remain = SHA256_BYTE_BLOCKSIZE - block_buffer_index;
 
-    if (block_remain >= SHA512_BYTE_SIZE_BLOCKSIZE)
+    if (block_remain >= SHA256_BYTE_SIZE_BLOCKSIZE)
     {
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
-        block_buffer_index += block_remain - SHA512_BYTE_SIZE_BLOCKSIZE;
-        soft_sha512_append_bit_len(&ctx->block_buffer[block_buffer_index],
+        block_buffer_index += block_remain - SHA256_BYTE_SIZE_BLOCKSIZE;
+        soft_sha256_append_bit_len(&ctx->block_buffer[block_buffer_index],
                                    &ctx->bitlen);
         // this block is now complete,so it can be processed
-        soft_sha512_block(ctx, ctx->block_buffer);
+        soft_sha256_block(ctx, ctx->block_buffer);
     }
     else
     {
@@ -128,22 +125,22 @@ int32_t soft_sha384_finish(sha384_ctx_t *const ctx, uint8_t *const hash,
             memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
         }
         block_buffer_index = 0;
-        block_remain = SHA512_BYTE_BLOCKSIZE;
+        block_remain = SHA256_BYTE_BLOCKSIZE;
         // this block is now complete,so it can be processed
-        soft_sha512_block(ctx, ctx->block_buffer);
+        soft_sha256_block(ctx, ctx->block_buffer);
 
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
 
-        block_buffer_index += block_remain - SHA512_BYTE_SIZE_BLOCKSIZE;
-        soft_sha512_append_bit_len(&ctx->block_buffer[block_buffer_index],
+        block_buffer_index += block_remain - SHA256_BYTE_SIZE_BLOCKSIZE;
+        soft_sha256_append_bit_len(&ctx->block_buffer[block_buffer_index],
                                    &ctx->bitlen);
         // this block is now complete,so it can be processed
-        soft_sha512_block(ctx, ctx->block_buffer);
+        soft_sha256_block(ctx, ctx->block_buffer);
     }
 
     // retrieving the hash result
-    copy_u64_2_u8_be(hash, ctx->h, SHA384_BYTE_HASHSIZE);
-    *hash_len = SHA384_BYTE_HASHSIZE;
+    copy_u32_2_u8_be(hash, ctx->h, SHA224_BYTE_HASHSIZE);
+    *hash_len = SHA224_BYTE_HASHSIZE;
 
     return (SCL_OK);
 }
