@@ -45,7 +45,7 @@
 
 #include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 
-int32_t sha_block_hca(const metal_scl_t *const scl, hash_mode_t hash_mode,
+int32_t hca_sha_block(const metal_scl_t *const scl, hash_mode_t hash_mode,
                       uint32_t NbBlocks512, const uint8_t *const data_in)
 {
 #if __riscv_xlen == 64

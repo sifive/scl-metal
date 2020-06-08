@@ -42,12 +42,12 @@
 #include <scl/scl_retdefs.h>
 #include <api/hash/sha.h>
 
-CRYPTO_FUNCTION int32_t sha_block_hca(const metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t hca_sha_block(const metal_scl_t *const scl,
                                       hash_mode_t hash_mode,
                                       uint32_t NbBlocks512,
                                       const uint8_t *const data_in);
 
-CRYPTO_FUNCTION int32_t sha_read_hca(const metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t hca_sha_read(const metal_scl_t *const scl,
                                      hash_mode_t hash_mode,
                                      uint8_t *const data_out);
 

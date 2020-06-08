@@ -39,20 +39,20 @@
 #include <api/defs.h>
 #include <api/hash/sha512.h>
 
-CRYPTO_FUNCTION int32_t sha512_core_hca(const metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t hca_sha512_core(const metal_scl_t *const scl,
                                         sha_ctx_t *const ctx,
                                         const uint8_t *const data,
                                         size_t data_byte_len);
 
-CRYPTO_FUNCTION int32_t sha512_finish_hca(const metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t hca_sha512_finish(const metal_scl_t *const scl,
                                           sha_ctx_t *const ctx,
                                           uint8_t *const hash,
                                           size_t *const hash_len);
 
-CRYPTO_FUNCTION void sha512_append_bit_len_hca(uint8_t *const buffer,
+CRYPTO_FUNCTION void hca_sha512_append_bit_len(uint8_t *const buffer,
                                                uint64_t *const length);
 
-CRYPTO_FUNCTION int32_t sha512_read_hca(const metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t hca_sha512_read(const metal_scl_t *const scl,
                                         hash_mode_t hash_mode,
                                         uint8_t *const data_out);
 

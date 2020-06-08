@@ -51,7 +51,7 @@
 #include <api/hardware/v0.5/hash/hca_sha384.h>
 #include <api/hardware/v0.5/hash/hca_sha512.h>
 
-int32_t sha_init_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t hca_sha_init(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                      hash_mode_t hash_mode, endianness_t data_endianness)
 {
 
@@ -112,7 +112,7 @@ int32_t sha_init_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_OK);
 }
 
-int32_t sha_core_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t hca_sha_core(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                      const uint8_t *const data, size_t data_byte_len)
 {
     if (NULL == ctx)
@@ -124,17 +124,17 @@ int32_t sha_core_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     {
     case SCL_HASH_SHA224:
         // same core than sha256
-        return (sha256_core_hca(scl, ctx, data, data_byte_len));
+        return (hca_sha256_core(scl, ctx, data, data_byte_len));
         break;
     case SCL_HASH_SHA256:
-        return (sha256_core_hca(scl, ctx, data, data_byte_len));
+        return (hca_sha256_core(scl, ctx, data, data_byte_len));
         break;
     case SCL_HASH_SHA384:
         // same core than sha384
-        return (sha512_core_hca(scl, ctx, data, data_byte_len));
+        return (hca_sha512_core(scl, ctx, data, data_byte_len));
         break;
     case SCL_HASH_SHA512:
-        return (sha512_core_hca(scl, ctx, data, data_byte_len));
+        return (hca_sha512_core(scl, ctx, data, data_byte_len));
         break;
     default:
         return (SCL_ERROR);
@@ -145,7 +145,7 @@ int32_t sha_core_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_ERROR);
 }
 
-int32_t sha_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t hca_sha_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                        uint8_t *const hash, size_t *const hash_len)
 {
     (void)scl;
@@ -158,16 +158,16 @@ int32_t sha_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     switch (ctx->mode)
     {
     case SCL_HASH_SHA224:
-        return (sha224_finish_hca(scl, ctx, hash, hash_len));
+        return (hca_sha224_finish(scl, ctx, hash, hash_len));
         break;
     case SCL_HASH_SHA256:
-        return (sha256_finish_hca(scl, ctx, hash, hash_len));
+        return (hca_sha256_finish(scl, ctx, hash, hash_len));
         break;
     case SCL_HASH_SHA384:
-        return (sha384_finish_hca(scl, ctx, hash, hash_len));
+        return (hca_sha384_finish(scl, ctx, hash, hash_len));
         break;
     case SCL_HASH_SHA512:
-        return (sha512_finish_hca(scl, ctx, hash, hash_len));
+        return (hca_sha512_finish(scl, ctx, hash, hash_len));
         break;
     default:
         return (SCL_ERROR);

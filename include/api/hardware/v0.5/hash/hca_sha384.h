@@ -39,12 +39,12 @@
 #include <api/defs.h>
 #include <api/hash/sha384.h>
 
-CRYPTO_FUNCTION int32_t sha384_finish_hca(const metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t hca_sha384_finish(const metal_scl_t *const scl,
                                           sha_ctx_t *const ctx,
                                           uint8_t *const hash,
                                           size_t *const hash_len);
 
-CRYPTO_FUNCTION int32_t sha384_read_hca(const metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t hca_sha384_read(const metal_scl_t *const scl,
                                         hash_mode_t hash_mode,
                                         uint8_t *const data_out);
 

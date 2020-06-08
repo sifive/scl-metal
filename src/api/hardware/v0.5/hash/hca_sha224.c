@@ -47,7 +47,7 @@
 #include <api/hardware/v0.5/hash/hca_sha256.h>
 #include <api/hardware/v0.5/hash/hca_sha_miscellaneous.h>
 
-int32_t sha224_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t hca_sha224_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                           uint8_t *const hash, size_t *const hash_len)
 {
     size_t block_buffer_index;
@@ -87,11 +87,11 @@ int32_t sha224_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
         memset(&ctx->ctx.sha256.block_buffer[block_buffer_index], 0,
                block_remain);
         block_buffer_index += block_remain - SHA256_BYTE_SIZE_BLOCKSIZE;
-        sha256_append_bit_len_hca(
+        hca_sha256_append_bit_len(
             &ctx->ctx.sha256.block_buffer[block_buffer_index],
             &ctx->ctx.sha256.bitlen);
         // this block is now complete,so it can be processed
-        result = sha_block_hca(scl, ctx->mode, 1, ctx->ctx.sha256.block_buffer);
+        result = hca_sha_block(scl, ctx->mode, 1, ctx->ctx.sha256.block_buffer);
         if (SCL_OK != result)
         {
             return (result);
@@ -107,7 +107,7 @@ int32_t sha224_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
         block_buffer_index = 0;
         block_remain = SHA256_BYTE_BLOCKSIZE;
         // this block is now complete,so it can be processed
-        result = sha_block_hca(scl, ctx->mode, 1, ctx->ctx.sha256.block_buffer);
+        result = hca_sha_block(scl, ctx->mode, 1, ctx->ctx.sha256.block_buffer);
         if (SCL_OK != result)
         {
             return (result);
@@ -117,11 +117,11 @@ int32_t sha224_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                block_remain);
 
         block_buffer_index += block_remain - SHA256_BYTE_SIZE_BLOCKSIZE;
-        sha256_append_bit_len_hca(
+        hca_sha256_append_bit_len(
             &ctx->ctx.sha256.block_buffer[block_buffer_index],
             &ctx->ctx.sha256.bitlen);
         // this block is now complete,so it can be processed
-        result = sha_block_hca(scl, ctx->mode, 1, ctx->ctx.sha256.block_buffer);
+        result = hca_sha_block(scl, ctx->mode, 1, ctx->ctx.sha256.block_buffer);
         if (SCL_OK != result)
         {
             return (result);
@@ -129,7 +129,7 @@ int32_t sha224_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     }
 
     // retrieving the hash result
-    result = sha224_read_hca(scl, ctx->mode, hash);
+    result = hca_sha224_read(scl, ctx->mode, hash);
     if (SCL_OK != result)
     {
         return (result);
@@ -140,7 +140,7 @@ int32_t sha224_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_OK);
 }
 
-int32_t sha224_read_hca(const metal_scl_t *const scl, hash_mode_t hash_mode,
+int32_t hca_sha224_read(const metal_scl_t *const scl, hash_mode_t hash_mode,
                         uint8_t *const data_out)
 {
     // uint64_t *out64 = (uint64_t *)data_out;
