@@ -319,9 +319,9 @@ int32_t hca_sha512_read(const metal_scl_t *const scl, hash_mode_t hash_mode,
         *out64++ = bswap64(METAL_REG64(
             scl->hca_base, (METAL_SIFIVE_HCA_HASH + 2 * sizeof(uint64_t))));
         *out64++ = bswap64(METAL_REG64(
-            scl->hca_base, (METAL_SIFIVE_HCA_HASH + 1 * sizeof(uint64_t))));
-        *out64++ = bswap64(METAL_REG64(
             scl->hca_base, (METAL_SIFIVE_HCA_HASH + sizeof(uint64_t))));
+        *out64++ = bswap64(METAL_REG64(
+            scl->hca_base, (METAL_SIFIVE_HCA_HASH)));
     }
     return (SCL_OK);
 }
