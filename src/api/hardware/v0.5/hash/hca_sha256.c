@@ -3,7 +3,7 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha224.c
+ * @file hca_sha256.c
  * @brief
  * @version 0.1
  * @date 2020-06-06
@@ -43,11 +43,72 @@
 
 #include <api/hardware/hca_macro.h>
 
-#include <api/hardware/hash/hca_sha224.h>
-#include <api/hardware/hash/hca_sha256.h>
+#include <api/hardware/v0.5/hash/hca_sha256.h>
+#include <api/hardware/v0.5/hash/hca_sha_miscellaneous.h>
 
-int32_t sha224_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
-                          uint8_t *const hash, size_t *const hash_len)
+int32_t sha256_core_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+                        const uint8_t *const data, size_t data_byte_len)
+{
+    size_t block_buffer_index;
+    size_t block_remain;
+    size_t nb_blocks;
+    size_t data_index = 0;
+    int32_t result;
+
+    if (NULL == ctx || NULL == data)
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    // currently used nb of bytes in the block buffer
+    block_buffer_index =
+        (size_t)((ctx->ctx.sha256.bitlen >> 3) % SHA256_BYTE_BLOCKSIZE);
+
+    // compute the free remaining space in the block buffer (64-byte long)
+    block_remain = SHA256_BYTE_BLOCKSIZE - block_buffer_index;
+
+    ctx->ctx.sha256.bitlen += (data_byte_len << 3);
+
+    // if the input data size is larger than the block remaining size we'll be
+    // able to process at least one block
+    if (data_byte_len >= block_remain)
+    {
+        // we can add data,starting at the first available position in the block
+        // buffer
+        memcpy(&ctx->ctx.sha256.block_buffer[block_buffer_index], data,
+               block_remain);
+
+        // this block is now complete,so it can be processed
+        result = sha_block_hca(scl, ctx->mode, 1, ctx->ctx.sha256.block_buffer);
+        if (SCL_OK != result)
+        {
+            return (result);
+        }
+
+        // block has been fully processed,so block buffer is empty
+        block_buffer_index = 0;
+
+        nb_blocks = (data_byte_len - block_remain) / SHA256_BYTE_BLOCKSIZE;
+
+        // processing full blocks as long as data are available
+        result = sha_block_hca(scl, ctx->mode, nb_blocks, &data[block_remain]);
+        if (SCL_OK != result)
+        {
+            return (result);
+        }
+
+        data_index = (nb_blocks * SHA256_BYTE_BLOCKSIZE) + block_remain;
+    }
+
+    // copying the remaining 'data' bytes to the block buffer
+    memcpy(&ctx->ctx.sha256.block_buffer[block_buffer_index], &data[data_index],
+           data_byte_len - data_index);
+
+    return (SCL_OK);
+}
+
+int32_t sha256_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+                          uint8_t *const hash, size_t *hash_len)
 {
     size_t block_buffer_index;
     size_t block_remain;
@@ -64,7 +125,7 @@ int32_t sha224_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
         return (SCL_INVALID_INPUT);
     }
 
-    if (*hash_len < SHA224_BYTE_HASHSIZE)
+    if (*hash_len < SHA256_BYTE_HASHSIZE)
     {
         return (SCL_INVALID_OUTPUT);
     }
@@ -128,81 +189,90 @@ int32_t sha224_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     }
 
     // retrieving the hash result
-    result = sha224_read_hca(scl, ctx->mode, hash);
+    result = sha256_read_hca(scl, ctx->mode, hash);
     if (SCL_OK != result)
     {
         return (result);
     }
 
-    *hash_len = SHA224_BYTE_HASHSIZE;
+    *hash_len = SHA256_BYTE_HASHSIZE;
 
     return (SCL_OK);
 }
 
-int32_t sha224_read_hca(const metal_scl_t *const scl, hash_mode_t hash_mode,
+void sha256_append_bit_len_hca(uint8_t *const buffer, uint64_t *const length)
+{
+    size_t i;
+    uint8_t *p_length = (uint8_t *)length;
+
+    for (i = 0; i < sizeof(*length); i++)
+    {
+        buffer[SHA256_BYTE_SIZE_BLOCKSIZE - i - 1] = p_length[i];
+    }
+}
+
+int32_t sha256_read_hca(const metal_scl_t *const scl, hash_mode_t hash_mode,
                         uint8_t *const data_out)
 {
-    // uint64_t *out64 = (uint64_t *)data_out;
-    uint32_t *out32 = (uint32_t *)data_out;
+    uint64_t *out64 = (uint64_t *)data_out;
     register uint64_t val;
     // Read hash
 #if __riscv_xlen == 64
-    if ((uint64_t)data_out & 0x3)
+    if ((uint64_t)data_out & 0x7)
 #elif __riscv_xlen == 32
-    if ((uint32_t)data_out & 0x3)
+    if ((uint32_t)data_out & 0x7)
 #endif
     {
         val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_HASH);
-        data_out[27] = (uint8_t)val;
-        data_out[26] = (uint8_t)(val >> 8);
-        data_out[25] = (uint8_t)(val >> 16);
-        data_out[24] = (uint8_t)(val >> 24);
-        data_out[23] = (uint8_t)(val >> 32);
-        data_out[22] = (uint8_t)(val >> 40);
-        data_out[21] = (uint8_t)(val >> 48);
-        data_out[20] = (uint8_t)(val >> 56);
+        data_out[31] = (uint8_t)val;
+        data_out[30] = (uint8_t)(val >> 8);
+        data_out[29] = (uint8_t)(val >> 16);
+        data_out[28] = (uint8_t)(val >> 24);
+        data_out[27] = (uint8_t)(val >> 32);
+        data_out[26] = (uint8_t)(val >> 40);
+        data_out[25] = (uint8_t)(val >> 48);
+        data_out[24] = (uint8_t)(val >> 56);
         val = METAL_REG64(scl->hca_base,
                           (METAL_SIFIVE_HCA_HASH + sizeof(uint64_t)));
-        data_out[19] = (uint8_t)val;
-        data_out[18] = (uint8_t)(val >> 8);
-        data_out[17] = (uint8_t)(val >> 16);
-        data_out[16] = (uint8_t)(val >> 24);
-        data_out[15] = (uint8_t)(val >> 32);
-        data_out[14] = (uint8_t)(val >> 40);
-        data_out[13] = (uint8_t)(val >> 48);
-        data_out[12] = (uint8_t)(val >> 56);
+        data_out[23] = (uint8_t)val;
+        data_out[22] = (uint8_t)(val >> 8);
+        data_out[21] = (uint8_t)(val >> 16);
+        data_out[20] = (uint8_t)(val >> 24);
+        data_out[19] = (uint8_t)(val >> 32);
+        data_out[18] = (uint8_t)(val >> 40);
+        data_out[17] = (uint8_t)(val >> 48);
+        data_out[16] = (uint8_t)(val >> 56);
         val = METAL_REG64(scl->hca_base,
                           (METAL_SIFIVE_HCA_HASH + 2 * sizeof(uint64_t)));
-        data_out[11] = (uint8_t)val;
-        data_out[10] = (uint8_t)(val >> 8);
-        data_out[9] = (uint8_t)(val >> 16);
-        data_out[8] = (uint8_t)(val >> 24);
-        data_out[7] = (uint8_t)(val >> 32);
-        data_out[6] = (uint8_t)(val >> 40);
-        data_out[5] = (uint8_t)(val >> 48);
-        data_out[4] = (uint8_t)(val >> 56);
+        data_out[15] = (uint8_t)val;
+        data_out[14] = (uint8_t)(val >> 8);
+        data_out[13] = (uint8_t)(val >> 16);
+        data_out[12] = (uint8_t)(val >> 24);
+        data_out[11] = (uint8_t)(val >> 32);
+        data_out[10] = (uint8_t)(val >> 40);
+        data_out[9] = (uint8_t)(val >> 48);
+        data_out[8] = (uint8_t)(val >> 56);
         val = METAL_REG64(scl->hca_base,
                           (METAL_SIFIVE_HCA_HASH + 3 * sizeof(uint64_t)));
-        data_out[3] = (uint8_t)val;
-        data_out[2] = (uint8_t)(val >> 8);
-        data_out[1] = (uint8_t)(val >> 16);
-        data_out[0] = (uint8_t)(val >> 24);
+        data_out[7] = (uint8_t)val;
+        data_out[6] = (uint8_t)(val >> 8);
+        data_out[5] = (uint8_t)(val >> 16);
+        data_out[4] = (uint8_t)(val >> 24);
+        data_out[3] = (uint8_t)(val >> 32);
+        data_out[2] = (uint8_t)(val >> 40);
+        data_out[1] = (uint8_t)(val >> 48);
+        data_out[0] = (uint8_t)(val >> 56);
     }
     else
     {
-        *out32++ = bswap32(METAL_REG32(
-            scl->hca_base, METAL_SIFIVE_HCA_HASH + 6 * sizeof(uint32_t)));
-        *out32++ = bswap32(METAL_REG32(
-            scl->hca_base, METAL_SIFIVE_HCA_HASH + 5 * sizeof(uint32_t)));
-        *out32++ = bswap32(METAL_REG32(
-            scl->hca_base, METAL_SIFIVE_HCA_HASH + 4 * sizeof(uint32_t)));
-        *out32++ = bswap32(METAL_REG32(
-            scl->hca_base, METAL_SIFIVE_HCA_HASH + 3 * sizeof(uint32_t)));
-        *out32++ = bswap32(METAL_REG32(
-            scl->hca_base, METAL_SIFIVE_HCA_HASH + 2 * sizeof(uint32_t)));
-        *out32++ = bswap32(METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_HASH +
-                                                          sizeof(uint32_t)));
-        *out32 = bswap32(METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_HASH));
+        *out64++ = bswap64(METAL_REG64(
+            scl->hca_base, (METAL_SIFIVE_HCA_HASH + 3 * sizeof(uint64_t))));
+        *out64++ = bswap64(METAL_REG64(
+            scl->hca_base, (METAL_SIFIVE_HCA_HASH + 2 * sizeof(uint64_t))));
+        *out64++ = bswap64(METAL_REG64(
+            scl->hca_base, (METAL_SIFIVE_HCA_HASH + 1 * sizeof(uint64_t))));
+        *out64 = bswap64(METAL_REG64(
+            scl->hca_base, (METAL_SIFIVE_HCA_HASH + sizeof(uint64_t))));
     }
-    return SCL_OK;
+    return (SCL_OK);
 }

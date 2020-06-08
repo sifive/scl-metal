@@ -3,8 +3,8 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha256.h
- * @brief software sha256 implementation
+ * @file hca_sha384.h
+ * @brief software sha384 implementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -29,32 +29,23 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef _HCA_SHA256_H
-#define _HCA_SHA256_H
+#ifndef _HCA_SHA384_H
+#define _HCA_SHA384_H
 
 #include <stdint.h>
 
 #include <crypto_cfg.h>
 
 #include <api/defs.h>
-#include <api/hardware/hash/hca_sha_miscellaneous.h>
-#include <api/hash/sha256.h>
+#include <api/hash/sha384.h>
 
-CRYPTO_FUNCTION int32_t sha256_core_hca(const metal_scl_t *const scl,
-                                        sha_ctx_t *const ctx,
-                                        const uint8_t *const data,
-                                        size_t data_byte_len);
-
-CRYPTO_FUNCTION int32_t sha256_finish_hca(const metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha384_finish_hca(const metal_scl_t *const scl,
                                           sha_ctx_t *const ctx,
                                           uint8_t *const hash,
-                                          size_t *hash_len);
+                                          size_t *const hash_len);
 
-CRYPTO_FUNCTION void sha256_append_bit_len_hca(uint8_t *const buffer,
-                                               uint64_t *const length);
-
-CRYPTO_FUNCTION int32_t sha256_read_hca(const metal_scl_t *const scl,
+CRYPTO_FUNCTION int32_t sha384_read_hca(const metal_scl_t *const scl,
                                         hash_mode_t hash_mode,
                                         uint8_t *const data_out);
 
-#endif /* _HCA_SHA256_H */
+#endif /* _HCA_SHA384_H */

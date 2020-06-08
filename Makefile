@@ -9,11 +9,18 @@ override SOURCE_DIRS := $(SOURCE_DIR)
 # API
 override SOURCE_DIRS += \
 		$(SOURCE_DIR)/api \
-		$(SOURCE_DIR)/api/hardware  \
 		$(SOURCE_DIR)/api/soft \
 		$(SOURCE_DIR)/api/soft/hash \
-		$(SOURCE_DIR)/api/hardware \
-		$(SOURCE_DIR)/api/hardware/hash 
+		$(SOURCE_DIR)/api/hardware 
+
+HCA_VERSION ?= 0.5
+# the version management will be improved, this is just a draft to test
+# compilation of the version specific files
+ifeq ($(HCA_VERSION),0.5)
+override SOURCE_DIRS += \
+		$(SOURCE_DIR)/api/hardware/v0.5 \
+		$(SOURCE_DIR)/api/hardware/v0.5/hash 
+endif
 
 # SCL
 override SOURCE_DIRS += \
@@ -22,10 +29,10 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/hash \
 		$(SOURCE_DIR)/hash/sha
 
-
 SCL_DIR = $(CURRENT_DIR)
 include $(CURRENT_DIR)/scripts/scl.mk
 
+# INCLUDE_DIRS is only use to list includes files and execute check-format.
 override INCLUDE_DIRS := $(SCL_INCLUDES) 
  # API
 override INCLUDE_DIRS += \
@@ -33,7 +40,8 @@ override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/api/soft \
 	$(CURRENT_DIR)/include/api/soft/hash \
 	$(CURRENT_DIR)/include/api/hardware \
-	$(CURRENT_DIR)/include/api/hardware/hash
+	$(CURRENT_DIR)/include/api/hardware/v0.5 \
+	$(CURRENT_DIR)/include/api/hardware/v0.5/hash
  # SCL
 override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/scl

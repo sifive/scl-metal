@@ -36,7 +36,7 @@
 
 #include <scl/scl_retdefs.h>
 
-#include <api/hardware/hash/hca_sha.h>
+#include <api/hardware/v0.5/hash/hca_sha.h>
 #include <api/hardware/hca_macro.h>
 #include <api/hardware/scl_hca.h>
 #include <api/hash/sha.h>
@@ -44,12 +44,12 @@
 #include <metal/io.h>
 #include <metal/machine/platform.h>
 
-#include <api/hardware/sifive_hca-0.5.x.h>
+#include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 
-#include <api/hardware/hash/hca_sha224.h>
-#include <api/hardware/hash/hca_sha256.h>
-#include <api/hardware/hash/hca_sha384.h>
-#include <api/hardware/hash/hca_sha512.h>
+#include <api/hardware/v0.5/hash/hca_sha224.h>
+#include <api/hardware/v0.5/hash/hca_sha256.h>
+#include <api/hardware/v0.5/hash/hca_sha384.h>
+#include <api/hardware/v0.5/hash/hca_sha512.h>
 
 int32_t sha_init_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                      hash_mode_t hash_mode, endianness_t data_endianness)

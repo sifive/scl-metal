@@ -39,11 +39,11 @@
 
 #include <scl/scl_retdefs.h>
 
-#include <api/hardware/hash/hca_sha_miscellaneous.h>
+#include <api/hardware/v0.5/hash/hca_sha_miscellaneous.h>
 
 #include <api/hardware/hca_macro.h>
 
-#include <api/hardware/sifive_hca-0.5.x.h>
+#include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 
 int32_t sha_block_hca(const metal_scl_t *const scl, hash_mode_t hash_mode,
                       uint32_t NbBlocks512, const uint8_t *const data_in)
