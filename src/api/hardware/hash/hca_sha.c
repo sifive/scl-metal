@@ -3,8 +3,7 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file soft_sha.c
- * @author Pierre-Henry Moussay (pierre-henry.moussay@sifive.com)
+ * @file hca_sha.c
  * @brief
  * @version 0.1
  * @date 2020-05-28
@@ -51,8 +50,6 @@
 #include <api/hardware/hash/hca_sha256.h>
 #include <api/hardware/hash/hca_sha384.h>
 #include <api/hardware/hash/hca_sha512.h>
-
-#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 
 int32_t sha_init_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                      hash_mode_t hash_mode, endianness_t data_endianness)
@@ -180,160 +177,3 @@ int32_t sha_finish_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     // just in case
     return (SCL_ERROR);
 }
-
-int32_t sha_block_hca(const metal_scl_t *const scl, hash_mode_t hash_mode,
-                      uint32_t NbBlocks512, const uint8_t *const data_in)
-{
-#if __riscv_xlen == 64
-    uint64_t *in64 = (uint64_t *)data_in;
-#elif __riscv_xlen == 32
-    uint32_t *in32 = (uint32_t *)data_in;
-#endif
-    int k;
-    register int i;
-
-    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_SHA_REV))
-    {
-        // revision of SHA is Zero so the SHA is not present.
-        return SCL_ERROR;
-    }
-
-    if (NbBlocks512 == 0)
-    {
-        return SCL_INVALID_INPUT;
-    }
-
-    if ((NbBlocks512 & 0x1) && (hash_mode >= SCL_HASH_SHA384))
-    {
-        // nb block should be even to have 1024bits
-        return SCL_INVALID_INPUT;
-    }
-
-    for (int k = 0; k < NbBlocks512; k++)
-    {
-        // Put data in the FIFO
-        // Wait for IFIFOEMPTY is cleared
-        while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
-                HCA_REGISTER_CR_IFIFOFULL_OFFSET) &
-               HCA_REGISTER_CR_IFIFOFULL_MASK)
-        {
-        }
-#if __riscv_xlen == 64
-        if ((uint64_t)data_in & 0x7)
-        {
-            i = k << 6;
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, i);
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 8));
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 16));
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 24));
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 32));
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 40));
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 48));
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 56));
-        }
-        else
-        {
-            i = k << 3;
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i];
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 1];
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 2];
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 3];
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 4];
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 5];
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 6];
-            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 7];
-        }
-#elif __riscv_xlen == 32
-        if ((uint32_t)data_in & 0x3)
-        {
-            i = k << 6;
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, i);
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 4));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 8));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 12));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 16));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 20));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 24));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 28));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 32));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 36));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 40));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 44));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 48));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 52));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 56));
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 60));
-        }
-        else
-        {
-            i = k << 4;
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 1];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 2];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 3];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 4];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 5];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 6];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 7];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 8];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 9];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 10];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 11];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 12];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 13];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 14];
-            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 15];
-        }
-#endif
-
-        if (hash_mode >= SCL_HASH_SHA384)
-        {
-            // Need to have 1024bits before SHA end performing.
-            if (k & 0x1)
-            {
-                // Wait for SHABUSY is cleared
-                while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_SHA_CR) >>
-                        HCA_REGISTER_SHA_CR_BUSY_OFFSET) &
-                       HCA_REGISTER_SHA_CR_BUSY_MASK)
-                {
-                }
-            }
-        }
-        else
-        {
-            // Wait for SHABUSY is cleared
-            while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_SHA_CR) >>
-                    HCA_REGISTER_SHA_CR_BUSY_OFFSET) &
-                   HCA_REGISTER_SHA_CR_BUSY_MASK)
-            {
-            }
-        }
-    }
-    return SCL_OK;
-}
-
-#endif

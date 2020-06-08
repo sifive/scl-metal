@@ -38,9 +38,12 @@
 #include <api/scl_api.h>
 #include <crypto_cfg.h>
 
+#include <metal/machine/platform.h>
+
 #define HCA_VERSION(a, b, c) (((a) << 16) + ((b) << 8) + (c))
 
-#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
+#if (METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0))
+#include <api/hardware/hash/hca_sha.h>
 #include <api/hardware/sifive_hca-0.5.x.h>
 #endif
 

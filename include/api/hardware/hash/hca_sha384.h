@@ -37,7 +37,7 @@
 #include <crypto_cfg.h>
 
 #include <api/defs.h>
-#include <api/hardware/hash/hca_sha.h>
+#include <api/hardware/hash/hca_sha_miscellaneous.h>
 #include <api/hash/sha384.h>
 
 CRYPTO_FUNCTION int32_t sha384_finish_hca(const metal_scl_t *const scl,

@@ -41,6 +41,8 @@
 #include <api/macro.h>
 #include <api/utils.h>
 
+#include <api/hardware/hca_macro.h>
+
 #include <api/hardware/hash/hca_sha512.h>
 
 int32_t sha512_core_hca(const metal_scl_t *const scl, sha_ctx_t *const ctx,

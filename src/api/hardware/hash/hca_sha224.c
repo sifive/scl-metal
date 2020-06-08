@@ -41,6 +41,8 @@
 #include <api/macro.h>
 #include <api/utils.h>
 
+#include <api/hardware/hca_macro.h>
+
 #include <api/hardware/hash/hca_sha224.h>
 #include <api/hardware/hash/hca_sha256.h>
 

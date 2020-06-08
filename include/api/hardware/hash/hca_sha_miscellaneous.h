@@ -3,8 +3,8 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha224.h
- * @brief software sha224 implementation
+ * @file hca_sha_miscellaneous.h
+ * @brief hardware sha implementation/wrapper
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -29,24 +29,26 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef _HCA_SHA224_H
-#define _HCA_SHA224_H
+#ifndef _HCA_SHA_MISCELLANEOUS_H
+#define _HCA_SHA_MISCELLANEOUS_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 #include <crypto_cfg.h>
 
-#include <api/defs.h>
-#include <api/hardware/hash/hca_sha_miscellaneous.h>
-#include <api/hash/sha224.h>
+#include <api/scl_api.h>
 
-CRYPTO_FUNCTION int32_t sha224_finish_hca(const metal_scl_t *const scl,
-                                          sha_ctx_t *const ctx,
-                                          uint8_t *const hash,
-                                          size_t *const hash_len);
+#include <scl/scl_retdefs.h>
+#include <api/hash/sha.h>
 
-CRYPTO_FUNCTION int32_t sha224_read_hca(const metal_scl_t *const scl,
-                                        hash_mode_t hash_mode,
-                                        uint8_t *const data_out);
+CRYPTO_FUNCTION int32_t sha_block_hca(const metal_scl_t *const scl,
+                                      hash_mode_t hash_mode,
+                                      uint32_t NbBlocks512,
+                                      const uint8_t *const data_in);
 
-#endif /* _HCA_SHA224_H */
+CRYPTO_FUNCTION int32_t sha_read_hca(const metal_scl_t *const scl,
+                                     hash_mode_t hash_mode,
+                                     uint8_t *const data_out);
+
+#endif /* _HCA_SHA_MISCELLANEOUS_H */
