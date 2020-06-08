@@ -85,7 +85,7 @@ static const uint64_t h_init[SHA512_BYTE_HASHSIZE] = {
     0xa54ff53a5f1d36f1ULL, 0x510e527fade682d1ULL, 0x9b05688c2b3e6c1fULL,
     0x1f83d9abfb41bd6bULL, 0x5be0cd19137e2179ULL};
 
-int32_t sha512_block_soft(sha512_ctx_t *ctx, const uint8_t *const words)
+int32_t soft_sha512_block(sha512_ctx_t *ctx, const uint8_t *const words)
 {
     size_t i;
     uint64_t w[SHA512_ROUNDS_NUMBER];
@@ -142,7 +142,7 @@ int32_t sha512_block_soft(sha512_ctx_t *ctx, const uint8_t *const words)
     return (SCL_OK);
 }
 
-int32_t sha512_init_soft(sha512_ctx_t *const ctx, endianness_t data_endianness)
+int32_t soft_sha512_init(sha512_ctx_t *const ctx, endianness_t data_endianness)
 {
     size_t i = 0;
 
@@ -167,7 +167,7 @@ int32_t sha512_init_soft(sha512_ctx_t *const ctx, endianness_t data_endianness)
     return (SCL_OK);
 }
 
-int32_t sha512_core_soft(sha512_ctx_t *const ctx, const uint8_t *const data,
+int32_t soft_sha512_core(sha512_ctx_t *const ctx, const uint8_t *const data,
                          size_t data_byte_len)
 {
     size_t block_buffer_index;
@@ -196,7 +196,7 @@ int32_t sha512_core_soft(sha512_ctx_t *const ctx, const uint8_t *const data,
         memcpy(&ctx->block_buffer[block_buffer_index], data, block_remain);
 
         // this block is now complete,so it can be processed
-        sha512_block_soft(ctx, ctx->block_buffer);
+        soft_sha512_block(ctx, ctx->block_buffer);
         // block has been fully processed,so block buffer is empty
         block_buffer_index = 0;
         // processing full blocks as long as data are available
@@ -204,7 +204,7 @@ int32_t sha512_core_soft(sha512_ctx_t *const ctx, const uint8_t *const data,
              data_index + SHA512_BYTE_BLOCKSIZE - 1 < data_byte_len;
              data_index += SHA512_BYTE_BLOCKSIZE)
         {
-            sha512_block_soft(ctx, &data[data_index]);
+            soft_sha512_block(ctx, &data[data_index]);
         }
     }
     // copying the remaining 'data' bytes to the block buffer
@@ -214,7 +214,7 @@ int32_t sha512_core_soft(sha512_ctx_t *const ctx, const uint8_t *const data,
     return (SCL_OK);
 }
 
-int32_t sha512_finish_soft(sha512_ctx_t *const ctx, uint8_t *const hash,
+int32_t soft_sha512_finish(sha512_ctx_t *const ctx, uint8_t *const hash,
                            size_t *hash_len)
 {
     size_t block_buffer_index;
@@ -251,10 +251,10 @@ int32_t sha512_finish_soft(sha512_ctx_t *const ctx, uint8_t *const hash,
     {
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
         block_buffer_index += block_remain - SHA512_BYTE_SIZE_BLOCKSIZE;
-        sha512_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+        soft_sha512_append_bit_len(&ctx->block_buffer[block_buffer_index],
                                    &ctx->bitlen);
         // this block is now complete,so it can be processed
-        sha512_block_soft(ctx, ctx->block_buffer);
+        soft_sha512_block(ctx, ctx->block_buffer);
     }
     else
     {
@@ -265,15 +265,15 @@ int32_t sha512_finish_soft(sha512_ctx_t *const ctx, uint8_t *const hash,
         block_buffer_index = 0;
         block_remain = SHA512_BYTE_BLOCKSIZE;
         // this block is now complete,so it can be processed
-        sha512_block_soft(ctx, ctx->block_buffer);
+        soft_sha512_block(ctx, ctx->block_buffer);
 
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
 
         block_buffer_index += block_remain - SHA512_BYTE_SIZE_BLOCKSIZE;
-        sha512_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+        soft_sha512_append_bit_len(&ctx->block_buffer[block_buffer_index],
                                    &ctx->bitlen);
         // this block is now complete,so it can be processed
-        sha512_block_soft(ctx, ctx->block_buffer);
+        soft_sha512_block(ctx, ctx->block_buffer);
     }
 
     // retrieving the hash result
@@ -283,7 +283,7 @@ int32_t sha512_finish_soft(sha512_ctx_t *const ctx, uint8_t *const hash,
     return (SCL_OK);
 }
 
-void sha512_append_bit_len_soft(uint8_t *const buffer, uint64_t *const length)
+void soft_sha512_append_bit_len(uint8_t *const buffer, uint64_t *const length)
 {
     size_t i;
     uint8_t *p_length = (uint8_t *)length;

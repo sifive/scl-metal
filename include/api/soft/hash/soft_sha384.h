@@ -39,14 +39,14 @@
 #include <api/defs.h>
 #include <api/hash/sha384.h>
 
-CRYPTO_FUNCTION int32_t sha384_init_soft(sha384_ctx_t *const ctx,
+CRYPTO_FUNCTION int32_t soft_sha384_init(sha384_ctx_t *const ctx,
                                          endianness_t data_endianness);
 
-CRYPTO_FUNCTION int32_t sha384_core_soft(sha384_ctx_t *const ctx,
+CRYPTO_FUNCTION int32_t soft_sha384_core(sha384_ctx_t *const ctx,
                                          const uint8_t *const data,
                                          size_t data_byte_len);
 
-CRYPTO_FUNCTION int32_t sha384_finish_soft(sha384_ctx_t *const ctx,
+CRYPTO_FUNCTION int32_t soft_sha384_finish(sha384_ctx_t *const ctx,
                                            uint8_t *const hash,
                                            size_t *const hash_len);
 

@@ -48,7 +48,7 @@ static const uint64_t h_init[SHA512_BYTE_HASHSIZE] = {
     0x152FECD8F70E5939ULL, 0x67332667FFC00B31ULL, 0x8EB44A8768581511ULL,
     0xDB0C2E0D64F98FA7ULL, 0x47B5481DBEFA4FA4ULL};
 
-int32_t sha384_init_soft(sha384_ctx_t *const ctx, endianness_t data_endianness)
+int32_t soft_sha384_init(sha384_ctx_t *const ctx, endianness_t data_endianness)
 {
     size_t i = 0;
 
@@ -73,13 +73,13 @@ int32_t sha384_init_soft(sha384_ctx_t *const ctx, endianness_t data_endianness)
     return (SCL_OK);
 }
 
-int32_t sha384_core_soft(sha384_ctx_t *const ctx, const uint8_t *const data,
+int32_t soft_sha384_core(sha384_ctx_t *const ctx, const uint8_t *const data,
                          size_t data_byte_len)
 {
-    return (sha512_core_soft(ctx, data, data_byte_len));
+    return (soft_sha512_core(ctx, data, data_byte_len));
 }
 
-int32_t sha384_finish_soft(sha384_ctx_t *const ctx, uint8_t *const hash,
+int32_t soft_sha384_finish(sha384_ctx_t *const ctx, uint8_t *const hash,
                            size_t *const hash_len)
 {
     size_t block_buffer_index;
@@ -116,10 +116,10 @@ int32_t sha384_finish_soft(sha384_ctx_t *const ctx, uint8_t *const hash,
     {
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
         block_buffer_index += block_remain - SHA512_BYTE_SIZE_BLOCKSIZE;
-        sha512_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+        soft_sha512_append_bit_len(&ctx->block_buffer[block_buffer_index],
                                    &ctx->bitlen);
         // this block is now complete,so it can be processed
-        sha512_block_soft(ctx, ctx->block_buffer);
+        soft_sha512_block(ctx, ctx->block_buffer);
     }
     else
     {
@@ -130,15 +130,15 @@ int32_t sha384_finish_soft(sha384_ctx_t *const ctx, uint8_t *const hash,
         block_buffer_index = 0;
         block_remain = SHA512_BYTE_BLOCKSIZE;
         // this block is now complete,so it can be processed
-        sha512_block_soft(ctx, ctx->block_buffer);
+        soft_sha512_block(ctx, ctx->block_buffer);
 
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
 
         block_buffer_index += block_remain - SHA512_BYTE_SIZE_BLOCKSIZE;
-        sha512_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+        soft_sha512_append_bit_len(&ctx->block_buffer[block_buffer_index],
                                    &ctx->bitlen);
         // this block is now complete,so it can be processed
-        sha512_block_soft(ctx, ctx->block_buffer);
+        soft_sha512_block(ctx, ctx->block_buffer);
     }
 
     // retrieving the hash result

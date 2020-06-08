@@ -39,21 +39,21 @@
 #include <api/defs.h>
 #include <api/hash/sha256.h>
 
-CRYPTO_FUNCTION int32_t sha256_block_soft(sha256_ctx_t *const ctx,
+CRYPTO_FUNCTION int32_t soft_sha256_block(sha256_ctx_t *const ctx,
                                           const uint8_t *const words);
 
-CRYPTO_FUNCTION int32_t sha256_init_soft(sha256_ctx_t *const ctx,
+CRYPTO_FUNCTION int32_t soft_sha256_init(sha256_ctx_t *const ctx,
                                          endianness_t data_endianness);
 
-CRYPTO_FUNCTION int32_t sha256_core_soft(sha256_ctx_t *const ctx,
+CRYPTO_FUNCTION int32_t soft_sha256_core(sha256_ctx_t *const ctx,
                                          const uint8_t *const data,
                                          size_t data_byte_len);
 
-CRYPTO_FUNCTION int32_t sha256_finish_soft(sha256_ctx_t *const ctx,
+CRYPTO_FUNCTION int32_t soft_sha256_finish(sha256_ctx_t *const ctx,
                                            uint8_t *const hash,
                                            size_t *hash_len);
 
-CRYPTO_FUNCTION void sha256_append_bit_len_soft(uint8_t *const buffer,
+CRYPTO_FUNCTION void soft_sha256_append_bit_len(uint8_t *const buffer,
                                                 uint64_t *const length);
 
 #endif /* _SOFT_SHA256_H */

@@ -42,7 +42,7 @@
 #include <api/soft/hash/soft_sha384.h>
 #include <api/soft/hash/soft_sha512.h>
 
-int32_t sha_init_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t soft_sha_init(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                       hash_mode_t hash_mode, endianness_t data_endianness)
 {
     (void)scl;
@@ -57,16 +57,16 @@ int32_t sha_init_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     switch (ctx->mode)
     {
     case SCL_HASH_SHA224:
-        return (sha224_init_soft(&(ctx->ctx.sha224), data_endianness));
+        return (soft_sha224_init(&(ctx->ctx.sha224), data_endianness));
         break;
     case SCL_HASH_SHA256:
-        return (sha256_init_soft(&(ctx->ctx.sha256), data_endianness));
+        return (soft_sha256_init(&(ctx->ctx.sha256), data_endianness));
         break;
     case SCL_HASH_SHA384:
-        return (sha384_init_soft(&(ctx->ctx.sha384), data_endianness));
+        return (soft_sha384_init(&(ctx->ctx.sha384), data_endianness));
         break;
     case SCL_HASH_SHA512:
-        return (sha512_init_soft(&(ctx->ctx.sha512), data_endianness));
+        return (soft_sha512_init(&(ctx->ctx.sha512), data_endianness));
         break;
     default:
         return (SCL_ERROR);
@@ -77,7 +77,7 @@ int32_t sha_init_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_ERROR);
 }
 
-int32_t sha_core_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t soft_sha_core(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                       const uint8_t *const data, size_t data_byte_len)
 {
     (void)scl;
@@ -90,16 +90,16 @@ int32_t sha_core_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     switch (ctx->mode)
     {
     case SCL_HASH_SHA224:
-        return (sha224_core_soft(&(ctx->ctx.sha224), data, data_byte_len));
+        return (soft_sha224_core(&(ctx->ctx.sha224), data, data_byte_len));
         break;
     case SCL_HASH_SHA256:
-        return (sha256_core_soft(&(ctx->ctx.sha256), data, data_byte_len));
+        return (soft_sha256_core(&(ctx->ctx.sha256), data, data_byte_len));
         break;
     case SCL_HASH_SHA384:
-        return (sha384_core_soft(&(ctx->ctx.sha384), data, data_byte_len));
+        return (soft_sha384_core(&(ctx->ctx.sha384), data, data_byte_len));
         break;
     case SCL_HASH_SHA512:
-        return (sha512_core_soft(&(ctx->ctx.sha512), data, data_byte_len));
+        return (soft_sha512_core(&(ctx->ctx.sha512), data, data_byte_len));
         break;
     default:
         return (SCL_ERROR);
@@ -110,7 +110,7 @@ int32_t sha_core_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_ERROR);
 }
 
-int32_t sha_finish_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+int32_t soft_sha_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                         uint8_t *const hash, size_t *const hash_len)
 {
     (void)scl;
@@ -123,16 +123,16 @@ int32_t sha_finish_soft(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     switch (ctx->mode)
     {
     case SCL_HASH_SHA224:
-        return (sha224_finish_soft(&(ctx->ctx.sha224), hash, hash_len));
+        return (soft_sha224_finish(&(ctx->ctx.sha224), hash, hash_len));
         break;
     case SCL_HASH_SHA256:
-        return (sha256_finish_soft(&(ctx->ctx.sha256), hash, hash_len));
+        return (soft_sha256_finish(&(ctx->ctx.sha256), hash, hash_len));
         break;
     case SCL_HASH_SHA384:
-        return (sha384_finish_soft(&(ctx->ctx.sha384), hash, hash_len));
+        return (soft_sha384_finish(&(ctx->ctx.sha384), hash, hash_len));
         break;
     case SCL_HASH_SHA512:
-        return (sha512_finish_soft(&(ctx->ctx.sha512), hash, hash_len));
+        return (soft_sha512_finish(&(ctx->ctx.sha512), hash, hash_len));
         break;
     default:
         return (SCL_ERROR);

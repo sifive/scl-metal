@@ -66,7 +66,7 @@ static const uint32_t h_init[SHA256_SIZE_WORDS] = {
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19};
 
-int32_t sha256_block_soft(sha256_ctx_t *const ctx, const uint8_t *const words)
+int32_t soft_sha256_block(sha256_ctx_t *const ctx, const uint8_t *const words)
 {
     size_t i;
     uint32_t w[SHA256_ROUNDS_NUMBER];
@@ -122,7 +122,7 @@ int32_t sha256_block_soft(sha256_ctx_t *const ctx, const uint8_t *const words)
     return (SCL_OK);
 }
 
-int32_t sha256_init_soft(sha256_ctx_t *const ctx, endianness_t data_endianness)
+int32_t soft_sha256_init(sha256_ctx_t *const ctx, endianness_t data_endianness)
 {
     size_t i = 0;
 
@@ -147,7 +147,7 @@ int32_t sha256_init_soft(sha256_ctx_t *const ctx, endianness_t data_endianness)
     return (SCL_OK);
 }
 
-int32_t sha256_core_soft(sha256_ctx_t *const ctx, const uint8_t *const data,
+int32_t soft_sha256_core(sha256_ctx_t *const ctx, const uint8_t *const data,
                          size_t data_byte_len)
 {
     size_t block_buffer_index;
@@ -176,7 +176,7 @@ int32_t sha256_core_soft(sha256_ctx_t *const ctx, const uint8_t *const data,
         memcpy(&ctx->block_buffer[block_buffer_index], data, block_remain);
 
         // this block is now complete,so it can be processed
-        sha256_block_soft(ctx, ctx->block_buffer);
+        soft_sha256_block(ctx, ctx->block_buffer);
         // block has been fully processed,so block buffer is empty
         block_buffer_index = 0;
         // processing full blocks as long as data are available
@@ -184,7 +184,7 @@ int32_t sha256_core_soft(sha256_ctx_t *const ctx, const uint8_t *const data,
              data_index + SHA256_BYTE_BLOCKSIZE - 1 < data_byte_len;
              data_index += SHA256_BYTE_BLOCKSIZE)
         {
-            sha256_block_soft(ctx, &data[data_index]);
+            soft_sha256_block(ctx, &data[data_index]);
         }
     }
     // copying the remaining 'data' bytes to the block buffer
@@ -194,7 +194,7 @@ int32_t sha256_core_soft(sha256_ctx_t *const ctx, const uint8_t *const data,
     return (SCL_OK);
 }
 
-int32_t sha256_finish_soft(sha256_ctx_t *const ctx, uint8_t *const hash,
+int32_t soft_sha256_finish(sha256_ctx_t *const ctx, uint8_t *const hash,
                            size_t *const hash_len)
 {
     size_t block_buffer_index;
@@ -231,10 +231,10 @@ int32_t sha256_finish_soft(sha256_ctx_t *const ctx, uint8_t *const hash,
     {
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
         block_buffer_index += block_remain - SHA256_BYTE_SIZE_BLOCKSIZE;
-        sha256_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+        soft_sha256_append_bit_len(&ctx->block_buffer[block_buffer_index],
                                    &ctx->bitlen);
         // this block is now complete,so it can be processed
-        sha256_block_soft(ctx, ctx->block_buffer);
+        soft_sha256_block(ctx, ctx->block_buffer);
     }
     else
     {
@@ -245,15 +245,15 @@ int32_t sha256_finish_soft(sha256_ctx_t *const ctx, uint8_t *const hash,
         block_buffer_index = 0;
         block_remain = SHA256_BYTE_BLOCKSIZE;
         // this block is now complete,so it can be processed
-        sha256_block_soft(ctx, ctx->block_buffer);
+        soft_sha256_block(ctx, ctx->block_buffer);
 
         memset(&ctx->block_buffer[block_buffer_index], 0, block_remain);
 
         block_buffer_index += block_remain - SHA256_BYTE_SIZE_BLOCKSIZE;
-        sha256_append_bit_len_soft(&ctx->block_buffer[block_buffer_index],
+        soft_sha256_append_bit_len(&ctx->block_buffer[block_buffer_index],
                                    &ctx->bitlen);
         // this block is now complete,so it can be processed
-        sha256_block_soft(ctx, ctx->block_buffer);
+        soft_sha256_block(ctx, ctx->block_buffer);
     }
 
     // retrieving the hash result
@@ -263,7 +263,7 @@ int32_t sha256_finish_soft(sha256_ctx_t *const ctx, uint8_t *const hash,
     return (SCL_OK);
 }
 
-void sha256_append_bit_len_soft(uint8_t *const buffer, uint64_t *const length)
+void soft_sha256_append_bit_len(uint8_t *const buffer, uint64_t *const length)
 {
     size_t i;
     uint8_t *p_length = (uint8_t *)length;
