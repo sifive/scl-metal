@@ -3,8 +3,13 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * Copyright 2020 SiFive, Inc
- * SPDX-License-Identifier: MIT
+ * @file scl_aes_ecb.c
+ * @brief ECB mode for the AES.
+ * AES is NIST FIPS-197, ECB follow NIST SP800-38A
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), 
@@ -24,13 +29,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
-
-/*
- * file: scl_aes_ecb.h
- * 
- * ECB mode for the AES
- * AES is NIST FIPS-197, ECB follow NIST SP800-38A
- */
 
 #include <scl_cfg.h>
 

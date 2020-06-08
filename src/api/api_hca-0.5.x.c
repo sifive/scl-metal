@@ -3,8 +3,12 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * Copyright 2020 SiFive, Inc
- * SPDX-License-Identifier: MIT
+ * @file api_hca-0.5.x.c
+ * @brief 
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),

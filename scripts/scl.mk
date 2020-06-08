@@ -1,6 +1,6 @@
 #
-# Copyright 2019 SiFive, Inc #
-# SPDX-License-Identifier: Apache-2.0 #
+# Copyright 2020 SiFive, Inc #
+# SPDX-License-Identifier: MIT #
 #
 
 ifeq ($(SCL_DIR),)

@@ -3,8 +3,13 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * Copyright 2020 SiFive, Inc
- * SPDX-License-Identifier: MIT
+ * @file scl_retdefs.h
+ * @brief defines the values returned by the functions: that's mainly error 
+ * codes
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -25,8 +30,6 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-// scl_retdefs.h
-// defines the values returned by the functions: that's mainly error codes
 #ifndef SCL_RETDEFS_H
 #define SCL_RETDEFS_H
 
