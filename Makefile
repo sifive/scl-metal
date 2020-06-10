@@ -12,8 +12,7 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/api/software \
 		$(SOURCE_DIR)/api/software/hash \
 		$(SOURCE_DIR)/api/hardware 
-
-HCA_VERSION ?= 0.5
+		
 # the version management will be improved, this is just a draft to test
 # compilation of the version specific files
 ifeq ($(HCA_VERSION),0.5)
