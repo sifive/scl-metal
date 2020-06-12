@@ -42,16 +42,47 @@
 
 #include <scl/scl_retdefs.h>
 
+/**
+ * @brief Init software sha context
+ * 
+ * @param[in] scl               metal scl context (not used in case of soft sha)
+ * @param[out] ctx              sha context
+ * @param[in] hash_mode         hash mode
+ * @param[in] data_endianness   endianess of the input data
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise
+ * @warning only SCL_BIG_ENDIAN_MODE is supported
+ */
 CRYPTO_FUNCTION int32_t soft_sha_init(const metal_scl_t *const scl,
                                       sha_ctx_t *const ctx,
                                       hash_mode_t hash_mode,
                                       endianness_t data_endianness);
 
+/**
+ * @brief Compute intermediate hash value of the bloc in parameter
+ * 
+ * @param[in] scl               metal scl context (not used in case of soft sha)
+ * @param[in,out] ctx           sha context
+ * @param[in] data              data to hash
+ * @param[in] data_byte_len     data lengtth to hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise
+ */
 CRYPTO_FUNCTION int32_t soft_sha_core(const metal_scl_t *const scl,
                                       sha_ctx_t *const ctx,
                                       const uint8_t *const data,
                                       size_t data_byte_len);
 
+/**
+ * @brief Compute final hash value of the concatenated bloc pass to
+ * soft_sha_core()
+ * 
+ * @param[in] scl               metal scl context (not used in case of soft sha)
+ * @param[in] ctx               sha context
+ * @param[out] hash             hash output buffer
+ * @param[in,out] hash_len      length of the hash buffer/length of the hash
+ * @return CRYPTO_FUNCTION soft_sha_finish 
+ */
 CRYPTO_FUNCTION int32_t soft_sha_finish(const metal_scl_t *const scl,
                                         sha_ctx_t *const ctx,
                                         uint8_t *const hash,

@@ -103,6 +103,10 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c err
 check-format:
 	clang-format -i $(SOURCES) $(INCLUDES)
 
+.PHONY : generate-doxygen
+generate-doxygen:
+	(cat Doxyfile; echo "INPUT = $(SOURCE_DIRS) $(INCLUDE_DIRS)") | doxygen - 
+
 .PHONY: err
 err: 
 	$(ERR)

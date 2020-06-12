@@ -4,9 +4,7 @@
  *
  ******************************************************************************
  * @file soft_sha384.c
- * @brief
- * @version 0.1
- * @date 2020-06-02
+ * @brief software sha384 implementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT

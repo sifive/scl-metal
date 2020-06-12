@@ -4,10 +4,7 @@
  *
  ******************************************************************************
  * @file soft_sha.c
- * @author Pierre-Henry Moussay (pierre-henry.moussay@sifive.com)
- * @brief
- * @version 0.1
- * @date 2020-05-28
+ * @brief software sha implementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
