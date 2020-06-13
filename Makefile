@@ -56,6 +56,12 @@ override INCLUDES := $(foreach dir,$(INCLUDE_DIRS),$(wildcard $(dir)/*.h))
 override OBJS := $(subst $(SOURCE_DIR),$(BUILD_DIR),$(SOURCES:.c=.o))
 
 ################################################################################
+#                        	DOCUMENTATION
+################################################################################
+
+override DOCS_DIR = $(CURRENT_DIR)/docs
+
+################################################################################
 #                        COMPILATION FLAGS
 ################################################################################
 
@@ -105,7 +111,8 @@ check-format:
 
 .PHONY : generate-doxygen
 generate-doxygen:
-	(cat Doxyfile; echo "INPUT = $(SOURCE_DIRS) $(INCLUDE_DIRS)") | doxygen - 
+	$(HIDE) mkdir -p $(DOCS_DIR)/doxygen_build
+	$(HIDE) (cat $(DOCS_DIR)/Doxyfile; echo "INPUT = $(SOURCE_DIRS) $(INCLUDE_DIRS)") | doxygen - 
 
 .PHONY: err
 err: 
