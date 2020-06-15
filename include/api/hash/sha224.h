@@ -37,8 +37,14 @@
 
 #include <api/hash/sha256.h>
 
+/*! @brief Size of SHA224 in bytes */
 #define SHA224_BYTE_HASHSIZE 28
 
+/**
+ * @brief SHA224 context
+ * @note Since SHA224 use SHA256 block computation, it can also use the same
+ * context
+ */
 typedef sha256_ctx_t sha224_ctx_t;
 
 #endif /* _SHA224_H */

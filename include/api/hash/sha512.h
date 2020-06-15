@@ -35,23 +35,27 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/*! @brief SHA512 block size */
 #define SHA512_BYTE_BLOCKSIZE 128
+/*! @brief Size of SHA512 in bytes */
 #define SHA512_BYTE_HASHSIZE 64
+/*! @brief number of rounds per SHA512 block computation */
 #define SHA512_ROUNDS_NUMBER 80
-/* number of words (64 bits) in hash */
+/*! @brief number of words (64 bits) in hash */
 #define SHA512_SIZE_WORDS 8
-/** number of word (64 bits) in one block */
+/*! @brief number of word (64 bits) in one block */
 #define SHA512_BLOCK_WORDS 16
-/* the nb of bytes for storing the size in the last block */
+/*! @brief The nb of bytes for storing the size in the last block */
 #define SHA512_BYTE_SIZE_BLOCKSIZE 16
 
+/*! @brief SHA 256 context */
 typedef struct
 {
-    // Initial, intermediate and then final hash.
+    /*! @brief Initial, intermediate and then final hash. */
     uint64_t h[SHA512_SIZE_WORDS];
-    // bit len
+    /*! @brief bit len */
     uint64_t bitlen;
-    // block buffer
+    /*! @brief  block buffer */
     uint8_t block_buffer[SHA512_BYTE_BLOCKSIZE] __attribute__((aligned(8)));
 } sha512_ctx_t;
 

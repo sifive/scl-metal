@@ -34,9 +34,18 @@
 #ifndef _DEFS_H
 #define _DEFS_H
 
+/**
+ * @brief endianess supported by the scl library
+ * @note On classic cryptographic data representation, data are big endian words
+ * for exemple a 128 bits AES key is a usually considered as a big number big
+ * endian 128 bits word.
+ * @warning The only mode supported by the software implementation is Big Endian
+ */
 typedef enum
 {
+    /*! @brief little endian words */
     SCL_LITTLE_ENDIAN_MODE = 0,
+    /*! @brief big endian words */
     SCL_BIG_ENDIAN_MODE = 1
 } endianness_t;
 

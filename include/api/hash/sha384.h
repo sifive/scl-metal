@@ -39,6 +39,11 @@
 
 #define SHA384_BYTE_HASHSIZE 48
 
+/**
+ * @brief SHA384 context
+ * @note Since SHA384 use SHA512 block computation, it can also use the same
+ * context
+ */
 typedef sha512_ctx_t sha384_ctx_t;
 
 #endif /* _SHA384_H */

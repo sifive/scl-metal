@@ -35,25 +35,28 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/*! @brief SHA256 block size */
 #define SHA256_BYTE_BLOCKSIZE 64
+/*! @brief Size of SHA256 in bytes */
 #define SHA256_BYTE_HASHSIZE 32
+/*! @brief number of rounds per SHA256 block computation */
 #define SHA256_ROUNDS_NUMBER 64
-/* number of words (32 bits) in hash */
+/*! @brief number of words (32 bits) in hash */
 #define SHA256_SIZE_WORDS 8
-/** number of word in one block */
+/*! @brief number of word in one block */
 #define SHA256_BLOCK_WORDS 16
-/* the nb of bytes for storing the size in the last block */
+/*! @brief the nb of bytes for storing the size in the last block */
 #define SHA256_BYTE_SIZE_BLOCKSIZE 8
 
+/*! @brief SHA 256 context */
 typedef struct
 {
-    // intermediate state and then final hash
+    /*! @brief intermediate state and then final hash */
     uint32_t h[SHA256_SIZE_WORDS];
-    // bits length
+    /*! @brief total bits length computed */
     uint64_t bitlen;
-    // block buffer
+    /*! @brief block buffer */
     uint8_t block_buffer[SHA256_BYTE_BLOCKSIZE] __attribute__((aligned(4)));
-
 } sha256_ctx_t;
 
 #endif /* _SHA256_H */
