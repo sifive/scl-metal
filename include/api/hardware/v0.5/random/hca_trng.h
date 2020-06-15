@@ -3,12 +3,12 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_init.c
- * @brief 
- *  
+ * @file hca_trng.h
+ * @brief hardware aes implementation/wrapper
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -29,50 +29,21 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+#ifndef _HCA_TRNG_H
+#define _HCA_TRNG_H
+
+#include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 
+#include <crypto_cfg.h>
+
+#include <api/defs.h>
 #include <api/scl_api.h>
-#include <scl_cfg.h>
 
-#include <scl/scl_init.h>
+#include <scl/scl_retdefs.h>
 
-#define UINT32(data)                                                           \
-    ((*(data + 3) << 24) + (*(data + 2) << 16) + (*(data + 1) << 8) + (*(data)))
-#define UINT64(data)                                                           \
-    (((uint64_t)UINT32(data + 4) << 32) + (uint64_t)UINT32(data))
+CRYPTO_FUNCTION int32_t hca_trng_init(const metal_scl_t *const scl);
 
-SCL_DATA metal_scl_t *scl_ctx = NULL;
+CRYPTO_FUNCTION int32_t hca_trng_getdata(const metal_scl_t *const scl, uint32_t *data_out);
 
-int scl_format_key(uint8_t *key, int key_byte_len,
-                                uint64_t *key_formated)
-{
-    if (NULL == key)
-    {
-        return SCL_INVALID_INPUT;
-    }
-    if ((SCL_KEY128 != key_byte_len) && (SCL_KEY192 != key_byte_len) &&
-        (SCL_KEY256 != key_byte_len))
-    {
-        return SCL_INVALID_INPUT;
-    }
-
-    if (SCL_KEY256 == key_byte_len)
-    {
-        key_formated[4] = UINT64(&key[24]);
-    }
-    else
-    {
-        key_formated[4] = 0;
-    }
-    if (SCL_KEY192 >= key_byte_len)
-    {
-        key_formated[3] = UINT64(&key[16]);
-    }
-    else
-    {
-        key_formated[3] = 0;
-    }
-    key_formated[1] = UINT64(&key[8]);
-    key_formated[0] = UINT64(&key[0]);
-}
+#endif /* _HCA_TRNG_H */

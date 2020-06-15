@@ -3,9 +3,9 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_retdefs.h
- * @brief defines the values returned by the functions: that's mainly error 
- * codes
+ * @file scl_aes.h
+ * @brief defines the AES.
+ * AES is NIST FIPS-197
  * 
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -30,29 +30,29 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef SCL_RETDEFS_H
-#define SCL_RETDEFS_H
+#ifndef _SCL_AES_H
+#define _SCL_AES_H
 
-#define SCL_TRUE 1
-#define SCL_FALSE 0
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
-#define SCL_OK 0
-#define SCL_ERROR -1
-#define SCL_INVALID_INPUT -2
-#define SCL_INVALID_OUTPUT -3
-#define SCL_INVALID_MODE -4
-#define SCL_INVALID_LENGTH -5
-#define SCL_STACK_OVERFLOW -6
-#define SCL_STACK_NOT_INITIALIZED -7
-#define SCL_STACK_ALREADY_INITIALIZED -8
-#define SCL_ALREADY_INITIALIZED -9
-#define SCL_STACK_INIT_ERROR -10
-#define SCL_STACK_FREE_ERROR -11
-#define SCL_STACK_ERROR -12
-#define SCL_RNG_ERROR -13
-#define SCL_RESEED_REQUIRED -14
-#define SCL_IGNORED -15
-#define SCL_NOT_PRESENT -30
-#define SCL_NOT_YET_SUPPORTED -31
+#include <stddef.h>
+#include <stdint.h>
 
-#endif // _SCL_RETDEFS_H
+#include <scl_cfg.h>
+
+#include <scl/scl_defs.h>
+#include <scl/scl_retdefs.h>
+
+#include <api/blockcipher/aes/aes.h>
+#include <api/scl_api.h>
+
+    SCL_FUNCTION int32_t scl_aes(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src, uint8_t *key, int key_byte_len, scl_process_t mode);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif /* _SCL_AES_H */

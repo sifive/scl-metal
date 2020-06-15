@@ -39,14 +39,12 @@
 #ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
-    int scl_aes_ecb(uint8_t *dst, uint8_t *src, int src_byte_len, uint8_t *key,
-                    int key_byte_len, int mode);
-    int scl_aes_ecb_init(uint8_t *key, int key_byte_len, int mode);
-    int scl_aes_ecb_core(uint8_t *dst, uint8_t *src, int src_byte_len,
-                         int mode);
-    int scl_aes_ecb_finish(void);
+#endif /* __cplusplus */
+    SCL_FUNCTION int32_t scl_aes_ecb_init(const metal_scl_t *const scl_ctx, uint8_t *key, int key_byte_len, int mode);
+    SCL_FUNCTION int32_t scl_aes_ecb_core(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src, int src_byte_len, scl_process_t mode);
+    SCL_FUNCTION int32_t scl_aes_ecb(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src, int src_byte_len, uint8_t *key,
+                int key_byte_len, scl_process_t mode);
 #ifdef __cplusplus
 }
-#endif // __cplusplus
-#endif //_SCL_AES_ECB_H
+#endif /* __cplusplus */
+#endif /* _SCL_AES_ECB_H */
