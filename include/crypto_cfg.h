@@ -5,10 +5,10 @@
  ******************************************************************************
  * @file crypto_cfg.h
  * @brief define default section for crypto function and crypto data
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),

@@ -6,10 +6,10 @@
  * @file scl_aes_ecb.c
  * @brief ECB mode for the AES.
  * AES is NIST FIPS-197, ECB follow NIST SP800-38A
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
