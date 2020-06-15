@@ -42,16 +42,47 @@
 
 #include <scl/scl_retdefs.h>
 
+/**
+ * @brief Init hardware sha context
+ *
+ * @param[in] scl               metal scl context
+ * @param[out] ctx              sha context
+ * @param[in] hash_mode         hash mode
+ * @param[in] data_endianness   endianess of the input data
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t hca_sha_init(const metal_scl_t *const scl,
                                      sha_ctx_t *const ctx,
                                      hash_mode_t hash_mode,
                                      endianness_t data_endianness);
 
+/**
+ * @brief Compute intermediate hash value of the chunk of data in parameter
+ *
+ * @param[in] scl               metal scl context
+ * @param[in,out] ctx           sha context
+ * @param[in] data              data to hash
+ * @param[in] data_byte_len     data length to hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t hca_sha_core(const metal_scl_t *const scl,
                                      sha_ctx_t *const ctx,
                                      const uint8_t *const data,
                                      size_t data_byte_len);
 
+/**
+ * @brief Compute final hash value of the concatenated block pass to
+ * hca_sha_core()
+ *
+ * @param[in] scl               metal scl context
+ * @param[in] ctx               sha context
+ * @param[out] hash             hash output buffer
+ * @param[in,out] hash_len      length of the hash buffer/length of the hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t hca_sha_finish(const metal_scl_t *const scl,
                                        sha_ctx_t *const ctx,
                                        uint8_t *const hash,

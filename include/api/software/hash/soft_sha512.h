@@ -40,20 +40,62 @@
 #include <api/hash/sha.h>
 #include <api/hash/sha512.h>
 
+/**
+ * @brief Compute one SHA512 bock
+ *
+ * @param[in] ctx               sha512 context
+ * @param[in] words             128 bytes block to be treated
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha512_block(sha512_ctx_t *const ctx,
                                           const uint8_t *const words);
 
+/**
+ * @brief Init software sha512 context
+ *
+ * @param[out] ctx              sha512 context
+ * @param[in] data_endianness   endianess of the input data
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ * @warning only SCL_BIG_ENDIAN_MODE is supported
+ */
 CRYPTO_FUNCTION int32_t soft_sha512_init(sha512_ctx_t *const ctx,
                                          endianness_t data_endianness);
 
+/**
+ * @brief Compute intermediate sha512 value of the chunk of data in parameter
+ *
+ * @param[in,out] ctx           sha512 context
+ * @param[in] data              data to hash
+ * @param[in] data_byte_len     data lengtth to hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha512_core(sha512_ctx_t *const ctx,
                                          const uint8_t *const data,
                                          size_t data_byte_len);
 
+/**
+ * @brief Compute final hash value of the concatenated block pass to
+ * soft_sha512_core()
+ *
+ * @param[in] ctx               sha512 context
+ * @param[out] hash             hash output buffer
+ * @param[in,out] hash_len      length of the hash buffer/length of the hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha512_finish(sha512_ctx_t *const ctx,
                                            uint8_t *const hash,
                                            size_t *const hash_len);
 
+/**
+ * @brief append 128 bits bit length to a block buffer to complete padding
+ *
+ * @param buffer    pointer on block buffer last 128 bits
+ * @param length    pointer on bit length to copy on the block's 128 last bits
+ */
 CRYPTO_FUNCTION void soft_sha512_append_bit_len(uint8_t *const buffer,
                                                 uint64_t *const length);
 

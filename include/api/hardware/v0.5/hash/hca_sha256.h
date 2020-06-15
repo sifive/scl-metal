@@ -39,21 +39,58 @@
 #include <api/defs.h>
 #include <api/hash/sha256.h>
 
+/**
+ * @brief Compute intermediate sha224/sha256 value of the chunk of data in
+ * parameter
+ *
+ * @param[in] scl               metal scl context
+ * @param[in,out] ctx           sha context
+ * @param[in] data              data to hash
+ * @param[in] data_byte_len     data length to hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t hca_sha256_core(const metal_scl_t *const scl,
                                         sha_ctx_t *const ctx,
                                         const uint8_t *const data,
                                         size_t data_byte_len);
 
+/**
+ * @brief Compute final hash value of the concatenated block pass to
+ * hca_sha256_core()
+ *
+ * @param[in] scl               metal scl context
+ * @param[in] ctx               sha context
+ * @param[out] hash             hash output buffer
+ * @param[in,out] hash_len      length of the hash buffer/length of the hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t hca_sha256_finish(const metal_scl_t *const scl,
                                           sha_ctx_t *const ctx,
                                           uint8_t *const hash,
                                           size_t *hash_len);
 
+/**
+ * @brief append 64 bits bit length to a block buffer to complete padding
+ *
+ * @param buffer    pointer on block buffer last 64 bits
+ * @param length    pointer on bit length to copy on the block's 64 last bits
+ */
 CRYPTO_FUNCTION void hca_sha256_append_bit_len(uint8_t *const buffer,
                                                uint64_t *const length);
 
+/**
+ * @brief Read hash result from HCA output FIFO
+ *
+ * @param[in] scl               metal scl context
+ * @param[out] data_out         output buffer
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ * @warning data_out buffer should be long enough to contain SHA output
+ * (32 bytes)
+ */
 CRYPTO_FUNCTION int32_t hca_sha256_read(const metal_scl_t *const scl,
-                                        hash_mode_t hash_mode,
                                         uint8_t *const data_out);
 
 #endif /* _HCA_SHA256_H */

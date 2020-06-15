@@ -39,13 +39,41 @@
 #include <api/defs.h>
 #include <api/hash/sha224.h>
 
+/**
+ * @brief Init software sha224 context
+ *
+ * @param[out] ctx              sha224 context
+ * @param[in] data_endianness   endianess of the input data
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ * @warning only SCL_BIG_ENDIAN_MODE is supported
+ */
 CRYPTO_FUNCTION int32_t soft_sha224_init(sha224_ctx_t *const ctx,
                                          endianness_t data_endianness);
 
+/**
+ * @brief Compute intermediate sha224 value of the chunk of data in parameter
+ *
+ * @param[in,out] ctx           sha224 context
+ * @param[in] data              data to hash
+ * @param[in] data_byte_len     data lengtth to hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha224_core(sha224_ctx_t *const ctx,
                                          const uint8_t *const data,
                                          size_t data_byte_len);
 
+/**
+ * @brief Compute final hash value of the concatenated block pass to
+ * soft_sha224_core()
+ *
+ * @param[in] ctx               sha224 context
+ * @param[out] hash             hash output buffer
+ * @param[in,out] hash_len      length of the hash buffer/length of the hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha224_finish(sha224_ctx_t *const ctx,
                                            uint8_t *const hash,
                                            size_t *const hash_len);

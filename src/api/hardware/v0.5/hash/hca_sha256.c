@@ -189,7 +189,7 @@ int32_t hca_sha256_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     }
 
     // retrieving the hash result
-    result = hca_sha256_read(scl, ctx->mode, hash);
+    result = hca_sha256_read(scl, hash);
     if (SCL_OK != result)
     {
         return (result);
@@ -211,7 +211,7 @@ void hca_sha256_append_bit_len(uint8_t *const buffer, uint64_t *const length)
     }
 }
 
-int32_t hca_sha256_read(const metal_scl_t *const scl, hash_mode_t hash_mode,
+int32_t hca_sha256_read(const metal_scl_t *const scl,
                         uint8_t *const data_out)
 {
     uint64_t *out64 = (uint64_t *)data_out;
