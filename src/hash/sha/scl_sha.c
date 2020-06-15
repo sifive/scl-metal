@@ -105,9 +105,15 @@ int32_t scl_sha_finish(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ct
  */
 int32_t scl_valid_hash_digest_length(size_t inputlength)
 {
-    if (inputlength != SHA256_BYTE_HASHSIZE)
-        if (inputlength != SHA384_BYTE_HASHSIZE)
-            if (inputlength != SHA512_BYTE_HASHSIZE)
-                return (SCL_INVALID_INPUT);
-    return (SCL_OK);
+    switch (inputlength)
+    {
+    case SHA256_BYTE_HASHSIZE:
+    case SHA384_BYTE_HASHSIZE:
+    case SHA512_BYTE_HASHSIZE:
+        return (SCL_OK);
+    default:
+        return (SCL_INVALID_INPUT);
+    }
+
+    return (SCL_INVALID_INPUT);
 }
