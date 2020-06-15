@@ -37,14 +37,17 @@
 #include <machine/endian.h>
 
 #ifndef bswap16
+/*! @brief swap 16 bits words  */
 #define bswap16(x) __bswap16(x)
 #endif
 
 #ifndef bswap32
+/*! @brief swap 32 bits words  */
 #define bswap32(x) __bswap32(x)
 #endif
 
 #ifndef bswap64
+/*! @brief swap 64 bits words  */
 #define bswap64(x) __bswap64(x)
 #endif
 

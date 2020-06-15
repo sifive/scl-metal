@@ -42,9 +42,9 @@
 /**
  * @brief copy 8 bits array into unsigned 32 bits array (big endian)
  *
- * @param dest              destination buffer (uint32_t)
- * @param src               source buffer (uint8_t)
- * @param len               length to copy in byte
+ * @param[out] dest         destination buffer (uint32_t)
+ * @param[in] src           source buffer (uint8_t)
+ * @param[in] len           length to copy in byte
  * @return SCL_OK           In case of success
  * @return SCL_ERROR        In case of failure
  * @warning lenght to copy shall be a multiple of 4 bytes
@@ -55,9 +55,9 @@ CRYPTO_FUNCTION int32_t copy_u8_2_u32_be(uint32_t *const dest,
 /**
  * @brief copy 8 bits array into unsigned 64 bits array (big endian)
  *
- * @param dest              destination buffer (uint32_t)
- * @param src               source buffer (uint8_t)
- * @param len               length to copy in byte
+ * @param[out] dest         destination buffer (uint32_t)
+ * @param[in] src           source buffer (uint8_t)
+ * @param[in] len           length to copy in byte
  * @return SCL_OK           In case of success
  * @return SCL_ERROR        In case of failure
  * @warning lenght to copy shall be a multiple of 8 bytes
@@ -68,9 +68,9 @@ CRYPTO_FUNCTION int32_t copy_u8_2_u64_be(uint64_t *const dest,
 /**
  * @brief copy 8 bits array into unsigned 64 bits array (big endian)
  *
- * @param dest              destination buffer (uint8_t)
- * @param src               source buffer (uint32_t)
- * @param len               length to copy in byte
+ * @param[out] dest         destination buffer (uint8_t)
+ * @param[in] src           source buffer (uint32_t)
+ * @param[in] len           length to copy in byte
  * @return SCL_OK           In case of success
  * @return SCL_ERROR        In case of failure
  * @warning lenght to copy shall be a multiple of 4 bytes
@@ -81,9 +81,9 @@ CRYPTO_FUNCTION int32_t copy_u32_2_u8_be(uint8_t *const dest,
 /**
  * @brief copy 8 bits array into unsigned 64 bits array (big endian)
  *
- * @param dest              destination buffer (uint8_t)
- * @param src               source buffer (uint32_t)
- * @param len               length to copy in byte
+ * @param[out] dest         destination buffer (uint8_t)
+ * @param[in] src           source buffer (uint32_t)
+ * @param[in] len           length to copy in byte
  * @return SCL_OK           In case of success
  * @return SCL_ERROR        In case of failure
  * @warning lenght to copy shall be a multiple of 8 bytes
