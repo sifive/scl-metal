@@ -10,6 +10,7 @@ Welcome to scl-metal's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+    doxygen_files.rst
 
 
 Indices and tables
