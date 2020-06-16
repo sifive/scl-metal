@@ -112,7 +112,11 @@ check-format:
 .PHONY : generate-doxygen
 generate-doxygen:
 	$(HIDE) mkdir -p $(DOCS_DIR)/doxygen_build
-	$(HIDE) (cat $(DOCS_DIR)/Doxyfile; echo "INPUT = $(SOURCE_DIRS) $(INCLUDE_DIRS)") | doxygen - 
+	$(HIDE) (cat $(DOCS_DIR)/Doxyfile; echo "INPUT = $(INCLUDE_DIRS)") | doxygen - 
+
+.PHONY : clean-doxygen
+clean-doxygen:
+	rm -rf $(DOCS_DIR)/doxygen_build
 
 .PHONY: err
 err: 

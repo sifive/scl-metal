@@ -94,7 +94,7 @@ SCL_FUNCTION int32_t scl_sha_init(const metal_scl_t *const scl_ctx,
  * @param[in] scl_ctx           scl context
  * @param[in] ctx               SHA context
  * @param[in] data              data to hash
- * @param[in] data_byte_len     length in bytes of data to hash
+ * @param[in] data_len     length in bytes of data to hash
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @see scl_errors_t
  */
