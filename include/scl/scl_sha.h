@@ -33,14 +33,6 @@
 #ifndef _SCL_SHA_H
 #define _SCL_SHA_H
 
-<<<<<<< HEAD
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-=======
->>>>>>> 796b7f3... Add comments
 #include <stddef.h>
 #include <stdint.h>
 
