@@ -1,18 +1,15 @@
 # SCL - SiFive Cryptographic Library
-scl-metal provide a bridge between a high level of API for the cryptographic function and basic crypto operation, that could be a software implementation of cryptographic function or hardware implementation.
+scl-metal provides a bridge between a high level API for the cryptographic functions and basic crypto operations, that could be either a software or a hardware implementation of cryptographic functions 
 
-The current version, just implement the basic function operation connected to the HCA (Hardware Cryptographic Accelerator). It support AES (and AESMAC), SHA, TRNG.
+The current version implements the basic functions operations connected to the HCA (Hardware Cryptographic Accelerator). It supports the AES through the HCA-supported modes of operation, the SHA-2 and the TRNG.
 
-For AES it support 
+For AES it supports:
 
 - key size: 128, 192 and 256 bits
-- mode ECB, CBC, CFB, OFB and CTR
-- mode CCM and GCM for AESMAC
+- mode ECB, CBC, CFB, OFB, CTR, CCM and GCM
 
-For SHA it support
+For SHA-2, it supports:
 
 - SHA224, SHA256, SHA384 and SHA512
 
-
-
-Support hte HCA version 0.5.x
+Supports the HCA version 0.5.x
