@@ -49,10 +49,10 @@ typedef enum
 #define HCA_VERSION(a, b, c) (((a) << 16) + ((b) << 8) + (c))
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
-#include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 #include <api/hardware/v0.5/blockcipher/aes/hca_aes.h>
 #include <api/hardware/v0.5/hash/hca_sha.h>
 #include <api/hardware/v0.5/random/hca_trng.h>
+#include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 #endif /* METAL_SIFIVE_HCA_VERSION */
 
 #endif /*_SCL_HCA_H */

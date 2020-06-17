@@ -33,6 +33,10 @@
 #ifndef SCL_RETDEFS_H
 #define SCL_RETDEFS_H
 
+/** \addtogroup SCL_API
+ *  @{
+ */
+
 /*! @brief SCL library error codes */
 typedef enum
 {
@@ -73,5 +77,7 @@ typedef enum
     /*! @brief error functionnality not yet supported */
     SCL_NOT_YET_SUPPORTED = -31,
 } scl_errors_t;
+
+/** @}*/
 
 #endif // _SCL_RETDEFS_H

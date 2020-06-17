@@ -35,6 +35,10 @@
 #include <api/defs.h>
 #include <api/hash/sha.h>
 
+/** \addtogroup SCL_API
+ *  @{
+ */
+
 typedef endianness_t scl_endianness_t;
 
 // symmetric-crypto encryption mode
@@ -83,5 +87,7 @@ typedef enum
 } scl_aes_mode_t;
 
 typedef hash_mode_t scl_hash_mode_t;
+
+/** @}*/
 
 #endif //_SCL_DEFS_H

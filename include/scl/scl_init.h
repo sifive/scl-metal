@@ -42,9 +42,15 @@
 #include <api/scl_api.h>
 #include <scl_cfg.h>
 
+/** \addtogroup SCL_API
+ *  @{
+ */
+
 SCL_FUNCTION int scl_init(const metal_scl_t *const scl);
 
 SCL_FUNCTION int scl_format_key(uint8_t *key, int key_byte_len,
                                 uint64_t *key_formated);
+
+/** @}*/
 
 #endif /* _SCL_INIT_H */

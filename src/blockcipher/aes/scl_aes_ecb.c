@@ -117,8 +117,7 @@ int32_t scl_aes_ecb(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src
     {
         return (SCL_INVALID_MODE);
     }
-    if ((SCL_KEY128 != key_byte_len) &&
-        (SCL_KEY192 != key_byte_len) &&
+    if ((SCL_KEY128 != key_byte_len) && (SCL_KEY192 != key_byte_len) &&
         (SCL_KEY256 != key_byte_len))
     {
         return (SCL_INVALID_INPUT);

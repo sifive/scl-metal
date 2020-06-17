@@ -44,6 +44,10 @@
 #include <api/hash/sha.h>
 #include <api/scl_api.h>
 
+/** \addtogroup SCL_API
+ *  @{
+ */
+
 /**
  * @brief SCL SHA context definition
  * @see sha_ctx_t
@@ -62,7 +66,7 @@ typedef sha_ctx_t scl_sha_ctx_t;
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @see scl_errors_t
  */
-SCL_FUNCTION int32_t scl_sha(const metal_scl_t *const scl_ctx, 
+SCL_FUNCTION int32_t scl_sha(const metal_scl_t *const scl_ctx,
                              scl_hash_mode_t algo, const uint8_t *const data,
                              size_t data_byte_len, uint8_t *const hash,
                              size_t *const hash_len);
@@ -119,5 +123,7 @@ SCL_FUNCTION int32_t scl_sha_finish(const metal_scl_t *const scl_ctx,
  * @return != 0 in case of errors @see scl_errors_t
  */
 SCL_FUNCTION int32_t scl_valid_hash_digest_length(size_t inputlength);
+
+/** @}*/
 
 #endif /* _SCL_SHA_H */

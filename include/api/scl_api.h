@@ -50,13 +50,14 @@ struct __aes_func
                   uint64_t *key, scl_process_t aes_process);
     int32_t (*setiv)(const metal_scl_t *const scl, uint64_t *initvec);
     int32_t (*cipher)(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
-                  scl_process_t aes_process, scl_endianness_t data_endianness,
-                  uint64_t data_len, uint8_t *data_in, uint8_t *data_out);
+                      scl_process_t aes_process,
+                      scl_endianness_t data_endianness, uint64_t data_len,
+                      uint8_t *data_in, uint8_t *data_out);
     int32_t (*auth)(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
-                scl_process_t aes_process, scl_endianness_t data_endianness,
-                uint32_t auth_option, uint64_t aad_len, uint8_t *aad,
-                uint64_t data_len, uint8_t *data_in, uint8_t *data_out,
-                uint64_t *tag);
+                    scl_process_t aes_process, scl_endianness_t data_endianness,
+                    uint32_t auth_option, uint64_t aad_len, uint8_t *aad,
+                    uint64_t data_len, uint8_t *data_in, uint8_t *data_out,
+                    uint64_t *tag);
 };
 
 /*! @brief Hash low level API entry points */

@@ -35,8 +35,9 @@
 
 #include <api/scl_api.h>
 
-int32_t scl_sha(const metal_scl_t *const scl_ctx, scl_hash_mode_t algo, const uint8_t *const data,
-                size_t data_len, uint8_t *const hash, size_t *const hash_len)
+int32_t scl_sha(const metal_scl_t *const scl_ctx, scl_hash_mode_t algo,
+                const uint8_t *const data, size_t data_len, uint8_t *const hash,
+                size_t *const hash_len)
 {
     int32_t result;
     scl_sha_ctx_t ctx;
@@ -66,7 +67,8 @@ int32_t scl_sha(const metal_scl_t *const scl_ctx, scl_hash_mode_t algo, const ui
     }
 }
 
-int32_t scl_sha_init(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx, scl_hash_mode_t algo)
+int32_t scl_sha_init(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx,
+                     scl_hash_mode_t algo)
 {
     if (NULL == scl_ctx)
     {
@@ -77,8 +79,8 @@ int32_t scl_sha_init(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx,
         scl_ctx->hash_func.sha_init(scl_ctx, ctx, algo, SCL_BIG_ENDIAN_MODE));
 }
 
-int32_t scl_sha_core(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx, const uint8_t *const data,
-                     size_t data_len)
+int32_t scl_sha_core(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx,
+                     const uint8_t *const data, size_t data_len)
 {
     if (NULL == scl_ctx)
     {
@@ -88,7 +90,8 @@ int32_t scl_sha_core(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx,
     return (scl_ctx->hash_func.sha_core(scl_ctx, ctx, data, data_len));
 }
 
-int32_t scl_sha_finish(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx, uint8_t *const hash,
+int32_t scl_sha_finish(const metal_scl_t *const scl_ctx,
+                       scl_sha_ctx_t *const ctx, uint8_t *const hash,
                        size_t *const hash_len)
 {
     if (NULL == scl_ctx)
