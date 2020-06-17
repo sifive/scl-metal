@@ -35,17 +35,44 @@
 #include <api/scl_api.h>
 #include <scl_cfg.h>
 
-#include <scl/scl_init.h>
+#include <scl/scl_utils.h>
 
 #define UINT32(data)                                                           \
     ((*(data + 3) << 24) + (*(data + 2) << 16) + (*(data + 1) << 8) + (*(data)))
 #define UINT64(data)                                                           \
     (((uint64_t)UINT32(data + 4) << 32) + (uint64_t)UINT32(data))
 
-int scl_init(const metal_scl_t * const scl)
-{
-    if (NULL == scl)
-        return SCL_ERROR;
+SCL_DATA metal_scl_t *scl_ctx = NULL;
 
-    return SCL_OK;
+int scl_format_key(const uint8_t *const key, const size_t key_byte_len,
+                                uint64_t *key_formated)
+{
+    if (NULL == key)
+    {
+        return SCL_INVALID_INPUT;
+    }
+    if ((SCL_KEY128 != key_byte_len) && (SCL_KEY192 != key_byte_len) &&
+        (SCL_KEY256 != key_byte_len))
+    {
+        return SCL_INVALID_INPUT;
+    }
+
+    if (SCL_KEY256 == key_byte_len)
+    {
+        key_formated[4] = UINT64(&key[24]);
+    }
+    else
+    {
+        key_formated[4] = 0;
+    }
+    if (SCL_KEY192 >= key_byte_len)
+    {
+        key_formated[3] = UINT64(&key[16]);
+    }
+    else
+    {
+        key_formated[3] = 0;
+    }
+    key_formated[1] = UINT64(&key[8]);
+    key_formated[0] = UINT64(&key[0]);
 }

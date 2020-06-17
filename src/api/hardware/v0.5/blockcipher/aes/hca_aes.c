@@ -45,7 +45,7 @@
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 #include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 
-int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, uint64_t *key)
+int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, uint64_t *key, scl_process_t aes_process, scl_process_t aes_process)
 {
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
     {

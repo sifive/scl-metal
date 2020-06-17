@@ -3,9 +3,9 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_aes_ecb.h
- * @brief defines the AES for the ECB mode.
- * AES is NIST FIPS-197, ECB is SP800-38A
+ * @file scl_aes_cbc.h
+ * @brief defines the AES for the CBC mode.
+ * AES is NIST FIPS-197
  * 
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -30,8 +30,8 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef _SCL_AES_ECB_H
-#define _SCL_AES_ECB_H
+#ifndef _SCL_AES_CBC_H
+#define _SCL_AES_CBC_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -42,9 +42,9 @@
 extern "C"
 {
 #endif /* __cplusplus */
-    SCL_FUNCTION int32_t scl_aes_ecb_init(const metal_scl_t *const scl_ctx, const uint8_t *const key, const size_t key_byte_len, scl_process_t mode);
-    SCL_FUNCTION int32_t scl_aes_ecb_core(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src, size_t src_byte_len, scl_process_t mode);
-    SCL_FUNCTION int32_t scl_aes_ecb(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src, size_t src_byte_len, const uint8_t *const key, const size_t key_byte_len, scl_process_t mode);
+    SCL_FUNCTION int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx, const uint8_t *const key, const size_t key_byte_len, const uint8_t *const iv, const size_t iv_byte_len, scl_process_t mode);
+    SCL_FUNCTION int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src, size_t src_byte_len, scl_process_t mode);
+    SCL_FUNCTION int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src, size_t src_byte_len, const uint8_t *const key, const size_t key_byte_len, const uint8_t *const iv, const size_t iv_byte_len, scl_process_t mode);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

@@ -3,12 +3,8 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_init.c
- * @brief 
- *  
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- * 
+ * Copyright 2020 SiFive, Inc
+ * SPDX-License-Identifier: MIT
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -29,23 +25,25 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file scl_utils.h
+ * @brief scl initialization functions
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ *
+ */
+
+#ifndef _SCL_UTILS_H
+#define _SCL_UTILS_H
+
 #include <stdint.h>
-#include <stdio.h>
 
-#include <api/scl_api.h>
 #include <scl_cfg.h>
+#include <api/scl_api.h>
 
-#include <scl/scl_init.h>
 
-#define UINT32(data)                                                           \
-    ((*(data + 3) << 24) + (*(data + 2) << 16) + (*(data + 1) << 8) + (*(data)))
-#define UINT64(data)                                                           \
-    (((uint64_t)UINT32(data + 4) << 32) + (uint64_t)UINT32(data))
+SCL_FUNCTION int scl_format_key(const uint8_t *const key, const size_t key_byte_len,
+                                uint64_t *key_formated);
 
-int scl_init(const metal_scl_t * const scl)
-{
-    if (NULL == scl)
-        return SCL_ERROR;
-
-    return SCL_OK;
-}
+#endif /* _SCL_UTILS_H */

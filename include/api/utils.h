@@ -91,4 +91,5 @@ CRYPTO_FUNCTION int32_t copy_u32_2_u8_be(uint8_t *const dest,
 CRYPTO_FUNCTION int32_t copy_u64_2_u8_be(uint8_t *const dest,
                                          const uint64_t *const src, size_t len);
 
+CRYPTO_FUNCTION int32_t copy_n_u8_2_m_u64_be(uint64_t *const dest, size_t len_dest, const uint8_t *const src, size_t len_src);
 #endif /* _UTILS_H */
