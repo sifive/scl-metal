@@ -45,8 +45,11 @@
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 #include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 
-int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, uint64_t *key, scl_process_t aes_process, scl_process_t aes_process)
+int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, uint64_t *key, scl_process_t aes_process)
 {
+	/* Remove compiler warning about unused parameter. */
+	( void ) aes_process;
+
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
     {
         // revision of AES is Zero so the AES is not present.
@@ -284,7 +287,7 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
 #endif /* __riscv_xlen */
     int i,j,k;
     uint64_t NbBlocks128;
-    uint64_t tmp[KEY128_NB_UINT64]                __attribute__ ((aligned (8)));
+    uint64_t tmp[BLOCK128_NB_UINT64]                __attribute__ ((aligned (8)));
 
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
     {

@@ -32,6 +32,9 @@
 #ifndef _AES_H
 #define _AES_H
 
-#define BLOCK128_NB_BYTE 16
+#define BLOCK128_NB_BYTE        16
 
-#endif
+#define BLOCK128_NB_UINT64      2
+#define BLOCK128_NB_UINT32      4
+
+#endif /* _AES_H */

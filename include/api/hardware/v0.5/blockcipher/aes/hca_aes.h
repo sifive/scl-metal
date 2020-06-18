@@ -42,13 +42,13 @@
 
 #include <scl/scl_retdefs.h>
 
-CRYPTO_FUNCTION int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, uint64_t *key);
+CRYPTO_FUNCTION int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, uint64_t *key, scl_process_t aes_process);
 
-CRYPTO_FUNCTION int32_t hca_aes_setiv(metal_scl_t *scl, uint64_t *initvec);
+CRYPTO_FUNCTION int32_t hca_aes_setiv(const metal_scl_t *const scl, uint64_t *initvec);
 
 CRYPTO_FUNCTION int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                        scl_process_t aes_process,
-                       scl_endianness_t data_endianness, uint32_t NbBlocks128,
+                       scl_endianness_t data_endianness, uint64_t data_len,
                        uint8_t *data_in, uint8_t *data_out);
 
 CRYPTO_FUNCTION int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,

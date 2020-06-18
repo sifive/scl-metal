@@ -18,6 +18,7 @@ override SOURCE_DIRS += \
 ifeq ($(HCA_VERSION),0.5)
 override SOURCE_DIRS += \
 		$(SOURCE_DIR)/api/hardware/v0.5 \
+		$(SOURCE_DIR)/api/hardware/v0.5/blockcipher/aes \
 		$(SOURCE_DIR)/api/hardware/v0.5/hash 
 endif
 
@@ -40,6 +41,7 @@ override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/api/software/hash \
 	$(CURRENT_DIR)/include/api/hardware \
 	$(CURRENT_DIR)/include/api/hardware/v0.5 \
+	$(CURRENT_DIR)/include/api/hardware/v0.5/blockcipher/aes \
 	$(CURRENT_DIR)/include/api/hardware/v0.5/hash
  # SCL
 override INCLUDE_DIRS += \
