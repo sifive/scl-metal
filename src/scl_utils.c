@@ -4,11 +4,11 @@
  *
  ******************************************************************************
  * @file scl_init.c
- * @brief 
- *  
+ * @brief
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -45,7 +45,7 @@
 SCL_DATA metal_scl_t *scl_ctx = NULL;
 
 int scl_format_key(const uint8_t *const key, const size_t key_byte_len,
-                                uint64_t *key_formated)
+                   uint64_t *key_formated)
 {
     if (NULL == key)
     {

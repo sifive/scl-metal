@@ -41,7 +41,7 @@
 
 #include <api/hardware/hca_macro.h>
 
-/** 
+/**
  * \addtogroup HCA
  *  @{
  */

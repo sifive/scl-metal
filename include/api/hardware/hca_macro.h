@@ -37,7 +37,7 @@
 
 #include <api/scl_api.h>
 
-/** 
+/**
  * \addtogroup HCA
  * \addtogroup HCA_MACRO
  * \ingroup HCA

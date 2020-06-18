@@ -35,7 +35,7 @@
 
 #include <machine/endian.h>
 
-/** 
+/**
  * \addtogroup COMMON
  * \addtogroup MACRO
  * \ingroup COMMON

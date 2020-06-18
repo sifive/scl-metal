@@ -45,7 +45,7 @@
 #include <api/hash/sha.h>
 #include <api/scl_api.h>
 
-/** 
+/**
  * \addtogroup SCL
  * \addtogroup SCL_SHA
  * \ingroup SCL

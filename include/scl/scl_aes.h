@@ -45,7 +45,7 @@
 #include <api/blockcipher/aes/aes.h>
 #include <api/scl_api.h>
 
-/** 
+/**
  * \addtogroup SCL
  * \addtogroup SCL_AES
  * \ingroup SCL
@@ -53,10 +53,9 @@
  */
 
 SCL_FUNCTION int32_t scl_aes(const metal_scl_t *const scl_ctx, uint8_t *dst,
-                                uint8_t *src, uint8_t *key, int key_byte_len,
-                                scl_process_t mode);
+                             uint8_t *src, uint8_t *key, int key_byte_len,
+                             scl_process_t mode);
 
 /** @}*/
-
 
 #endif /* _SCL_AES_H */

@@ -41,7 +41,7 @@
 #include <api/hash/sha.h>
 #include <api/hash/sha512.h>
 
-/** 
+/**
  * \addtogroup SOFTWARE
  * \addtogroup SOFT_SHA
  * \ingroup SOFTWARE

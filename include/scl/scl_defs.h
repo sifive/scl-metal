@@ -36,7 +36,7 @@
 #include <api/defs.h>
 #include <api/hash/sha.h>
 
-/** 
+/**
  * \addtogroup SCL
  * \addtogroup SCL_DEFS
  * \ingroup SCL

@@ -43,7 +43,7 @@
 
 #include <scl/scl_retdefs.h>
 
-/** 
+/**
  * \addtogroup SOFTWARE
  * \addtogroup SOFT_API_SHA
  * \ingroup SOFTWARE

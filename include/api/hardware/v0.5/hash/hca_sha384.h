@@ -40,7 +40,7 @@
 #include <api/defs.h>
 #include <api/hash/sha384.h>
 
-/** 
+/**
  * \addtogroup HCA
  * \addtogroup HCA_SHA
  * \ingroup HCA

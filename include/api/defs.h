@@ -32,7 +32,7 @@
 #ifndef _DEFS_H
 #define _DEFS_H
 
-/** 
+/**
  * \addtogroup COMMON
  * \addtogroup DEFS
  * \ingroup COMMON

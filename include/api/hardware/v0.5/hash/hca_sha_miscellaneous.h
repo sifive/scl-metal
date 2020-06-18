@@ -25,10 +25,10 @@
 /**
  * @file hca_sha_miscellaneous.h
  * @brief hardware sha implementation/wrapper
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  */
 
 #ifndef _HCA_SHA_MISCELLANEOUS_H
@@ -44,8 +44,8 @@
 #include <api/hash/sha.h>
 #include <scl/scl_retdefs.h>
 
-/** 
- * \addtogroup HCA 
+/**
+ * \addtogroup HCA
  * \addtogroup HCA_SHA
  * \ingroup HCA
  *  @{

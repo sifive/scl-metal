@@ -42,13 +42,12 @@
 #include <api/scl_api.h>
 #include <scl_cfg.h>
 
-/** 
+/**
  * \addtogroup SCL
  * \addtogroup SCL_INIT
  * \ingroup SCL
  *  @{
  */
-
 
 SCL_FUNCTION int scl_init(const metal_scl_t *const scl);
 

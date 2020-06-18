@@ -28,7 +28,7 @@
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  */
 
 #ifndef _HCA_SHA_H
@@ -44,7 +44,7 @@
 
 #include <scl/scl_retdefs.h>
 
-/** 
+/**
  * \addtogroup HCA
  * \addtogroup HCA_API_SHA
  * \ingroup HCA
