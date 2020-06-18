@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_macro.h
- * @brief macro definition specific to hca
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,12 +22,27 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file hca_macro.h
+ * @brief macro definition specific to hca
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _HCA_MACRO_H
 #define _HCA_MACRO_H
 
 #include <metal/io.h>
 
 #include <api/scl_api.h>
+
+/** 
+ * \addtogroup HCA
+ * \addtogroup HCA_MACRO
+ * \ingroup HCA
+ *  @{
+ */
 
 #define METAL_REG64(base, offset)                                              \
     (__METAL_ACCESS_ONCE((uint64_t *)((base) + (offset))))
@@ -55,5 +63,7 @@ static __inline__ void hca_setfield32(const metal_scl_t *const scl,
 #define GET_UNIT64(data, k)                                                    \
     ((((uint64_t)GET_UNIT32(data, (k + 4))) << 32) +                           \
      (uint64_t)GET_UNIT32(data, k))
+
+/** @}*/
 
 #endif

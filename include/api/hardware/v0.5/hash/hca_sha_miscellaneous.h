@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha_miscellaneous.h
- * @brief hardware sha implementation/wrapper
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,15 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file hca_sha_miscellaneous.h
+ * @brief hardware sha implementation/wrapper
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #ifndef _HCA_SHA_MISCELLANEOUS_H
 #define _HCA_SHA_MISCELLANEOUS_H
 
@@ -41,6 +43,13 @@
 
 #include <api/hash/sha.h>
 #include <scl/scl_retdefs.h>
+
+/** 
+ * \addtogroup HCA 
+ * \addtogroup HCA_SHA
+ * \ingroup HCA
+ *  @{
+ */
 
 /**
  * @brief Compute one or more 512 blocks using HCA
@@ -57,5 +66,7 @@ CRYPTO_FUNCTION int32_t hca_sha_block(const metal_scl_t *const scl,
                                       hash_mode_t hash_mode,
                                       uint32_t NbBlocks512,
                                       const uint8_t *const data_in);
+
+/** @}*/
 
 #endif /* _HCA_SHA_MISCELLANEOUS_H */

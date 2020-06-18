@@ -1,13 +1,6 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- *
- ******************************************************************************
- * @file aes.h
- * @brief 
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
  * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,12 +22,29 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file aes.h
+ * @brief 
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _AES_H
 #define _AES_H
+
+/** 
+ * \addtogroup COMMON
+ * \addtogroup AES
+ * \ingroup COMMON
+ *  @{
+ */
 
 #define BLOCK128_NB_BYTE        16
 
 #define BLOCK128_NB_UINT64      2
 #define BLOCK128_NB_UINT32      4
+
+/** @}*/
 
 #endif /* _AES_H */

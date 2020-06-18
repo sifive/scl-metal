@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_defs.h
- * @brief contains various definitions for the cryptographic algorithms
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,13 +22,24 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file scl_defs.h
+ * @brief contains various definitions for the cryptographic algorithms
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SCL_DEFS_H
 #define _SCL_DEFS_H
 
 #include <api/defs.h>
 #include <api/hash/sha.h>
 
-/** \addtogroup SCL_API
+/** 
+ * \addtogroup SCL
+ * \addtogroup SCL_DEFS
+ * \ingroup SCL
  *  @{
  */
 

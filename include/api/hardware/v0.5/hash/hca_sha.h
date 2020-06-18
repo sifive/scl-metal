@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha.h
- * @brief hardware sha implementation/wrapper
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,15 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file hca_sha.h
+ * @brief hardware sha implementation/wrapper
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
 #ifndef _HCA_SHA_H
 #define _HCA_SHA_H
 
@@ -41,6 +43,13 @@
 #include <api/scl_api.h>
 
 #include <scl/scl_retdefs.h>
+
+/** 
+ * \addtogroup HCA
+ * \addtogroup HCA_API_SHA
+ * \ingroup HCA
+ *  @{
+ */
 
 /**
  * @brief Init hardware sha context
@@ -87,5 +96,7 @@ CRYPTO_FUNCTION int32_t hca_sha_finish(const metal_scl_t *const scl,
                                        sha_ctx_t *const ctx,
                                        uint8_t *const hash,
                                        size_t *const hash_len);
+
+/** @}*/
 
 #endif /* _HCA_SHA_H */

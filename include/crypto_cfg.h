@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file crypto_cfg.h
- * @brief define default section for crypto function and crypto data
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,10 +22,18 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file crypto_cfg.h
+ * @brief define default section for crypto function and crypto data
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _CRYPTO_CFG_H
 #define _CRYPTO_CFG_H
 
 #define CRYPTO_FUNCTION __attribute__((section("crypto_functions")))
-#define CRYPTO_DATA __attribute__((section("crypto_datas")))
+#define CRYPTO_DATA __attribute__((section("crypto_data")))
 
 #endif /* _CRYPTO_CFG_H */

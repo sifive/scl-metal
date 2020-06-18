@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file sha256.h
- * @brief sha256 implementation/wrapper
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- * 
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,11 +22,26 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file sha256.h
+ * @brief sha256 implementation/wrapper
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SHA256_H
 #define _SHA256_H
 
 #include <stddef.h>
 #include <stdint.h>
+
+/** 
+ * \addtogroup COMMON
+ * \addtogroup SHA
+ * \ingroup COMMON
+ *  @{
+ */
 
 /*! @brief SHA256 block size */
 #define SHA256_BYTE_BLOCKSIZE 64
@@ -58,5 +66,7 @@ typedef struct
     /*! @brief block buffer */
     uint8_t block_buffer[SHA256_BYTE_BLOCKSIZE] __attribute__((aligned(4)));
 } sha256_ctx_t;
+
+/** @}*/
 
 #endif /* _SHA256_H */

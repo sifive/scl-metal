@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_api.h
- * @brief
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/*
+ * @file scl_api.h
+ * @brief Low level API interface description
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SCL_API_H
 #define _SCL_API_H
 
@@ -39,6 +40,14 @@
 #include <scl/scl_retdefs.h>
 
 #include <api/hash/sha.h>
+
+/** 
+ * \addtogroup COMMON
+ * \addtogroup API
+ * \ingroup COMMON
+ *  @{
+ */
+
 
 struct _metal_scl_struct;
 
@@ -164,4 +173,7 @@ static __inline__ int default_trng_getdata(metal_scl_t *scl, uint32_t *data_out)
 {
     return SCL_ERROR;
 }
+
+/** @}*/
+
 #endif

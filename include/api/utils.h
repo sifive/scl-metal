@@ -1,16 +1,7 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- *
- ******************************************************************************
- * @file utils.h
- * @brief
- * @version 0.1
- * @date 2020-06-03
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
+ * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -31,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file utils.h
+ * @brief Low level API common utilitarian functions
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _UTILS_H
 #define _UTILS_H
 
@@ -38,6 +37,13 @@
 #include <stdint.h>
 
 #include <crypto_cfg.h>
+
+/** 
+ * \addtogroup COMMON
+ * \addtogroup UTILS
+ * \ingroup COMMON
+ *  @{
+ */
 
 /**
  * @brief copy 8 bits array into unsigned 32 bits array (big endian)
@@ -92,4 +98,7 @@ CRYPTO_FUNCTION int32_t copy_u64_2_u8_be(uint8_t *const dest,
                                          const uint64_t *const src, size_t len);
 
 CRYPTO_FUNCTION int32_t copy_n_u8_2_m_u64_be(uint64_t *const dest, size_t len_dest, const uint8_t *const src, size_t len_src);
+
+/** @}*/
+
 #endif /* _UTILS_H */

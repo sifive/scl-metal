@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha256.h
- * @brief software sha256 implementation
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file hca_sha256.h
+ * @brief software sha256 implementation
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _HCA_SHA256_H
 #define _HCA_SHA256_H
 
@@ -38,6 +39,13 @@
 
 #include <api/defs.h>
 #include <api/hash/sha256.h>
+
+/** 
+ * \addtogroup HCA
+ * \addtogroup HCA_SHA
+ * \ingroup HCA
+ *  @{
+ */
 
 /**
  * @brief Compute intermediate sha224/sha256 value of the chunk of data in
@@ -92,5 +100,7 @@ CRYPTO_FUNCTION void hca_sha256_append_bit_len(uint8_t *const buffer,
  */
 CRYPTO_FUNCTION int32_t hca_sha256_read(const metal_scl_t *const scl,
                                         uint8_t *const data_out);
+
+/** @}*/
 
 #endif /* _HCA_SHA256_H */

@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha384.h
- * @brief software sha384 implementation
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file hca_sha384.h
+ * @brief software sha384 implementation
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _HCA_SHA384_H
 #define _HCA_SHA384_H
 
@@ -38,6 +39,13 @@
 
 #include <api/defs.h>
 #include <api/hash/sha384.h>
+
+/** 
+ * \addtogroup HCA
+ * \addtogroup HCA_SHA
+ * \ingroup HCA
+ *  @{
+ */
 
 /**
  * @brief Compute final hash value of the concatenated block pass to
@@ -67,5 +75,7 @@ CRYPTO_FUNCTION int32_t hca_sha384_finish(const metal_scl_t *const scl,
  */
 CRYPTO_FUNCTION int32_t hca_sha384_read(const metal_scl_t *const scl,
                                         uint8_t *const data_out);
+
+/** @}*/
 
 #endif /* _HCA_SHA384_H */

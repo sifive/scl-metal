@@ -1,13 +1,6 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- *
- ******************************************************************************
- * @file hca_trng.c
- * @brief 
- * 
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
  * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,6 +22,13 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file hca_trng.c
+ * @brief 
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
 
 #include <stdint.h>
 #include <stdio.h>

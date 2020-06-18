@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file soft_sha256.h
- * @brief software sha256 implementation
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file soft_sha256.h
+ * @brief software sha256 implementation
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SOFT_SHA256_H
 #define _SOFT_SHA256_H
 
@@ -38,6 +39,13 @@
 
 #include <api/defs.h>
 #include <api/hash/sha256.h>
+
+/** 
+ * \addtogroup SOFTWARE
+ * \addtogroup SOFT_SHA
+ * \ingroup SOFTWARE
+ *  @{
+ */
 
 /**
  * @brief Compute one SHA256 bock
@@ -97,5 +105,7 @@ CRYPTO_FUNCTION int32_t soft_sha256_finish(sha256_ctx_t *const ctx,
  */
 CRYPTO_FUNCTION void soft_sha256_append_bit_len(uint8_t *const buffer,
                                                 uint64_t *const length);
+
+/** @}*/
 
 #endif /* _SOFT_SHA256_H */

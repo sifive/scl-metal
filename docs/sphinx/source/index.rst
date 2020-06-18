@@ -3,14 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to scl-metal's documentation!
-=====================================
+scl-metal's documentation!
+==========================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
 
-    doxygen_files.rst
+    scl/api
+    api/api
 
 
 Indices and tables

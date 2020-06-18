@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_aes.h
- * @brief hardware aes implementation/wrapper
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file hca_aes.h
+ * @brief hardware aes implementation/wrapper
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _HCA_AES_H
 #define _HCA_AES_H
 
@@ -41,6 +42,13 @@
 #include <api/scl_api.h>
 
 #include <scl/scl_retdefs.h>
+
+/** 
+ * \addtogroup HCA
+ * \addtogroup HCA_API_AES
+ * \ingroup HCA
+ *  @{
+ */
 
 CRYPTO_FUNCTION int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, uint64_t *key, scl_process_t aes_process);
 
@@ -56,5 +64,7 @@ CRYPTO_FUNCTION int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_
                      scl_endianness_t data_endianness, uint32_t auth_option,
                      uint64_t aad_len, uint8_t *aad, uint64_t data_len,
                      uint8_t *data_in, uint8_t *data_out, uint64_t *tag);
+
+/** @}*/
 
 #endif /* _HCA_AES_H */

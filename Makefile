@@ -60,6 +60,8 @@ override OBJS := $(subst $(SOURCE_DIR),$(BUILD_DIR),$(SOURCES:.c=.o))
 ################################################################################
 
 override DOCS_DIR = $(CURRENT_DIR)/docs
+override DOXYGEN_DIR = $(DOCS_DIR)/doxygen
+override SPHINX_DIR = $(DOCS_DIR)/sphinx
 
 ################################################################################
 #                        COMPILATION FLAGS
@@ -109,14 +111,18 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c err
 check-format:
 	clang-format -i $(SOURCES) $(INCLUDES)
 
+.PHONY : docs
+docs: generate-doxygen
+	$(HIDE) cd $(SPHINX_DIR); make html
+
 .PHONY : generate-doxygen
-generate-doxygen:
-	$(HIDE) mkdir -p $(DOCS_DIR)/doxygen_build
-	$(HIDE) (cat $(DOCS_DIR)/Doxyfile; echo "INPUT = $(INCLUDE_DIRS)") | doxygen - 
+generate-doxygen: clean-doxygen
+	$(HIDE) mkdir -p $(DOXYGEN_DIR)/build
+	$(HIDE) (cat $(DOXYGEN_DIR)/Doxyfile; echo "INPUT = $(INCLUDE_DIRS)") | doxygen - 
 
 .PHONY : clean-doxygen
 clean-doxygen:
-	rm -rf $(DOCS_DIR)/doxygen_build
+	rm -rf $(DOXYGEN_DIR)/build
 
 .PHONY: err
 err: 

@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file soft_sha512.h
- * @brief software sha512 implementation
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file soft_sha512.h
+ * @brief software sha512 implementation
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SOFT_SHA512_H
 #define _SOFT_SHA512_H
 
@@ -39,6 +40,13 @@
 #include <api/defs.h>
 #include <api/hash/sha.h>
 #include <api/hash/sha512.h>
+
+/** 
+ * \addtogroup SOFTWARE
+ * \addtogroup SOFT_SHA
+ * \ingroup SOFTWARE
+ *  @{
+ */
 
 /**
  * @brief Compute one SHA512 bock
@@ -98,5 +106,7 @@ CRYPTO_FUNCTION int32_t soft_sha512_finish(sha512_ctx_t *const ctx,
  */
 CRYPTO_FUNCTION void soft_sha512_append_bit_len(uint8_t *const buffer,
                                                 uint64_t *const length);
+
+/** @}*/
 
 #endif /* _SOFT_SHA512_H */

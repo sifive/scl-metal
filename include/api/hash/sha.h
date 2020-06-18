@@ -1,13 +1,6 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- *
- ******************************************************************************
- * @file sha.h
- * @brief sha implementation/wrapper
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
  * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file sha.h
+ * @brief sha implementation/wrapper
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SHA_H
 #define _SHA_H
 
@@ -36,6 +37,13 @@
 #include <api/hash/sha256.h>
 #include <api/hash/sha384.h>
 #include <api/hash/sha512.h>
+
+/** 
+ * \addtogroup COMMON
+ * \addtogroup SHA
+ * \ingroup COMMON
+ *  @{
+ */
 
 /*! @brief Hash mode supported */
 typedef enum
@@ -62,5 +70,7 @@ typedef struct {
     /*! Hash mode  */
     hash_mode_t mode;
 } sha_ctx_t;
+
+/** @}*/
 
 #endif

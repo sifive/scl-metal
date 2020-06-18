@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file soft_sha.h
- * @brief software sha implementation
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file soft_sha.h
+ * @brief software sha implementation
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SOFT_SHA_H
 #define _SOFT_SHA_H
 
@@ -41,6 +42,13 @@
 #include <api/scl_api.h>
 
 #include <scl/scl_retdefs.h>
+
+/** 
+ * \addtogroup SOFTWARE
+ * \addtogroup SOFT_API_SHA
+ * \ingroup SOFTWARE
+ *  @{
+ */
 
 /**
  * @brief Init software sha context
@@ -88,5 +96,7 @@ CRYPTO_FUNCTION int32_t soft_sha_finish(const metal_scl_t *const scl,
                                         sha_ctx_t *const ctx,
                                         uint8_t *const hash,
                                         size_t *const hash_len);
+
+/** @}*/
 
 #endif /* _SOFT_SHA_H */

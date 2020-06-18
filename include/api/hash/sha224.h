@@ -1,13 +1,6 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- *
- ******************************************************************************
- * @file sha224.h
- * @brief sha224 implementation/wrapper
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
  * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file sha224.h
+ * @brief sha224 implementation/wrapper
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SHA224_H
 #define _SHA224_H
 
@@ -36,6 +37,13 @@
 #include <stdint.h>
 
 #include <api/hash/sha256.h>
+
+/** 
+ * \addtogroup COMMON
+ * \addtogroup SHA
+ * \ingroup COMMON
+ *  @{
+ */
 
 /*! @brief Size of SHA224 in bytes */
 #define SHA224_BYTE_HASHSIZE 28
@@ -46,5 +54,7 @@
  * context
  */
 typedef sha256_ctx_t sha224_ctx_t;
+
+/** @}*/
 
 #endif /* _SHA224_H */

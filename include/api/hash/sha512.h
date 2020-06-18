@@ -1,13 +1,6 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- *
- ******************************************************************************
- * @file sha512.h
- * @brief sha512 implementation/wrapper
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
  * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,11 +22,26 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file sha512.h
+ * @brief sha512 implementation/wrapper
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SHA512_H
 #define _SHA512_H
 
 #include <stddef.h>
 #include <stdint.h>
+
+/** 
+ * \addtogroup COMMON
+ * \addtogroup SHA
+ * \ingroup COMMON
+ *  @{
+ */
 
 /*! @brief SHA512 block size */
 #define SHA512_BYTE_BLOCKSIZE 128
@@ -58,5 +66,7 @@ typedef struct
     /*! @brief  block buffer */
     uint8_t block_buffer[SHA512_BYTE_BLOCKSIZE] __attribute__((aligned(8)));
 } sha512_ctx_t;
+
+/** @}*/
 
 #endif

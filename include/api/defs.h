@@ -3,15 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file defs.h
- * @brief
- * @version 0.1
- * @date 2020-06-02
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -30,9 +21,23 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+/**
+ * @file defs.h
+ * @brief Low level API common definitions
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
 
 #ifndef _DEFS_H
 #define _DEFS_H
+
+/** 
+ * \addtogroup COMMON
+ * \addtogroup DEFS
+ * \ingroup COMMON
+ *  @{
+ */
 
 /**
  * @brief endianess supported by the scl library
@@ -48,5 +53,7 @@ typedef enum
     /*! @brief big endian words */
     SCL_BIG_ENDIAN_MODE = 1
 } endianness_t;
+
+/** @}*/
 
 #endif /* _DEFS_H */
