@@ -55,6 +55,8 @@ override INCLUDES := $(foreach dir,$(INCLUDE_DIRS),$(wildcard $(dir)/*.h))
 
 override OBJS := $(subst $(SOURCE_DIR),$(BUILD_DIR),$(SOURCES:.c=.o))
 
+override SPLINT_RESULTS := $(subst $(SOURCE_DIR),$(BUILD_DIR)/splint,$(SOURCES:.c=.c.splint))
+
 ################################################################################
 #                        	DOCUMENTATION
 ################################################################################
@@ -110,6 +112,13 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c err
 .PHONY : check-format
 check-format:
 	clang-format -i $(SOURCES) $(INCLUDES)
+
+.PHONY : splint
+splint: $(SPLINT_RESULTS)
+
+$(BUILD_DIR)/splint/%.c.splint: $(SOURCE_DIR)/%.c
+	$(HIDE) mkdir -p $(dir $@)
+	splint -preproc -forcehints -standard -I $(INCLUDE_DIR) $< > $@ ; true
 
 .PHONY : docs
 docs: generate-doxygen

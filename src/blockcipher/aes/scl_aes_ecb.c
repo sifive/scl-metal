@@ -76,7 +76,7 @@ int32_t scl_aes_ecb_init(const metal_scl_t *const scl_ctx,
         break;
     }
 
-    /* @FIXME: /*
+    /* @FIXME: */
     /* key_formated should be secure erased */
 
     return (ret);
