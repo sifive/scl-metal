@@ -38,13 +38,10 @@
 
 #include <scl/scl_init.h>
 
-#define UINT32(data)                                                           \
-    ((*(data + 3) << 24) + (*(data + 2) << 16) + (*(data + 1) << 8) + (*(data)))
-#define UINT64(data)                                                           \
-    (((uint64_t)UINT32(data + 4) << 32) + (uint64_t)UINT32(data))
-
-int scl_init(const metal_scl_t *const scl)
+int scl_init(const metal_scl_t * const scl)
 {
-    (void)scl;
-    return SCL_OK;
+    if (NULL == scl)
+        return (SCL_ERROR);
+
+    return (SCL_OK);
 }

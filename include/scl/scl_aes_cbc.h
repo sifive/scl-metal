@@ -3,14 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_aes_cbc.h
- * @brief defines the AES for the CBC mode.
- * AES is NIST FIPS-197
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -30,6 +22,15 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file scl_aes_cbc.h
+ * @brief defines the AES for the CBC mode.
+ * AES is NIST FIPS-197
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SCL_AES_CBC_H
 #define _SCL_AES_CBC_H
 
@@ -38,10 +39,13 @@
 
 #include <scl_cfg.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+/**
+ * \addtogroup SCL
+ * \addtogroup SCL_AES
+ * \ingroup SCL
+ *  @{
+ */
+
     SCL_FUNCTION int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
                                           const uint8_t *const key,
                                           const size_t key_byte_len,
@@ -52,12 +56,11 @@ extern "C"
                                           uint8_t *dst, uint8_t *src,
                                           size_t src_byte_len,
                                           scl_process_t mode);
-    SCL_FUNCTION int32_t
-    scl_aes_cbc(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src,
+    SCL_FUNCTION int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx, uint8_t *dst, uint8_t *src,
                 size_t src_byte_len, const uint8_t *const key,
                 const size_t key_byte_len, const uint8_t *const iv,
                 const size_t iv_byte_len, scl_process_t mode);
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
+/** @}*/
+
 #endif /* _SCL_AES_ECB_H */

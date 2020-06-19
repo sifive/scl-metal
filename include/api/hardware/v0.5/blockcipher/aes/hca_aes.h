@@ -57,18 +57,15 @@ CRYPTO_FUNCTION int32_t hca_aes_setkey(const metal_scl_t *const scl,
 CRYPTO_FUNCTION int32_t hca_aes_setiv(const metal_scl_t *const scl,
                                       uint64_t *initvec);
 
-CRYPTO_FUNCTION int32_t hca_aes_cipher(const metal_scl_t *const scl,
-                                       scl_aes_mode_t aes_mode,
-                                       scl_process_t aes_process,
-                                       scl_endianness_t data_endianness,
-                                       uint64_t data_len, uint8_t *data_in,
-                                       uint8_t *data_out);
+CRYPTO_FUNCTION int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
+                       scl_process_t aes_process, scl_endianness_t data_endianness, 
+                       const uint8_t *const data_in, size_t data_len, uint8_t *data_out);
 
-CRYPTO_FUNCTION int32_t hca_aes_auth(
-    const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
-    scl_process_t aes_process, scl_endianness_t data_endianness,
-    uint32_t auth_option, uint64_t aad_len, uint8_t *aad, uint64_t data_len,
-    uint8_t *data_in, uint8_t *data_out, uint64_t *tag);
+CRYPTO_FUNCTION int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
+                     scl_process_t aes_process,
+                     scl_endianness_t data_endianness, uint32_t auth_option,
+                     const uint8_t *const aad, size_t aad_len, 
+                     const uint8_t *const data_in, size_t data_len, uint8_t *data_out, uint64_t *tag);
 
 /** @}*/
 

@@ -3,14 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_aes_cbc.c
- * @brief CBC mode for the AES.
- * AES is NIST FIPS-197,
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +21,15 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+/**
+ * @file scl_aes_cbc.c
+ * @brief CBC mode for the AES.
+ * AES is NIST FIPS-197,
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
 
 #include <scl_cfg.h>
 
@@ -50,7 +51,7 @@ int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
 {
     int ret;
     uint64_t formated[4] = {0};
-    uint64_t tmp[4] = {0};
+    uint64_t tmp[2] = {0};
 
     if (NULL == scl_ctx)
     {
@@ -64,23 +65,27 @@ int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
 
     switch (key_byte_len)
     {
-    case SCL_KEY128:
-        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY128, formated, mode);
-        break;
-    case SCL_KEY192:
-        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY192, formated, mode);
-        break;
-    case SCL_KEY256:
-        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY256, formated, mode);
-        break;
+        case SCL_KEY128:
+            ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY128, formated, mode);
+            break;
+        case SCL_KEY192:
+            ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY192, formated, mode);
+            break;
+        case SCL_KEY256:
+            ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY256, formated, mode);
+            break;
+        default:
+            ret = SCL_INVALID_INPUT;
     }
 
-    if (SCL_OK != ret)
-        return (ret);
+    if (SCL_OK == ret)
+    {
+        copy_n_u8_2_m_u64_be(formated, 2, iv, iv_byte_len);
+        tmp[0] = formated[1];
+        tmp[1] = formated[0];
 
-    copy_n_u8_2_m_u64_be(formated, 4, iv, iv_byte_len);
-
-    ret = scl_ctx->aes_func.setiv(scl_ctx, formated);
+        ret = scl_ctx->aes_func.setiv(scl_ctx, tmp);
+    }
 
     /* @FIXME: /*
     /* key_formated should be secure erased */
@@ -103,8 +108,7 @@ int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx, uint8_t *dst,
     if (src_byte_len & 0xF)
         return (SCL_INVALID_INPUT);
 
-    scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_ECB, mode, SCL_BIG_ENDIAN_MODE,
-                             src_byte_len, src, dst);
+    scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_CBC, mode, SCL_BIG_ENDIAN_MODE, src, src_byte_len, dst);
 
     return (ret);
 }
@@ -127,7 +131,7 @@ int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx, uint8_t *dst,
     {
         return (SCL_INVALID_INPUT);
     }
-    if ((SCL_ENCRYPT != mode) && (SCL_ENCRYPT != mode))
+    if ((SCL_ENCRYPT != mode) && (SCL_DECRYPT != mode))
     {
         return (SCL_INVALID_MODE);
     }

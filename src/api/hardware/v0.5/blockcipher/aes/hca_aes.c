@@ -95,8 +95,8 @@ int32_t hca_aes_setiv(const metal_scl_t *const scl, uint64_t *initvec)
 
 int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                        scl_process_t aes_process,
-                       scl_endianness_t data_endianness, uint64_t data_len,
-                       uint8_t *data_in, uint8_t *data_out)
+                       scl_endianness_t data_endianness, 
+                       const uint8_t *const data_in, size_t data_len, uint8_t *data_out)
 {
 
 #if __riscv_xlen == 64
@@ -163,9 +163,9 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         {
             i = k << 4;
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, i);
+                GET_64BITS(data_in, i);
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 8));
+                GET_64BITS(data_in, (i + 8));
         }
         else
         {
@@ -178,13 +178,13 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         {
             i = k << 4;
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, i);
+                GET_32BITS(data_in, i);
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 4));
+                GET_32BITS(data_in, (i + 4));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 8));
+                GET_32BITS(data_in, (i + 8));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 12));
+                GET_32BITS(data_in, (i + 12));
         }
         else
         {
@@ -272,8 +272,8 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
 int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                      scl_process_t aes_process,
                      scl_endianness_t data_endianness, uint32_t auth_option,
-                     uint64_t aad_byte_len, uint8_t *aad, uint64_t data_byte_len,
-                     uint8_t *data_in, uint8_t *data_out, uint64_t *tag)
+                     const uint8_t *const aad, size_t aad_byte_len,
+                     const uint8_t *const data_in, size_t data_len, uint8_t *data_out, uint64_t *tag)
 {
 #if __riscv_xlen == 64
     uint64_t *in64 = (uint64_t *)data_in;
@@ -303,7 +303,7 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
     METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_ALEN) = aad_byte_len;
 
     // Set AES_PLDLEN
-    METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_PDLEN) = data_byte_len;
+    METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_PDLEN) = data_len;
 
     // Set MODE
     hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
@@ -355,9 +355,9 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         {
             i = k << 4;
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(aad, i);
+                GET_64BITS(aad, i);
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(aad, (i + 8));
+                GET_64BITS(aad, (i + 8));
         }
         else
         {
@@ -370,13 +370,13 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         {
             i = k << 4;
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(aad, i);
+                GET_32BITS(aad, i);
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(aad, (i + 4));
+                GET_32BITS(aad, (i + 4));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(aad, (i + 8));
+                GET_32BITS(aad, (i + 8));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(aad, (i + 12));
+                GET_32BITS(aad, (i + 12));
         }
         else
         {
@@ -404,7 +404,7 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                     tmp[0] = tmp[0] << 8 + *(aad + (k << 4) + j);
             }
         } else {
-            tmp[0] = GET_UNIT64(aad, (k << 4));
+            tmp[0] = GET_64BITS(aad, (k << 4));
             i -= 8;
             if (i) {
                 for (j=0 ; j < i; j++)
@@ -430,7 +430,7 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                        HCA_REGISTER_AES_CR_DTYPE_OFFSET,
                        HCA_REGISTER_AES_CR_DTYPE_MASK);
 
-    NbBlocks128 = (data_byte_len >> 4);
+    NbBlocks128 = (data_len >> 4);
 
     for (k = 0; k < NbBlocks128; k++)
     {
@@ -442,9 +442,9 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         {
             i = k << 4;
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, i);
+                GET_64BITS(data_in, i);
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 8));
+                GET_64BITS(data_in, (i + 8));
         }
         else
         {
@@ -457,13 +457,13 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         {
             i = k << 4;
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, i);
+                GET_32BITS(data_in, i);
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 4));
+                GET_32BITS(data_in, (i + 4));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 8));
+                GET_32BITS(data_in, (i + 8));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 12));
+                GET_32BITS(data_in, (i + 12));
         }
         else
         {
@@ -545,7 +545,7 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
     }
 
     // PLD rest
-    i = data_byte_len & 0xF;
+    i = data_len & 0xF;
     if (i) 
     {
         tmp[0] = 0;
@@ -559,7 +559,7 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                     tmp[0] = tmp[0] << 8 + *(data_in + (k << 4) + j);
             }
         } else {
-            tmp[0] = GET_UNIT64(data_in, (k << 4));
+            tmp[0] = GET_64BITS(data_in, (k << 4));
             i -= 8;
             if (i) {
                 for (j=0 ; j < i; j++)

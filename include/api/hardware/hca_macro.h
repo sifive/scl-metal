@@ -57,12 +57,12 @@ static __inline__ void hca_setfield32(const metal_scl_t *const scl,
     METAL_REG32(scl->hca_base, reg) |= ((value & mask) << offset);
 }
 
-#define GET_UNIT32(data, k)                                                    \
+#define GET_32BITS(data, k)                                                    \
     ((*(data + k + 3) << 24) + (*(data + k + 2) << 16) +                       \
      (*(data + k + 1) << 8) + (*(data + k)))
-#define GET_UNIT64(data, k)                                                    \
-    ((((uint64_t)GET_UNIT32(data, (k + 4))) << 32) +                           \
-     (uint64_t)GET_UNIT32(data, k))
+#define GET_64BITS(data, k)                                                    \
+    ((((uint64_t)GET_32BITS(data, (k + 4))) << 32) +                           \
+     (uint64_t)GET_32BITS(data, k))
 
 /** @}*/
 

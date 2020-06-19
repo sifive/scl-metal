@@ -30,7 +30,7 @@
  * @brief scl initialization functions
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright SPDX-License-Identifier: MIT
  *
  */
 
