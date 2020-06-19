@@ -55,16 +55,16 @@ typedef struct _metal_scl_struct metal_scl_t;
 struct __aes_func
 {
     int32_t (*setkey)(const metal_scl_t *const scl, scl_aes_key_type_t type,
-                      uint64_t *key, scl_process_t aes_process);
-    int32_t (*setiv)(const metal_scl_t *const scl, uint64_t *initvec);
+                      const uint64_t *const key, scl_process_t aes_process);
+    int32_t (*setiv)(const metal_scl_t *const scl, const uint64_t *const initvec);
     int32_t (*cipher)(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                   scl_process_t aes_process, scl_endianness_t data_endianness,
-                  const uint8_t *const data_in, size_t data_len, uint8_t *data_out);
+                  const uint8_t *const data_in, size_t data_len, uint8_t *const data_out);
     int32_t (*auth)(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                 scl_process_t aes_process, scl_endianness_t data_endianness,
                 uint32_t auth_option, const uint8_t *const aad, size_t aad_len,
-                const uint8_t *const data_in, size_t data_len, uint8_t *data_out,
-                uint64_t *tag);
+                const uint8_t *const data_in, size_t data_len, uint8_t *const data_out,
+                uint64_t *const tag);
 };
 
 /*! @brief Hash low level API entry points */

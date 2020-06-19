@@ -46,7 +46,7 @@
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 #include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 
-int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, uint64_t *key, scl_process_t aes_process)
+int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, const uint64_t *const key, scl_process_t aes_process)
 {
 	/* Remove compiler warning about unused parameter. */
 	( void ) aes_process;
@@ -75,7 +75,7 @@ int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, ui
     return SCL_OK;
 }
 
-int32_t hca_aes_setiv(const metal_scl_t *const scl, uint64_t *initvec)
+int32_t hca_aes_setiv(const metal_scl_t *const scl, const uint64_t *const initvec)
 {
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
     {
@@ -96,7 +96,7 @@ int32_t hca_aes_setiv(const metal_scl_t *const scl, uint64_t *initvec)
 int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                        scl_process_t aes_process,
                        scl_endianness_t data_endianness, 
-                       const uint8_t *const data_in, size_t data_len, uint8_t *data_out)
+                       const uint8_t *const data_in, size_t data_len, uint8_t *const data_out)
 {
 
 #if __riscv_xlen == 64
@@ -273,7 +273,7 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                      scl_process_t aes_process,
                      scl_endianness_t data_endianness, uint32_t auth_option,
                      const uint8_t *const aad, size_t aad_byte_len,
-                     const uint8_t *const data_in, size_t data_len, uint8_t *data_out, uint64_t *tag)
+                     const uint8_t *const data_in, size_t data_len, uint8_t *const data_out, uint64_t *const tag)
 {
 #if __riscv_xlen == 64
     uint64_t *in64 = (uint64_t *)data_in;
@@ -649,8 +649,8 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
             & HCA_REGISTER_AES_CR_BUSY_MASK ) ;
 
     // Get tag
-    *tag++ = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_AUTH);
-    *tag = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_AES_AUTH + sizeof(uint64_t)) );
+    tag[0] = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_AUTH);
+    tag[1] = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_AES_AUTH + sizeof(uint64_t)) );
 
     return SCL_OK;
 }
