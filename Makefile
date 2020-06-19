@@ -115,10 +115,11 @@ check-format:
 
 .PHONY : splint
 splint: $(SPLINT_RESULTS)
+	$(HIDE) splint -preproc -forcehints -standard -I $(INCLUDE_DIR) $(SOURCES) > $(BUILD_DIR)/splint/all_warnings.splint ; true
 
 $(BUILD_DIR)/splint/%.c.splint: $(SOURCE_DIR)/%.c
 	$(HIDE) mkdir -p $(dir $@)
-	splint -preproc -forcehints -standard -I $(INCLUDE_DIR) $< > $@ ; true
+	$(HIDE) splint -preproc -forcehints -standard -I $(INCLUDE_DIR) $< > $@ ; true
 
 .PHONY : docs
 docs: generate-doxygen
