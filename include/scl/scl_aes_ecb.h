@@ -48,14 +48,14 @@
 
 SCL_FUNCTION int32_t scl_aes_ecb_init(const metal_scl_t *const scl_ctx,
                                       const uint8_t *const key,
-                                      size_t key_byte_len,
-                                      scl_process_t mode);
+                                      size_t key_byte_len, scl_process_t mode);
 SCL_FUNCTION int32_t scl_aes_ecb_core(const metal_scl_t *const scl_ctx,
-                                      uint8_t *const dst, const uint8_t *const src,
+                                      uint8_t *const dst,
+                                      const uint8_t *const src,
                                       size_t src_byte_len, scl_process_t mode);
-SCL_FUNCTION int32_t scl_aes_ecb(const metal_scl_t *const scl_ctx, uint8_t *const dst,
-                                 const uint8_t *const src, size_t src_byte_len,
-                                 const uint8_t *const key,
+SCL_FUNCTION int32_t scl_aes_ecb(const metal_scl_t *const scl_ctx,
+                                 uint8_t *const dst, const uint8_t *const src,
+                                 size_t src_byte_len, const uint8_t *const key,
                                  size_t key_byte_len, scl_process_t mode);
 
 /** @}*/

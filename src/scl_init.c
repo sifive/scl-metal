@@ -38,7 +38,7 @@
 
 #include <scl/scl_init.h>
 
-int scl_init(const metal_scl_t * const scl)
+int scl_init(const metal_scl_t *const scl)
 {
     if (NULL == scl)
         return (SCL_ERROR);

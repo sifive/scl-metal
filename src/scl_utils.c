@@ -39,9 +39,13 @@
 #include <scl/scl_utils.h>
 
 #define UINT32(data)                                                           \
-    (((uint32_t)*((uint8_t *)data) << 24) + ((uint32_t)*((uint8_t *)data + 1) << 16) + ((uint32_t)*((uint8_t *)data + 2) << 8) + ((uint32_t)*((uint8_t *)data + 3)))
+    (((uint32_t) * ((uint8_t *)data) << 24) +                                  \
+     ((uint32_t) * ((uint8_t *)data + 1) << 16) +                              \
+     ((uint32_t) * ((uint8_t *)data + 2) << 8) +                               \
+     ((uint32_t) * ((uint8_t *)data + 3)))
 #define UINT64(data)                                                           \
-    (((uint64_t)UINT32((uint8_t *)data) << 32) + (uint64_t)UINT32((uint8_t *)data + 4))
+    (((uint64_t)UINT32((uint8_t *)data) << 32) +                               \
+     (uint64_t)UINT32((uint8_t *)data + 4))
 
 SCL_DATA metal_scl_t *scl_ctx = NULL;
 

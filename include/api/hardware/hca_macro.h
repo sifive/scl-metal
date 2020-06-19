@@ -58,10 +58,12 @@ static __inline__ void hca_setfield32(const metal_scl_t *const scl,
 }
 
 #define GET_32BITS(data, k)                                                    \
-    (((uint32_t)*((uint8_t *)data + k + 3) << 24) + ((uint32_t)*((uint8_t *)data + k + 2) << 16) +                       \
-     ((uint32_t)*((uint8_t *)data + k + 1) << 8) + ((uint32_t)*((uint8_t *)data + k)))
+    (((uint32_t) * ((uint8_t *)data + k + 3) << 24) +                          \
+     ((uint32_t) * ((uint8_t *)data + k + 2) << 16) +                          \
+     ((uint32_t) * ((uint8_t *)data + k + 1) << 8) +                           \
+     ((uint32_t) * ((uint8_t *)data + k)))
 #define GET_64BITS(data, k)                                                    \
-    ((((uint64_t)GET_32BITS((uint8_t *)data, (k + 4))) << 32) +                           \
+    ((((uint64_t)GET_32BITS((uint8_t *)data, (k + 4))) << 32) +                \
      (uint64_t)GET_32BITS((uint8_t *)data, k))
 
 /** @}*/

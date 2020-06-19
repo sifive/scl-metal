@@ -65,17 +65,17 @@ int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
 
     switch (key_byte_len)
     {
-        case SCL_KEY128:
-            ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY128, formated, mode);
-            break;
-        case SCL_KEY192:
-            ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY192, formated, mode);
-            break;
-        case SCL_KEY256:
-            ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY256, formated, mode);
-            break;
-        default:
-            ret = SCL_INVALID_INPUT;
+    case SCL_KEY128:
+        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY128, formated, mode);
+        break;
+    case SCL_KEY192:
+        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY192, formated, mode);
+        break;
+    case SCL_KEY256:
+        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY256, formated, mode);
+        break;
+    default:
+        ret = SCL_INVALID_INPUT;
     }
 
     if (SCL_OK == ret)
@@ -95,7 +95,8 @@ int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
 
 // for any input length, multiple of blocks
 int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx, uint8_t *const dst,
-                         const uint8_t *const src, size_t src_byte_len, scl_process_t mode)
+                         const uint8_t *const src, size_t src_byte_len,
+                         scl_process_t mode)
 {
     int i;
     int ret;
@@ -108,15 +109,17 @@ int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx, uint8_t *const dst,
     if (src_byte_len & 0xF)
         return (SCL_INVALID_INPUT);
 
-    scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_CBC, mode, SCL_BIG_ENDIAN_MODE, src, src_byte_len, dst);
+    scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_CBC, mode, SCL_BIG_ENDIAN_MODE,
+                             src, src_byte_len, dst);
 
     return (ret);
 }
 
 int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx, uint8_t *const dst,
-                    const uint8_t *const src, size_t src_byte_len, 
-                    const uint8_t *const key, size_t key_byte_len, 
-                    const uint8_t *const iv, size_t iv_byte_len, scl_process_t mode)
+                    const uint8_t *const src, size_t src_byte_len,
+                    const uint8_t *const key, size_t key_byte_len,
+                    const uint8_t *const iv, size_t iv_byte_len,
+                    scl_process_t mode)
 {
     int ret;
     if (NULL == src || NULL == key)
