@@ -24,7 +24,7 @@
 
 /**
  * @file scl_init.c
- * @brief 
+ * @brief
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -39,14 +39,14 @@
 #include <scl/scl_utils.h>
 
 #define UINT32(data)                                                           \
-    ((*(data) << 24) + (*(data + 1) << 16) + (*(data + 2) << 8) + (*(data + 3)))
+    (((uint32_t)*((uint8_t *)data) << 24) + ((uint32_t)*((uint8_t *)data + 1) << 16) + ((uint32_t)*((uint8_t *)data + 2) << 8) + ((uint32_t)*((uint8_t *)data + 3)))
 #define UINT64(data)                                                           \
-    (((uint64_t)UINT32(data) << 32) + (uint64_t)UINT32(data + 4))
+    (((uint64_t)UINT32((uint8_t *)data) << 32) + (uint64_t)UINT32((uint8_t *)data + 4))
 
 SCL_DATA metal_scl_t *scl_ctx = NULL;
 
 int32_t scl_format_key(const uint8_t *const key, const size_t key_byte_len,
-                   uint64_t *key_formated)
+                       uint64_t *key_formated)
 {
     int32_t ret;
 
@@ -57,29 +57,29 @@ int32_t scl_format_key(const uint8_t *const key, const size_t key_byte_len,
 
     switch (key_byte_len)
     {
-        case SCL_KEY128:
-            key_formated[0] = 0;
-            key_formated[1] = 0;
-            key_formated[2] = UINT64(&key[8]);
-            key_formated[3] = UINT64(&key[0]);
-            ret = SCL_OK;
-            break;
-        case SCL_KEY192:
-            key_formated[0] = 0;
-            key_formated[1] = UINT64(&key[16]);
-            key_formated[2] = UINT64(&key[8]);
-            key_formated[3] = UINT64(&key[0]);
-            ret = SCL_OK;
-            break;
-        case SCL_KEY256:
-            key_formated[0] = UINT64(&key[24]);
-            key_formated[1] = UINT64(&key[16]);
-            key_formated[2] = UINT64(&key[8]);
-            key_formated[3] = UINT64(&key[0]);
-            ret = SCL_OK;
-            break;
-        default:
-            ret = SCL_INVALID_INPUT;
+    case SCL_KEY128:
+        key_formated[0] = 0;
+        key_formated[1] = 0;
+        key_formated[2] = UINT64(&key[8]);
+        key_formated[3] = UINT64(&key[0]);
+        ret = SCL_OK;
+        break;
+    case SCL_KEY192:
+        key_formated[0] = 0;
+        key_formated[1] = UINT64(&key[16]);
+        key_formated[2] = UINT64(&key[8]);
+        key_formated[3] = UINT64(&key[0]);
+        ret = SCL_OK;
+        break;
+    case SCL_KEY256:
+        key_formated[0] = UINT64(&key[24]);
+        key_formated[1] = UINT64(&key[16]);
+        key_formated[2] = UINT64(&key[8]);
+        key_formated[3] = UINT64(&key[0]);
+        ret = SCL_OK;
+        break;
+    default:
+        ret = SCL_INVALID_INPUT;
     }
 
     return (ret);
