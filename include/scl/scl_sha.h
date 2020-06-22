@@ -68,7 +68,7 @@ typedef sha_ctx_t scl_sha_ctx_t;
  * @param[out] hash             hash output buffer
  * @param[in,out] hash_len      output buffer length / hash length
  * @return 0    in case of SUCCESS
- * @return != 0 in case of errors @see scl_errors_t
+ * @return != 0 in case of errors @ref scl_errors_t
  */
 SCL_FUNCTION int32_t scl_sha(const metal_scl_t *const scl_ctx,
                              scl_hash_mode_t algo, const uint8_t *const data,
@@ -82,7 +82,7 @@ SCL_FUNCTION int32_t scl_sha(const metal_scl_t *const scl_ctx,
  * @param[out] ctx              SHA context
  * @param[in] algo              hash algorithm to use
  * @return 0    in case of SUCCESS
- * @return != 0 in case of errors @see scl_errors_t
+ * @return != 0 in case of errors @ref scl_errors_t
  */
 SCL_FUNCTION int32_t scl_sha_init(const metal_scl_t *const scl_ctx,
                                   scl_sha_ctx_t *const ctx,
@@ -96,7 +96,7 @@ SCL_FUNCTION int32_t scl_sha_init(const metal_scl_t *const scl_ctx,
  * @param[in] data              data to hash
  * @param[in] data_len     length in bytes of data to hash
  * @return 0    in case of SUCCESS
- * @return != 0 in case of errors @see scl_errors_t
+ * @return != 0 in case of errors @ref scl_errors_t
  */
 SCL_FUNCTION int32_t scl_sha_core(const metal_scl_t *const scl_ctx,
                                   scl_sha_ctx_t *const ctx,
@@ -110,7 +110,7 @@ SCL_FUNCTION int32_t scl_sha_core(const metal_scl_t *const scl_ctx,
  * @param[out] hash             hash output buffer
  * @param[in,out] hash_len      output buffer length / hash length
  * @return 0    in case of SUCCESS
- * @return != 0 in case of errors @see scl_errors_t
+ * @return != 0 in case of errors @ref scl_errors_t
  */
 SCL_FUNCTION int32_t scl_sha_finish(const metal_scl_t *const scl_ctx,
                                     scl_sha_ctx_t *const ctx,
@@ -124,7 +124,7 @@ SCL_FUNCTION int32_t scl_sha_finish(const metal_scl_t *const scl_ctx,
  *
  * @param[in] inputlength              length in bytes to check
  * @return 0    in case of SUCCESS
- * @return != 0 in case of errors @see scl_errors_t
+ * @return != 0 in case of errors @ref scl_errors_t
  */
 SCL_FUNCTION int32_t scl_valid_hash_digest_length(size_t inputlength);
 

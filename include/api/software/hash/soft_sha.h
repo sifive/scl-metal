@@ -58,7 +58,7 @@
  * @param[in] hash_mode         hash mode
  * @param[in] data_endianness   endianess of the input data
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  * @warning only SCL_BIG_ENDIAN_MODE is supported
  */
 CRYPTO_FUNCTION int32_t soft_sha_init(const metal_scl_t *const scl,
@@ -74,7 +74,7 @@ CRYPTO_FUNCTION int32_t soft_sha_init(const metal_scl_t *const scl,
  * @param[in] data              data to hash
  * @param[in] data_byte_len     data length to hash
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_sha_core(const metal_scl_t *const scl,
                                       sha_ctx_t *const ctx,
@@ -90,7 +90,7 @@ CRYPTO_FUNCTION int32_t soft_sha_core(const metal_scl_t *const scl,
  * @param[out] hash             hash output buffer
  * @param[in,out] hash_len      length of the hash buffer/length of the hash
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_sha_finish(const metal_scl_t *const scl,
                                         sha_ctx_t *const ctx,

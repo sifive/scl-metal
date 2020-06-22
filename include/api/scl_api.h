@@ -82,7 +82,7 @@ struct __hash_func
      * @param[in] hash_mode         hash mode
      * @param[in] data_endianness   endianess of the input data
      * @return 0                    SUCCESS
-     * @return != 0                 otherwise @see scl_errors_t
+     * @return != 0                 otherwise @ref scl_errors_t
      * @warning only SCL_BIG_ENDIAN_MODE is supported
      */
     int32_t (*sha_init)(const metal_scl_t *const scl, sha_ctx_t *const ctx,
@@ -95,7 +95,7 @@ struct __hash_func
      * @param[in] data              data to hash
      * @param[in] data_byte_len     data length to hash
      * @return 0                    SUCCESS
-     * @return != 0                 otherwise @see scl_errors_t
+     * @return != 0                 otherwise @ref scl_errors_t
      */
     int32_t (*sha_core)(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                         const uint8_t *const data, size_t data_byte_len);
@@ -108,7 +108,7 @@ struct __hash_func
      * @param[out] hash             hash output buffer
      * @param[in,out] hash_len      length of the hash buffer/length of the hash
      * @return 0                    SUCCESS
-     * @return != 0                 otherwise @see scl_errors_t
+     * @return != 0                 otherwise @ref scl_errors_t
      */
     int32_t (*sha_finish)(const metal_scl_t *const scl, sha_ctx_t *const ctx,
                           uint8_t *const hash, size_t *const hash_len);

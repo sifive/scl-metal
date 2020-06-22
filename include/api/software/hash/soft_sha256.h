@@ -53,7 +53,7 @@
  * @param[in] ctx               sha256 context
  * @param[in] words             64 bytes block to be treated
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_sha256_block(sha256_ctx_t *const ctx,
                                           const uint8_t *const words);
@@ -64,7 +64,7 @@ CRYPTO_FUNCTION int32_t soft_sha256_block(sha256_ctx_t *const ctx,
  * @param[out] ctx              sha256 context
  * @param[in] data_endianness   endianess of the input data
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  * @warning only SCL_BIG_ENDIAN_MODE is supported
  */
 CRYPTO_FUNCTION int32_t soft_sha256_init(sha256_ctx_t *const ctx,
@@ -77,7 +77,7 @@ CRYPTO_FUNCTION int32_t soft_sha256_init(sha256_ctx_t *const ctx,
  * @param[in] data              data to hash
  * @param[in] data_byte_len     data lengtth to hash
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_sha256_core(sha256_ctx_t *const ctx,
                                          const uint8_t *const data,
@@ -91,7 +91,7 @@ CRYPTO_FUNCTION int32_t soft_sha256_core(sha256_ctx_t *const ctx,
  * @param[out] hash             hash output buffer
  * @param[in,out] hash_len      length of the hash buffer/length of the hash
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_sha256_finish(sha256_ctx_t *const ctx,
                                            uint8_t *const hash,

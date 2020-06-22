@@ -59,7 +59,7 @@
  * @param[in] NbBlocks512       number of 512 bits blocks
  * @param[in] data_in           Pointer on data to hash
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  * @note For SHA384 and SHA512 the number of blocks should be a multiple of 2
  */
 CRYPTO_FUNCTION int32_t hca_sha_block(const metal_scl_t *const scl,

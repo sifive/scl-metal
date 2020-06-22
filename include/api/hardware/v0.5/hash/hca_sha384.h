@@ -56,7 +56,7 @@
  * @param[out] hash             hash output buffer
  * @param[in,out] hash_len      length of the hash buffer/length of the hash
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t hca_sha384_finish(const metal_scl_t *const scl,
                                           sha_ctx_t *const ctx,
@@ -69,7 +69,7 @@ CRYPTO_FUNCTION int32_t hca_sha384_finish(const metal_scl_t *const scl,
  * @param[in] scl               metal scl context
  * @param[out] data_out         output buffer
  * @return 0                    SUCCESS
- * @return != 0                 otherwise @see scl_errors_t
+ * @return != 0                 otherwise @ref scl_errors_t
  * @warning data_out buffer should be long enough to contain SHA output
  * (48 bytes)
  */
