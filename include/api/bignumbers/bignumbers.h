@@ -23,20 +23,16 @@
  ******************************************************************************/
 
 /**
- * @file scl_soft.h
- * @brief
+ * @file bignumbers.h
+ * @brief big number arithmetic implementation/wrapper
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_SOFT_H
-#define _SCL_SOFT_H
+#ifndef _BIGNUMBERS_H
+#define _BIGNUMBERS_H
 
-#include <stdint.h>
-#include <stdio.h>
 
-#include <api/software/hash/soft_sha.h>
-#include <api/software/bignumbers/soft_bignumbers.h>
 
-#endif /*_SCL_SOFT_H */
+#endif /* _BIGNUMBERS_H */

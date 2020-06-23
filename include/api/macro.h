@@ -57,6 +57,40 @@
 #define bswap64(x) __bswap64(x)
 #endif
 
+/**
+ * @brief simple max macro
+ * @warning Not safe in case of function call as inputs, double entry issue.
+ */
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
+/**
+ * @brief simple min macro
+ * @warning Not safe in case of function call as inputs, double entry issue.
+ */
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
+/**
+ * @brief safe max macro
+ * @note Safe in case of function call as inputs, but more ressource consuming
+ */
+#define SAFE_MAX(a, b)                                                         \
+    ({                                                                         \
+        __typeof__(a) _a = (a);                                                \
+        __typeof__(b) _b = (b);                                                \
+        _a > _b ? _a : _b;                                                     \
+    })
+
+/**
+ * @brief simple min macro
+ * @note Safe in case of function call as inputs, but more ressource consuming
+ */
+#define SAFE_MIN(a, b)                                                         \
+    ({                                                                         \
+        __typeof__(a) _a = (a);                                                \
+        __typeof__(b) _b = (b);                                                \
+        _a < _b ? _a : _b;                                                     \
+    })
+
 /** @}*/
 
 #endif /* _MACRO_H */
