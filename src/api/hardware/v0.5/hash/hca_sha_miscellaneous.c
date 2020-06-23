@@ -71,7 +71,7 @@ int32_t hca_sha_block(const metal_scl_t *const scl, hash_mode_t hash_mode,
         return SCL_INVALID_INPUT;
     }
 
-    for (int k = 0; k < NbBlocks512; k++)
+    for (uint32_t k = 0; k < NbBlocks512; k++)
     {
         // Put data in the FIFO
         // Wait for IFIFOEMPTY is cleared

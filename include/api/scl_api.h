@@ -135,11 +135,16 @@ struct _metal_scl_struct
 static __inline__ int default_aes_setkey(metal_scl_t *scl,
                                          scl_aes_key_type_t type, uint64_t *key)
 {
+    (void)scl;
+    (void)type;
+    (void)key;
     return SCL_ERROR;
 }
 
 static __inline__ int default_aes_setiv(metal_scl_t *scl, uint64_t *initvec)
 {
+    (void)scl;
+    (void)initvec;
     return SCL_ERROR;
 }
 
@@ -148,6 +153,14 @@ default_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
                    scl_process_t aes_process, scl_endianness_t data_endianness,
                    uint32_t NbBlocks128, uint8_t *data_in, uint8_t *data_out)
 {
+    (void)scl;
+    (void)aes_mode;
+    (void)aes_process;
+    (void)data_endianness;
+    (void)NbBlocks128;
+    (void)data_in;
+    (void)data_out;
+
     return SCL_ERROR;
 }
 
@@ -158,6 +171,17 @@ default_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
                  uint64_t data_len, uint8_t *data_in, uint8_t *data_out,
                  uint64_t *tag)
 {
+    (void)scl;
+    (void)aes_mode;
+    (void)aes_process;
+    (void)data_endianness;
+    (void)auth_option;
+    (void)aad_len;
+    (void)aad;
+    (void)data_len;
+    (void)data_in;
+    (void)data_out;
+    (void)tag;
     return SCL_ERROR;
 }
 
@@ -166,13 +190,25 @@ static __inline__ int default_sha(metal_scl_t *scl, scl_hash_mode_t hash_mode,
                                   uint32_t NbBlocks, uint8_t *data_in,
                                   uint8_t *data_out)
 {
+    (void)scl;
+    (void)hash_mode;
+    (void)data_endianness;
+    (void)NbBlocks;
+    (void)data_in;
+    (void)data_out;
     return SCL_ERROR;
 }
 
-static __inline__ int default_trng_init(metal_scl_t *scl) { return SCL_ERROR; }
+static __inline__ int default_trng_init(metal_scl_t *scl)
+{
+    (void)scl;
+    return SCL_ERROR;
+}
 
 static __inline__ int default_trng_getdata(metal_scl_t *scl, uint32_t *data_out)
 {
+    (void)scl;
+    (void)data_out;
     return SCL_ERROR;
 }
 

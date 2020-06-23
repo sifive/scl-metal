@@ -72,7 +72,7 @@ override SPHINX_DIR = $(DOCS_DIR)/sphinx
 #                        COMPILATION FLAGS
 ################################################################################
 
-override CFLAGS += -I $(INCLUDE_DIR) -Wall
+override CFLAGS += -I $(INCLUDE_DIR) -Wall -Wextra
 
 override ASFLAGS = $(CFLAGS)
 

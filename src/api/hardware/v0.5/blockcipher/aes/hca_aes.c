@@ -286,7 +286,7 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
     uint32_t *aad32 = (uint32_t *)aad;
     register uint32_t val;
 #endif /* __riscv_xlen */
-    int i,j,k;
+    uint32_t i,j,k;
     uint64_t NbBlocks128;
     uint64_t tmp[BLOCK128_NB_UINT64]                __attribute__ ((aligned (8)));
 
