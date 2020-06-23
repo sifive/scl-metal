@@ -80,7 +80,6 @@ int32_t soft_sha224_finish(sha224_ctx_t *const ctx, uint8_t *const hash,
 {
     size_t block_buffer_index;
     size_t block_remain;
-    size_t data_index = 0;
 
     if ((NULL == hash) || (NULL == hash_len))
     {

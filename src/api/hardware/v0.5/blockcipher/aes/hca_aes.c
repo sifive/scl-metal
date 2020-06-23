@@ -399,9 +399,9 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
             for (j=0 ; j < i; j++)
             {
                 if ( SCL_BIG_ENDIAN_MODE == data_endianness)
-                    tmp[0] = tmp[0] << 8 + *(aad + (k << 4) + i - 1 - j);
+                    tmp[0] = (tmp[0] << 8) + *(aad + (k << 4) + i - 1 - j);
                 else
-                    tmp[0] = tmp[0] << 8 + *(aad + (k << 4) + j);
+                    tmp[0] = (tmp[0] << 8) + *(aad + (k << 4) + j);
             }
         } else {
             tmp[0] = GET_64BITS(aad, (k << 4));
@@ -410,9 +410,9 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                 for (j=0 ; j < i; j++)
                 {
                     if ( SCL_BIG_ENDIAN_MODE == data_endianness)
-                        tmp[1] = tmp[1] << 8 + *(aad + (k << 4) + i - 1 - j);
+                        tmp[1] = (tmp[1] << 8)+ *(aad + (k << 4) + i - 1 - j);
                     else
-                        tmp[1] = tmp[1] << 8 + *(aad + (k << 4) + j);
+                        tmp[1] = (tmp[1] << 8) + *(aad + (k << 4) + j);
                 }
             } 
         }
@@ -554,9 +554,9 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
             for (j=0 ; j < i; j++)
             {
                 if ( SCL_BIG_ENDIAN_MODE == data_endianness)
-                    tmp[0] = tmp[0] << 8 + *(data_in + (k << 4) + i - 1 - j);
+                    tmp[0] = (tmp[0] << 8) + *(data_in + (k << 4) + i - 1 - j);
                 else
-                    tmp[0] = tmp[0] << 8 + *(data_in + (k << 4) + j);
+                    tmp[0] = (tmp[0] << 8) + *(data_in + (k << 4) + j);
             }
         } else {
             tmp[0] = GET_64BITS(data_in, (k << 4));
@@ -565,9 +565,9 @@ int32_t hca_aes_auth(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                 for (j=0 ; j < i; j++)
                 {
                     if ( SCL_BIG_ENDIAN_MODE == data_endianness)
-                        tmp[1] = tmp[1] << 8 + *(data_in + (k << 4) + i - 1 - j);
+                        tmp[1] = (tmp[1] << 8) + *(data_in + (k << 4) + i - 1 - j);
                     else
-                        tmp[1] = tmp[1] << 8 + *(data_in + (k << 4) + j);
+                        tmp[1] = (tmp[1] << 8) + *(data_in + (k << 4) + j);
                 }
             } 
         }

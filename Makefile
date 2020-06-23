@@ -11,7 +11,7 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/api \
 		$(SOURCE_DIR)/api/software \
 		$(SOURCE_DIR)/api/software/hash \
-		$(SOURCE_DIR)/api/hardware 
+		$(SOURCE_DIR)/api/software/bignumbers 
 		
 # the version management will be improved, this is just a draft to test
 # compilation of the version specific files
@@ -27,7 +27,8 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/blockcipher \
 		$(SOURCE_DIR)/blockcipher/aes \
 		$(SOURCE_DIR)/hash \
-		$(SOURCE_DIR)/hash/sha
+		$(SOURCE_DIR)/hash/sha \
+		$(SOURCE_DIR)/bignumbers
 
 SCL_DIR = $(CURRENT_DIR)
 include $(CURRENT_DIR)/scripts/scl.mk
@@ -39,10 +40,12 @@ override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/api \
 	$(CURRENT_DIR)/include/api/software \
 	$(CURRENT_DIR)/include/api/software/hash \
+	$(CURRENT_DIR)/include/api/software/bignumbers \
 	$(CURRENT_DIR)/include/api/hardware \
 	$(CURRENT_DIR)/include/api/hardware/v0.5 \
 	$(CURRENT_DIR)/include/api/hardware/v0.5/blockcipher/aes \
 	$(CURRENT_DIR)/include/api/hardware/v0.5/hash
+	
  # SCL
 override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/scl
@@ -69,7 +72,7 @@ override SPHINX_DIR = $(DOCS_DIR)/sphinx
 #                        COMPILATION FLAGS
 ################################################################################
 
-override CFLAGS += -I $(INCLUDE_DIR)
+override CFLAGS += -I $(INCLUDE_DIR) -Wall
 
 override ASFLAGS = $(CFLAGS)
 

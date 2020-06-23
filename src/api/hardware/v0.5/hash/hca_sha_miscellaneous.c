@@ -52,7 +52,6 @@ int32_t hca_sha_block(const metal_scl_t *const scl, hash_mode_t hash_mode,
 #elif __riscv_xlen == 32
     uint32_t *in32 = (uint32_t *)data_in;
 #endif
-    int k;
     register int i;
 
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_SHA_REV))

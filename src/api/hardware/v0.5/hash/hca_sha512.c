@@ -112,7 +112,6 @@ int32_t hca_sha512_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
 {
     size_t block_buffer_index;
     size_t block_remain;
-    size_t data_index = 0;
     int32_t result;
 
     if ((NULL == hash) || (NULL == hash_len))

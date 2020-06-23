@@ -87,7 +87,7 @@ int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
         ret = scl_ctx->aes_func.setiv(scl_ctx, tmp);
     }
 
-    /* @FIXME: /*
+    /* @FIXME: */
     /* key_formated should be secure erased */
 
     return (ret);
@@ -98,7 +98,6 @@ int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx, uint8_t *const dst,
                          const uint8_t *const src, size_t src_byte_len,
                          scl_process_t mode)
 {
-    int i;
     int ret;
 
     if (NULL == scl_ctx)
@@ -109,8 +108,8 @@ int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx, uint8_t *const dst,
     if (src_byte_len & 0xF)
         return (SCL_INVALID_INPUT);
 
-    scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_CBC, mode, SCL_BIG_ENDIAN_MODE,
-                             src, src_byte_len, dst);
+    ret = scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_CBC, mode,
+                                   SCL_BIG_ENDIAN_MODE, src, src_byte_len, dst);
 
     return (ret);
 }

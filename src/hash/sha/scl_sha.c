@@ -66,6 +66,8 @@ int32_t scl_sha(const metal_scl_t *const scl_ctx, scl_hash_mode_t algo,
     {
         return (result);
     }
+
+    return (result);
 }
 
 int32_t scl_sha_init(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx,
