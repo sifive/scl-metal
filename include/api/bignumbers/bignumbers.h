@@ -33,6 +33,6 @@
 #ifndef _BIGNUMBERS_H
 #define _BIGNUMBERS_H
 
-
+#include <stdint.h>
 
 #endif /* _BIGNUMBERS_H */

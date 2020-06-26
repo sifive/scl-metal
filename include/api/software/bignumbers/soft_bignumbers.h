@@ -37,6 +37,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <api/bignumbers/bignumbers.h>
+
 #if __riscv_xlen == 32
 #define SCL_WORD_MAX_VALUE 0xFFFFFFFF
 #define SCL_WORD_HALF_VALUE 0xFFFF
@@ -60,38 +62,28 @@
 #endif
 
 /**
- * @brief memset for 64 bits word to target to speed up big numbers computation
+ * @brief zeroise bignum struct
  *
- * @param[out] array        array to memset
- * @param[in] value         value to set in the array
- * @param[in] word_size     number of 64 bits words to set
- * @warning No check on pointer value
+ * @param[out] array        bignumber to zeroise
+ * @param[in] nb_64b_words  number of 64 bits words to zeroize
+ * 
  */
-void scl_bignum_memset(uint64_t *const array, uint64_t value, size_t word_size);
+CRYPTO_FUNCTION void soft_bignum_zeroise(uint64_t *const array, size_t nb_64b_words);
 
 /**
- * @brief memcopy for 64 bits word to target to speed up big numbers computation
+ * @brief Do big number ber addition
  *
- * @param[out] dest          destination 64 bits words array
- * @param[in] source        source 64 bits words array
- * @param[in] word_size     number of 64 bits words to copy
- * @warning No check on pointer value
+ * @param in_a              Input array a
+ * @param in_b              Input array b
+ * @param out               Output array (addition result)
+ * @param nb_32b_words      number of 32 bits words to use in calcul
+ * @return  the carry from the addition
+ * @warning Warning the big number need to be little endian convert if necessary
+ * @warning nb_32b_words is limited to 
  */
-void scl_bignum_memcpy(uint64_t *const dest, const uint64_t *const source,
-                       size_t word_size);
-
-/**
- * @brief memcmp for 64 bits word to target to speed up big numbers computation
- *
- * @param[in] a             first array to compare
- * @param[in] b             second array to compare
- * @param[in] word_size     number of 64 bits words to compare
- * @return 0            a == b
- * @return 1            a > b
- * @return -1           a < b
- * @warning No check on pointer value
- */
-int32_t scl_bignum_memcmp(const uint64_t *const a, const uint64_t *const b,
-                          size_t word_size);
+CRYPTO_FUNCTION uint64_t soft_bignum_add(const uint64_t *const in_a,
+                                                const uint64_t *const in_b,
+                                                uint64_t *const out,
+                                                size_t nb_32b_words);
 
 #endif /* _SOFT_BIGNUMBERS_H */
