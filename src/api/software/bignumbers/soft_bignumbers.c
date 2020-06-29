@@ -143,6 +143,9 @@ __attribute__((naked)) uint64_t soft_bignum_inc(const uint64_t *const array,
         "slli a1, a1, 2 \n"
         "add a1, a0, a1 \n"
 
+        /* init t2 */
+        "li t2, 1 \n"
+
         /* case there is only one 32bit word */
         "addi a4, a0, 4 \n"
         "beq a1, a4, 2f\n"
@@ -151,9 +154,6 @@ __attribute__((naked)) uint64_t soft_bignum_inc(const uint64_t *const array,
         "mv a4, a1 \n"
         "srl a1, a1, 3 \n"
         "sll a1, a1, 3 \n"
-
-        /* init t2 */
-        "li t2, 1 \n"
 
         /* start loop */
         "1: \n"
