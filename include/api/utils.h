@@ -118,20 +118,6 @@ void memset_u64(uint64_t *const array, uint64_t value, size_t word_size);
 void memcpy_u64(uint64_t *const dest, const uint64_t *const source,
                 size_t word_size);
 
-/**
- * @brief memcmp for 64 bits word to target to speed up big numbers computation
- *
- * @param[in] a             first array to compare
- * @param[in] b             second array to compare
- * @param[in] word_size     number of 64 bits words to compare
- * @return 0            a == b
- * @return 1            a > b
- * @return -1           a < b
- * @warning No check on pointer value
- */
-int32_t memcmp_u64(const uint64_t *const a, const uint64_t *const b,
-                   size_t word_size);
-
 /** @}*/
 
 #endif /* _UTILS_H */

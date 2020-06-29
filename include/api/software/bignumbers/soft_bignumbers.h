@@ -72,7 +72,34 @@ CRYPTO_FUNCTION void soft_bignum_zeroise(uint64_t *const array,
                                          size_t nb_64b_words);
 
 /**
- * @brief Do big number ber addition
+ * @brief big integer compare
+ *
+ * @param[in] a             first array to compare
+ * @param[in] b             second array to compare
+ * @param[in] word_size     number of 64 bits words to compare
+ * @return 0            a == b
+ * @return 1            a > b
+ * @return -1           a < b
+ * @warning No check on pointer value
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_compare(const uint64_t *const a,
+                                            const uint64_t *const b,
+                                            size_t word_size);
+
+/**
+ * @brief Increment big number by one
+ *
+ * @param array              Input array a
+ * @param nb_32b_words      number of 32 bits words to use in calcul
+ * @return  the carry from the addition
+ * @warning Warning the big number need to be little endian convert if necessary
+ * @warning nb_32b_words is limited to 0x3FFFFFFF
+ */
+CRYPTO_FUNCTION uint64_t soft_bignum_inc(const uint64_t *const array,
+                                         size_t nb_32b_words);
+
+/**
+ * @brief Do big number addition
  *
  * @param in_a              Input array a
  * @param in_b              Input array b
@@ -105,5 +132,19 @@ CRYPTO_FUNCTION uint32_t soft_bignum_sub(const uint64_t *const in_a,
                                          const uint64_t *const in_b,
                                          uint64_t *const out,
                                          size_t nb_32b_words);
+
+/**
+ * @brief Big integer multiplication
+ *
+ * @param in_a              Input array a
+ * @param in_b              Input array a
+ * @param out               Output array, should be twice the size of input
+ * array
+ * @param nb_32b_words      Number of words, of inputs arrays
+ * @warning Output should be 2 time the size of Inouts arrays
+ */
+CRYPTO_FUNCTION void soft_bignum_mult(const uint64_t *const in_a,
+                                      const uint64_t *const in_b,
+                                      uint64_t *const out, size_t nb_32b_words);
 
 #endif /* _SOFT_BIGNUMBERS_H */
