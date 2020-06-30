@@ -421,6 +421,15 @@ int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
 #endif
     }
 
+    if (NbBlocks128)
+    {
+        // Wait for IFIFOEMPTY is cleared
+        while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
+                HCA_REGISTER_CR_IFIFOFULL_OFFSET) &
+               HCA_REGISTER_CR_IFIFOFULL_MASK)
+            ;
+    }
+
     // PLD
     // Set DTYPE
     scl_hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 1,
