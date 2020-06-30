@@ -17,6 +17,7 @@ override SOURCE_DIRS += \
 # compilation of the version specific files
 ifeq ($(HCA_VERSION),0.5)
 override SOURCE_DIRS += \
+		$(SOURCE_DIR)/api/hardware \
 		$(SOURCE_DIR)/api/hardware/v0.5 \
 		$(SOURCE_DIR)/api/hardware/v0.5/blockcipher/aes \
 		$(SOURCE_DIR)/api/hardware/v0.5/hash \
@@ -74,7 +75,7 @@ override SPHINX_DIR = $(DOCS_DIR)/sphinx
 #                        COMPILATION FLAGS
 ################################################################################
 
-override CFLAGS += -I $(INCLUDE_DIR) -Wall -Wextra
+override CFLAGS += -I $(INCLUDE_DIR) -Wall -Wextra -Wpedantic
 
 override ASFLAGS = $(CFLAGS)
 
