@@ -49,10 +49,7 @@
  *  @{
  */
 
-SCL_FUNCTION int scl_init(const metal_scl_t *const scl);
-
-SCL_FUNCTION int scl_format_key(uint8_t *key, int key_byte_len,
-                                uint64_t *key_formated);
+SCL_FUNCTION int32_t scl_init(const metal_scl_t *const scl);
 
 /** @}*/
 

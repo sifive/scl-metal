@@ -23,9 +23,9 @@
  ******************************************************************************/
 
 /**
- * @file scl_aes_cbc.c
- * @brief CBC mode for the AES.
- * AES is NIST FIPS-197,
+ * @file scl_aes_gcm.c
+ * @brief GCM mode for the AES.
+ * AES is NIST FIPS-197, GCM follow NIST SP 800-38D
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -42,12 +42,13 @@
 
 #include <api/blockcipher/aes/aes.h>
 
-#include <scl/scl_aes_cbc.h>
+#include <scl/scl_aes_gcm.h>
 
-int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
-                         const uint8_t *const key, size_t key_byte_len,
-                         const uint8_t *const iv, size_t iv_byte_len,
-                         scl_process_t mode)
+int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
+                                      const uint8_t *const key,
+                                      size_t key_byte_len, const uint8_t *const iv,
+                                      size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len,
+                                      size_t pld_byte_len, scl_process_t mode)
 {
     int32_t ret;
     uint64_t formated[4] = {0};
@@ -61,7 +62,9 @@ int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
     ret = scl_format_key(key, key_byte_len, formated);
 
     if (SCL_OK != ret)
+    {
         return (ret);
+    }
 
     switch (key_byte_len)
     {
@@ -88,70 +91,98 @@ int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
     /* @FIXME: */
     /* key_formated should be secure erased */
 
+    if (SCL_OK != ret)
+    {
+        return (ret);
+    }
+
+    ret = scl_ctx->aes_func.auth_init(scl_ctx, ctx, SCL_AES_GCM, mode, SCL_BIG_ENDIAN_MODE, 0, aad, aad_byte_len, pld_byte_len);
+
     return (ret);
 }
 
-// for any input length, multiple of blocks
-int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx, uint8_t *const dst,
-                         const uint8_t *const src, size_t src_byte_len,
-                         scl_process_t mode)
+int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
+                                      uint8_t *const dst,
+                                      const uint8_t *const src, size_t src_byte_len)
+{
+    if (NULL == scl_ctx)
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    return scl_ctx->aes_func.auth_core(scl_ctx, ctx, SCL_BIG_ENDIAN_MODE, src, src_byte_len, dst);
+}
+
+int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
+                                 uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst, const uint8_t *const src, size_t src_byte_len)
 {
     int32_t ret;
+    uint8_t tmp[16] = {0};
+    size_t i;
 
     if (NULL == scl_ctx)
     {
         return (SCL_INVALID_INPUT);
     }
 
-    if (src_byte_len & 0xF)
-        return (SCL_INVALID_INPUT);
+    if ((NULL != src) && src_byte_len)
+    {
+        ret = scl_ctx->aes_func.auth_core(scl_ctx, ctx, SCL_BIG_ENDIAN_MODE, src, src_byte_len, dst);
+        if (SCL_OK != ret)
+        {
+            return (ret);
+        }
+    }
 
-    ret = scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_CBC, mode, SCL_BIG_ENDIAN_MODE,
-                             src, src_byte_len, dst);
+    if (NULL == dst)
+    {
+        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, NULL, (uint64_t *)tmp);
+    }
+    else
+    {
+        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, &dst[src_byte_len], (uint64_t *)tmp);
+    }
+    if (SCL_OK != ret)
+    {
+        return (ret);
+    }
+
+    for (i = 0; i < tag_byte_len; i++ )
+    {
+        tag[i]=tmp[15-i];
+    }
 
     return (ret);
 }
 
-int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx, uint8_t *const dst,
-                    const uint8_t *const src, size_t src_byte_len,
-                    const uint8_t *const key, size_t key_byte_len,
-                    const uint8_t *const iv, size_t iv_byte_len,
-                    scl_process_t mode)
+int32_t scl_aes_gcm(const metal_scl_t *const scl_ctx,
+                                 uint8_t *const tag, size_t tag_byte_len, 
+                                 uint8_t *const dst, const uint8_t *const src,
+                                 size_t src_byte_len, const uint8_t *const key,
+                                 size_t key_byte_len, const uint8_t *const iv,
+                                 size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len, scl_process_t mode)
 {
     int32_t ret;
+    aes_auth_ctx_t ctx_aes_auth = {0};
 
-    if (NULL == src || NULL == key || NULL == dst)
+    if (NULL == scl_ctx)
     {
         return (SCL_INVALID_INPUT);
     }
 
-    if ((src_byte_len % BLOCK128_NB_BYTE) != 0)
-    {
-        return (SCL_INVALID_INPUT);
-    }
-
-    if ((SCL_ENCRYPT != mode) && (SCL_DECRYPT != mode))
-    {
-        return (SCL_INVALID_MODE);
-    }
-
-    if ((SCL_KEY128 != key_byte_len) && (SCL_KEY192 != key_byte_len) &&
-        (SCL_KEY256 != key_byte_len))
-    {
-        return (SCL_INVALID_INPUT);
-    }
-
-    ret = scl_aes_cbc_init(scl_ctx, key, key_byte_len, iv, iv_byte_len, mode);
+    ret = scl_aes_gcm_init(scl_ctx, &ctx_aes_auth, key, key_byte_len, iv, iv_byte_len, aad, aad_byte_len, src_byte_len, mode);
     if (SCL_OK != ret)
     {
         return (ret);
     }
 
-    ret = scl_aes_cbc_core(scl_ctx, dst, src, src_byte_len, mode);
+    ret = scl_aes_gcm_core(scl_ctx, &ctx_aes_auth, dst, src, src_byte_len);
     if (SCL_OK != ret)
     {
         return (ret);
     }
-    
-    return (SCL_OK);
+
+    ret = scl_aes_gcm_finish(scl_ctx, &ctx_aes_auth, tag, tag_byte_len, NULL, NULL, 0);
+
+    return (ret);
 }
