@@ -38,6 +38,7 @@
 #include <stdint.h>
 
 #include <api/bignumbers/bignumbers.h>
+#include <api/scl_api.h>
 
 #if __riscv_xlen == 32
 #define SCL_WORD_MAX_VALUE 0xFFFFFFFF
@@ -62,16 +63,6 @@
 #endif
 
 /**
- * @brief zeroise bignum struct
- *
- * @param[out] array        bignumber to zeroise
- * @param[in] nb_64b_words  number of 64 bits words to zeroize
- *
- */
-CRYPTO_FUNCTION void soft_bignum_zeroise(uint64_t *const array,
-                                         size_t nb_64b_words);
-
-/**
  * @brief big integer compare
  *
  * @param[in] a             first array to compare
@@ -89,8 +80,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_compare(const uint64_t *const a,
 /**
  * @brief Increment big number by one
  *
- * @param array              Input array a
- * @param nb_32b_words      number of 32 bits words to use in calcul
+ * @param[in,out] array             Input array a
+ * @param[in] nb_32b_words          number of 32 bits words to use in calcul
  * @return  the carry from the addition
  * @warning Warning the big number need to be little endian convert if necessary
  * @warning nb_32b_words is limited to 0x3FFFFFFF
@@ -101,10 +92,10 @@ CRYPTO_FUNCTION uint64_t soft_bignum_inc(const uint64_t *const array,
 /**
  * @brief Do big number addition
  *
- * @param in_a              Input array a
- * @param in_b              Input array b
- * @param out               Output array (addition result)
- * @param nb_32b_words      number of 32 bits words to use in calcul
+ * @param[in] in_a              Input array a
+ * @param[in] in_b              Input array b
+ * @param[out] out              Output array (addition result)
+ * @param[in] nb_32b_words      number of 32 bits words to use in calcul
  * @return  the carry from the addition
  * @warning Warning the big number need to be little endian convert if necessary
  * @warning nb_32b_words is limited to 0x3FFFFFFF
@@ -117,10 +108,10 @@ CRYPTO_FUNCTION uint64_t soft_bignum_add(const uint64_t *const in_a,
 /**
  * @brief Do big number ber substraction
  *
- * @param in_a              Input array a
- * @param in_b              Input array b
- * @param out               Output array (substration result)
- * @param nb_32b_words      number of 32 bits words to use in calcul
+ * @param[in] in_a              Input array a
+ * @param[in] in_b              Input array b
+ * @param[out] out              Output array (substration result)
+ * @param[in] nb_32b_words      number of 32 bits words to use in calcul
  * @return  the carry from the substraction
  * @warning Warning the big number need to be little endian convert if necessary
  * @warning nb_32b_words is limited to 0x3FFFFFFF
@@ -136,15 +127,48 @@ CRYPTO_FUNCTION uint32_t soft_bignum_sub(const uint64_t *const in_a,
 /**
  * @brief Big integer multiplication
  *
- * @param in_a              Input array a
- * @param in_b              Input array a
- * @param out               Output array, should be twice the size of input
+ * @param[in] in_a          Input array a
+ * @param[in] in_b          Input array a
+ * @param[out] out          Output array, should be twice the size of input
  * array
- * @param nb_32b_words      Number of words, of inputs arrays
- * @warning Output should be 2 time the size of Inouts arrays
+ * @param[in] nb_32b_words  Number of words, of inputs arrays
+ * @warning Output should be 2 time the size of Inputs arrays
  */
 CRYPTO_FUNCTION void soft_bignum_mult(const uint64_t *const in_a,
                                       const uint64_t *const in_b,
                                       uint64_t *const out, size_t nb_32b_words);
+
+/**
+ * @brief bignumber left shift
+ *
+ * @param[in] scl           metal scl context (not used in case of soft sha)
+ * @param[in] in            big integer array to left shift
+ * @param[out] out          output big integer
+ * @param[in] shift         number of bits to left shift
+ * @param[in] nb_32b_words  size of the big integer in 32bits words
+ * @return 0 success
+ * @return != 0 otherwise @ref scl_errors_t
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
+                                              const uint64_t *const in,
+                                              uint64_t *const out, size_t shift,
+                                              size_t nb_32b_words);
+
+/**
+ * @brief bignumber right shift
+ *
+ * @param[in] scl           metal scl context (not used in case of soft sha)
+ * @param[in] in            big integer array to right shift
+ * @param[out] out          output big integer
+ * @param[in] shift         number of bits to right shift
+ * @param[in] nb_32b_words  size of the big integer in 32bits words
+ * @return 0 success
+ * @return != 0 otherwise @ref scl_errors_t
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_rightshift(const metal_scl_t *const scl,
+                                               const uint64_t *const in,
+                                               uint64_t *const out,
+                                               size_t shift,
+                                               size_t nb_32b_words);
 
 #endif /* _SOFT_BIGNUMBERS_H */
