@@ -106,28 +106,34 @@ struct __aes_func
      * @param[in] auth_option       option for the ccm mode
      * @param[in] aad               add data
      * @param[in] add_len           length of the add data (in bytes)
-     * @param[in] payload_len       length of the payload data (in bytes) 
+     * @param[in] payload_len       length of the payload data (in bytes)
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
-    int32_t (*auth_init)(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
-                    scl_process_t aes_process, scl_endianness_t data_endianness,
-                    uint32_t auth_option, const uint8_t *const aad,
-                    size_t aad_len, size_t payload_len);
+    int32_t (*auth_init)(const metal_scl_t *const scl,
+                         aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
+                         scl_process_t aes_process,
+                         scl_endianness_t data_endianness, uint32_t auth_option,
+                         const uint8_t *const aad, size_t aad_len,
+                         size_t payload_len);
     /**
      * @brief perform AES cipher with authentication operation
      *
      * @param[in] scl               metal scl context
      * @param[in,out] ctx           aes authenticate context
      * @param[in] data_in           data payload to process
-     * @param[in] data_len          length of the current data payload to process (in bytes)
+     * @param[in] data_len          length of the current data payload to
+     * process (in bytes)
      * @param[out] data_out         data output buffer
      * @param[out] len_out          length of data (in bytes) write into output buffer
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
-    int32_t (*auth_core)(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
-                    const uint8_t *const data_in, size_t data_len, uint8_t *const data_out, size_t *const len_out);
+    int32_t (*auth_core)(const metal_scl_t *const scl,
+                         aes_auth_ctx_t *const ctx,
+                         scl_endianness_t data_endianness,
+                         const uint8_t *const data_in, size_t data_len,
+                         uint8_t *const data_out);
     /**
      * @brief finish AES cipher with authentication operation
      *
@@ -138,8 +144,9 @@ struct __aes_func
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
-    int32_t (*auth_finish)(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, uint8_t *const data_out,
-                    uint64_t *const tag);
+    int32_t (*auth_finish)(const metal_scl_t *const scl,
+                           aes_auth_ctx_t *const ctx, uint8_t *const data_out,
+                           uint64_t *const tag);
 };
 
 /*! @brief Hash low level API entry points */
@@ -217,8 +224,8 @@ struct _metal_scl_struct
     const struct __trng_func trng_func;
 };
 
-static __inline__ int32_t default_aes_setkey(metal_scl_t *scl,
-                                         scl_aes_key_type_t type, uint64_t *key)
+static __inline__ int32_t
+default_aes_setkey(metal_scl_t *scl, scl_aes_key_type_t type, uint64_t *key)
 {
     (void)scl;
     (void)type;
@@ -249,11 +256,12 @@ default_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     return SCL_ERROR;
 }
 
-static __inline__ int32_t 
-default_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
-                    scl_process_t aes_process, scl_endianness_t data_endianness,
-                    uint32_t auth_option, const uint8_t *const aad,
-                    size_t aad_len, size_t payload_len)
+static __inline__ int32_t
+default_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
+                      scl_aes_mode_t aes_mode, scl_process_t aes_process,
+                      scl_endianness_t data_endianness, uint32_t auth_option,
+                      const uint8_t *const aad, size_t aad_len,
+                      size_t payload_len)
 {
     (void)scl;
     (void)ctx;
@@ -267,9 +275,11 @@ default_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, s
     return SCL_ERROR;
 }
 
-static __inline__ int32_t 
-default_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
-                    const uint8_t *const data_in, size_t data_len, uint8_t *const data_out)
+static __inline__ int32_t default_aes_auth_core(const metal_scl_t *const scl,
+                                                aes_auth_ctx_t *const ctx,
+                                                const uint8_t *const data_in,
+                                                size_t data_len,
+                                                uint8_t *const data_out)
 {
     (void)scl;
     (void)ctx;
@@ -279,9 +289,10 @@ default_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
     return SCL_ERROR;
 }
 
-static __inline__ int32_t 
-default_aes_auth_finish(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, uint8_t *const data_out,
-                    uint64_t *const tag)
+static __inline__ int32_t default_aes_auth_finish(const metal_scl_t *const scl,
+                                                  aes_auth_ctx_t *const ctx,
+                                                  uint8_t *const data_out,
+                                                  uint64_t *const tag)
 {
     (void)scl;
     (void)ctx;
@@ -290,9 +301,10 @@ default_aes_auth_finish(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
     return SCL_ERROR;
 }
 
-static __inline__ int32_t 
-default_sha_init(const metal_scl_t *const scl, sha_ctx_t *const ctx,
-                        hash_mode_t hash_mode, endianness_t data_endianness)
+static __inline__ int32_t default_sha_init(const metal_scl_t *const scl,
+                                           sha_ctx_t *const ctx,
+                                           hash_mode_t hash_mode,
+                                           endianness_t data_endianness)
 {
     (void)scl;
     (void)ctx;
@@ -301,9 +313,10 @@ default_sha_init(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return SCL_ERROR;
 }
 
-static __inline__ int32_t 
-default_sha_core(const metal_scl_t *const scl, sha_ctx_t *const ctx,
-                        const uint8_t *const data, size_t data_byte_len)
+static __inline__ int32_t default_sha_core(const metal_scl_t *const scl,
+                                           sha_ctx_t *const ctx,
+                                           const uint8_t *const data,
+                                           size_t data_byte_len)
 {
     (void)scl;
     (void)ctx;
@@ -312,9 +325,10 @@ default_sha_core(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return SCL_ERROR;
 }
 
-static __inline__ int32_t 
-default_sha_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
-                          uint8_t *const hash, size_t *const hash_len)
+static __inline__ int32_t default_sha_finish(const metal_scl_t *const scl,
+                                             sha_ctx_t *const ctx,
+                                             uint8_t *const hash,
+                                             size_t *const hash_len)
 {
     (void)scl;
     (void)ctx;
@@ -323,13 +337,14 @@ default_sha_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return SCL_ERROR;
 }
 
-static __inline__ int32_t default_trng_init(metal_scl_t *scl) 
+static __inline__ int32_t default_trng_init(metal_scl_t *scl)
 {
     (void)scl;
-    return SCL_ERROR; 
+    return SCL_ERROR;
 }
 
-static __inline__ int32_t default_trng_getdata(metal_scl_t *scl, uint32_t *data_out)
+static __inline__ int32_t default_trng_getdata(metal_scl_t *scl,
+                                               uint32_t *data_out)
 {
     (void)scl;
     (void)data_out;

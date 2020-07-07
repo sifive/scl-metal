@@ -43,16 +43,17 @@
 
 #include <scl/scl_retdefs.h>
 
-/** 
+/**
  * \addtogroup HCA
- * \addtogroup HCA_API_TRNG 
+ * \addtogroup HCA_API_TRNG
  * \ingroup HCA
  *  @{
  */
 
 CRYPTO_FUNCTION int32_t hca_trng_init(const metal_scl_t *const scl);
 
-CRYPTO_FUNCTION int32_t hca_trng_getdata(const metal_scl_t *const scl, uint32_t *data_out);
+CRYPTO_FUNCTION int32_t hca_trng_getdata(const metal_scl_t *const scl,
+                                         uint32_t *data_out);
 
 /** @}*/
 

@@ -44,7 +44,7 @@ int32_t soft_bignum_compare(const metal_scl_t *const scl,
                             size_t word_size)
 {
     size_t i;
-    (void) scl;
+    (void)scl;
 
     i = word_size;
 
@@ -71,7 +71,7 @@ int32_t soft_bignum_inc(const metal_scl_t *const scl, uint64_t *const array,
     uint64_t carry = 1;
     register uint64_t previous = 0;
 
-    (void) scl;
+    (void)scl;
 
     if (NULL == array)
     {
@@ -108,7 +108,7 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
     uint64_t carry = 0;
     register uint64_t previous = 0;
 
-    (void) scl;
+    (void)scl;
 
     if ((NULL == in_a) || (NULL == in_b) || (NULL == out))
     {
@@ -148,7 +148,7 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
     uint64_t carry = 0;
     register uint64_t previous = 0;
 
-    (void) scl;
+    (void)scl;
 
     if ((NULL == in_a) || (NULL == in_b) || (NULL == out))
     {
@@ -198,8 +198,8 @@ int32_t soft_bignum_mult(const metal_scl_t *const scl,
 
     uint32_t *res = (uint32_t *)out;
 
-    (void) scl;
-    
+    (void)scl;
+
     if ((NULL == in_a) || (NULL == in_b) || (NULL == out))
     {
         return (SCL_INVALID_INPUT);

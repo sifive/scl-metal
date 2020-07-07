@@ -46,11 +46,12 @@
 
 #include <scl/scl_aes_gcm.h>
 
-int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      const uint8_t *const key,
-                                      size_t key_byte_len, const uint8_t *const iv,
-                                      size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len,
-                                      size_t pld_byte_len, scl_process_t mode)
+int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx,
+                         aes_auth_ctx_t *const ctx, const uint8_t *const key,
+                         size_t key_byte_len, const uint8_t *const iv,
+                         size_t iv_byte_len, const uint8_t *const aad,
+                         size_t aad_byte_len, size_t pld_byte_len,
+                         scl_process_t mode)
 {
     int32_t ret;
     uint64_t formated[4] = {0};
@@ -98,7 +99,9 @@ int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
         return (ret);
     }
 
-    ret = scl_ctx->aes_func.auth_init(scl_ctx, ctx, SCL_AES_GCM, mode, SCL_BIG_ENDIAN_MODE, 0, aad, aad_byte_len, pld_byte_len);
+    ret = scl_ctx->aes_func.auth_init(scl_ctx, ctx, SCL_AES_GCM, mode,
+                                      SCL_BIG_ENDIAN_MODE, 0, aad, aad_byte_len,
+                                      pld_byte_len);
 
     return (ret);
 }
@@ -115,8 +118,10 @@ int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
     return scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst, dst_byte_len);
 }
 
-int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                 uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst, const uint8_t *const src, size_t src_byte_len)
+int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx,
+                           aes_auth_ctx_t *const ctx, uint8_t *const tag,
+                           size_t tag_byte_len, uint8_t *const dst,
+                           const uint8_t *const src, size_t src_byte_len)
 {
     int32_t ret;
     uint8_t tmp_tag[BLOCK128_NB_BYTE] = {0};
@@ -156,7 +161,7 @@ int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
         return (ret);
     }
 
-    for (i = 0; i < tag_byte_len; i++ )
+    for (i = 0; i < tag_byte_len; i++)
     {
         tag[i]=tmp_tag[sizeof(tmp_tag) - 1 - i];
     }
@@ -168,12 +173,13 @@ int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
     return (ret);
 }
 
-int32_t scl_aes_gcm(const metal_scl_t *const scl_ctx,
-                                 uint8_t *const tag, size_t tag_byte_len, 
-                                 uint8_t *const dst, const uint8_t *const src,
-                                 size_t src_byte_len, const uint8_t *const key,
-                                 size_t key_byte_len, const uint8_t *const iv,
-                                 size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len, scl_process_t mode)
+int32_t scl_aes_gcm(const metal_scl_t *const scl_ctx, uint8_t *const tag,
+                    size_t tag_byte_len, uint8_t *const dst,
+                    const uint8_t *const src, size_t src_byte_len,
+                    const uint8_t *const key, size_t key_byte_len,
+                    const uint8_t *const iv, size_t iv_byte_len,
+                    const uint8_t *const aad, size_t aad_byte_len,
+                    scl_process_t mode)
 {
     int32_t ret;
     aes_auth_ctx_t ctx_aes_auth = {0};
@@ -184,7 +190,8 @@ int32_t scl_aes_gcm(const metal_scl_t *const scl_ctx,
         return (SCL_INVALID_INPUT);
     }
 
-    ret = scl_aes_gcm_init(scl_ctx, &ctx_aes_auth, key, key_byte_len, iv, iv_byte_len, aad, aad_byte_len, src_byte_len, mode);
+    ret = scl_aes_gcm_init(scl_ctx, &ctx_aes_auth, key, key_byte_len, iv,
+                           iv_byte_len, aad, aad_byte_len, src_byte_len, mode);
     if (SCL_OK != ret)
     {
         return (ret);

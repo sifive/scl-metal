@@ -90,29 +90,29 @@ int32_t scl_format_key(const uint8_t *const key, const size_t key_byte_len,
 }
 
 void scl_format_iv(const uint8_t *const iv, const size_t iv_byte_len,
-                       uint64_t *iv_formated)
+                   uint64_t *iv_formated)
 {
     size_t i;
 
     iv_formated[0] = 0;
     iv_formated[1] = 0;
 
-    if (iv_byte_len < 8) 
+    if (iv_byte_len < 8)
     {
-        for (i=0 ; i < iv_byte_len; i++)
+        for (i = 0; i < iv_byte_len; i++)
         {
-            iv_formated[1] += ((uint64_t)*(iv + i)) << ((7 - i) << 3);
+            iv_formated[1] += ((uint64_t) * (iv + i)) << ((7 - i) << 3);
         }
     }
     else
     {
         iv_formated[1] = UINT64(iv);
 
-        if (iv_byte_len > 8) 
+        if (iv_byte_len > 8)
         {
-            for (i=0 ; i < (iv_byte_len - 8); i++)
+            for (i = 0; i < (iv_byte_len - 8); i++)
             {
-                iv_formated[0] += ((uint64_t)*(iv + 8 + i)) << ((7 - i) << 3);
+                iv_formated[0] += ((uint64_t) * (iv + 8 + i)) << ((7 - i) << 3);
             }
         }
     }

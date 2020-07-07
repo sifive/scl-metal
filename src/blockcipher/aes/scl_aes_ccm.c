@@ -46,13 +46,14 @@
 
 #include <scl/scl_aes_ccm.h>
 
-#define CCM_TQ(t, q)     ((uint8_t)((uint8_t) t + ((uint8_t)q << 4)))
+#define CCM_TQ(t, q) ((uint8_t)((uint8_t)t + ((uint8_t)q << 4)))
 
-int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      const uint8_t *const key,
-                                      size_t key_byte_len, const uint8_t *const iv,
-                                      size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len,
-                                      size_t pld_byte_len, size_t tag_byte_len, scl_process_t mode)
+int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
+                         aes_auth_ctx_t *const ctx, const uint8_t *const key,
+                         size_t key_byte_len, const uint8_t *const iv,
+                         size_t iv_byte_len, const uint8_t *const aad,
+                         size_t aad_byte_len, size_t pld_byte_len,
+                         size_t tag_byte_len, scl_process_t mode)
 {
     int32_t ret;
     uint64_t formated[4] = {0};
@@ -68,31 +69,31 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
 
     // get ccmt value
     ccmt = ccmt_tab[tag_byte_len];
-    if ((uint8_t)-1 == ccmt) 
+    if ((uint8_t)-1 == ccmt)
     {
         return (SCL_INVALID_INPUT);
     }
 
     // determine ccmq value
     // 2⁸
-    if (pld_byte_len < 0x100) 
+    if (pld_byte_len < 0x100)
     {
         ccmq = 1;
-    } 
+    }
     else
     {
         // 2¹⁶
-        if (pld_byte_len < 0x10000) 
+        if (pld_byte_len < 0x10000)
         {
             ccmq = 2;
-        } 
+        }
         else
         {
             // 2²⁴
-            if (pld_byte_len < 0x1000000) 
+            if (pld_byte_len < 0x1000000)
             {
                 ccmq = 3;
-            } 
+            }
             else
             // 2³²
             {
@@ -132,20 +133,23 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
 
     /* @FIXME: */
     /* key_formated should be secure erased */
-    
+
     if (SCL_OK != ret)
     {
         return (ret);
     }
 
-    ret = scl_ctx->aes_func.auth_init(scl_ctx, ctx, SCL_AES_CCM, mode, SCL_BIG_ENDIAN_MODE, CCM_TQ(ccmt, ccmq), aad, aad_byte_len, pld_byte_len);
+    ret = scl_ctx->aes_func.auth_init(scl_ctx, ctx, SCL_AES_CCM, mode,
+                                      SCL_BIG_ENDIAN_MODE, CCM_TQ(ccmt, ccmq),
+                                      aad, aad_byte_len, pld_byte_len);
 
     return (ret);
 }
 
-int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      uint8_t *const dst, size_t *const dst_byte_len,
-                                      const uint8_t *const src, size_t src_byte_len)
+int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, 
+                         aes_auth_ctx_t *const ctx, uint8_t *const dst, 
+                         size_t *const dst_byte_len, const uint8_t *const src, 
+                         size_t src_byte_len)
 {
     if (NULL == scl_ctx)
     {
@@ -155,8 +159,10 @@ int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
     return scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst, dst_byte_len);
 }
 
-int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                 uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst, const uint8_t *const src, size_t src_byte_len)
+int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx,
+                           aes_auth_ctx_t *const ctx, uint8_t *const tag,
+                           size_t tag_byte_len, uint8_t *const dst,
+                           const uint8_t *const src, size_t src_byte_len)
 {
     int32_t ret;
     uint8_t tmp_tag[BLOCK128_NB_BYTE] __attribute__((aligned(8))) = {0};
@@ -200,7 +206,7 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
         return (ret);
     }
 
-    for (i = 0; i < tag_byte_len; i++ )
+    for (i = 0; i < tag_byte_len; i++)
     {
         tag[i]=tmp_tag[sizeof(tmp_tag) - 1 - i];
     }
@@ -212,12 +218,13 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
     return (ret);
 }
 
-int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
-                                 uint8_t *const tag, size_t tag_byte_len, 
-                                 uint8_t *const dst, const uint8_t *const src,
-                                 size_t src_byte_len, const uint8_t *const key,
-                                 size_t key_byte_len, const uint8_t *const iv,
-                                 size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len, scl_process_t mode)
+int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx, uint8_t *const tag,
+                    size_t tag_byte_len, uint8_t *const dst,
+                    const uint8_t *const src, size_t src_byte_len,
+                    const uint8_t *const key, size_t key_byte_len,
+                    const uint8_t *const iv, size_t iv_byte_len,
+                    const uint8_t *const aad, size_t aad_byte_len,
+                    scl_process_t mode)
 {
     int32_t ret;
     aes_auth_ctx_t ctx_aes_auth = {0};
@@ -228,7 +235,9 @@ int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
         return (SCL_INVALID_INPUT);
     }
 
-    ret = scl_aes_ccm_init(scl_ctx, &ctx_aes_auth, key, key_byte_len, iv, iv_byte_len, aad, aad_byte_len, src_byte_len, tag_byte_len, mode);
+    ret = scl_aes_ccm_init(scl_ctx, &ctx_aes_auth, key, key_byte_len, iv,
+                           iv_byte_len, aad, aad_byte_len, src_byte_len,
+                           tag_byte_len, mode);
     if (SCL_OK != ret)
     {
         return (ret);

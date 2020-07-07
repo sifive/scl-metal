@@ -35,9 +35,9 @@
 
 #include <scl/scl_retdefs.h>
 
-#include <api/hardware/v0.5/hash/hca_sha.h>
 #include <api/hardware/hca_macro.h>
 #include <api/hardware/scl_hca.h>
+#include <api/hardware/v0.5/hash/hca_sha.h>
 #include <api/hash/sha.h>
 
 #include <metal/io.h>
@@ -90,23 +90,23 @@ int32_t hca_sha_init(const metal_scl_t *const scl, sha_ctx_t *const ctx,
 
     // Set HCA_MODE to SHA
     hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_SHA_MODE,
-                       HCA_REGISTER_CR_IFIFOTGT_OFFSET,
-                       HCA_REGISTER_CR_IFIFOTGT_MASK);
+                   HCA_REGISTER_CR_IFIFOTGT_OFFSET,
+                   HCA_REGISTER_CR_IFIFOTGT_MASK);
 
     // Set endianness
     hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
-                       HCA_REGISTER_CR_ENDIANNESS_OFFSET,
-                       HCA_REGISTER_CR_ENDIANNESS_MASK);
+                   HCA_REGISTER_CR_ENDIANNESS_OFFSET,
+                   HCA_REGISTER_CR_ENDIANNESS_MASK);
 
     // Set SHA mode
     hca_setfield32(scl, METAL_SIFIVE_HCA_SHA_CR, hash_mode,
-                       HCA_REGISTER_SHA_CR_MODE_OFFSET,
-                       HCA_REGISTER_SHA_CR_MODE_MASK);
+                   HCA_REGISTER_SHA_CR_MODE_OFFSET,
+                   HCA_REGISTER_SHA_CR_MODE_MASK);
 
     // Init SHA
     hca_setfield32(scl, METAL_SIFIVE_HCA_SHA_CR, 1,
-                       HCA_REGISTER_SHA_CR_INIT_OFFSET,
-                       HCA_REGISTER_SHA_CR_INIT_MASK);
+                   HCA_REGISTER_SHA_CR_INIT_OFFSET,
+                   HCA_REGISTER_SHA_CR_INIT_MASK);
 
     return (SCL_OK);
 }

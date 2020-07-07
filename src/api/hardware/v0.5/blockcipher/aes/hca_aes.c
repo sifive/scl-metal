@@ -35,10 +35,10 @@
 
 #include <scl/scl_retdefs.h>
 
-#include <api/hardware/v0.5/blockcipher/aes/hca_aes.h>
+#include <api/blockcipher/aes/aes.h>
 #include <api/hardware/hca_macro.h>
 #include <api/hardware/scl_hca.h>
-#include <api/blockcipher/aes/aes.h>
+#include <api/hardware/v0.5/blockcipher/aes/hca_aes.h>
 
 #include <metal/io.h>
 #include <metal/machine/platform.h>
@@ -46,10 +46,11 @@
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 #include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 
-int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, const uint64_t *const key, scl_process_t aes_process)
+int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type,
+                       const uint64_t *const key, scl_process_t aes_process)
 {
-	/* Remove compiler warning about unused parameter. */
-	( void ) aes_process;
+    /* Remove compiler warning about unused parameter. */
+    (void)aes_process;
 
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
     {
@@ -59,8 +60,8 @@ int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, co
 
     // set the key size
     hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, type,
-                       HCA_REGISTER_AES_CR_KEYSZ_OFFSET,
-                       HCA_REGISTER_AES_CR_KEYSZ_MASK);
+                   HCA_REGISTER_AES_CR_KEYSZ_OFFSET,
+                   HCA_REGISTER_AES_CR_KEYSZ_MASK);
 
     METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_KEY) = key[0];
     METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_AES_KEY + sizeof(uint64_t))) =
@@ -70,12 +71,13 @@ int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, co
     METAL_REG64(scl->hca_base,
                 (METAL_SIFIVE_HCA_AES_KEY + 3 * sizeof(uint64_t))) = key[3];
 
-    __asm__ __volatile__("fence.i"); // FENCE    
+    __asm__ __volatile__("fence.i"); // FENCE
 
     return SCL_OK;
 }
 
-int32_t hca_aes_setiv(const metal_scl_t *const scl, const uint64_t *const initvec)
+int32_t hca_aes_setiv(const metal_scl_t *const scl,
+                      const uint64_t *const initvec)
 {
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
     {
@@ -88,15 +90,16 @@ int32_t hca_aes_setiv(const metal_scl_t *const scl, const uint64_t *const initve
     METAL_REG64(scl->hca_base,
                 (METAL_SIFIVE_HCA_AES_INITV + sizeof(uint64_t))) = initvec[1];
 
-    __asm__ __volatile__("fence.i"); // FENCE    
+    __asm__ __volatile__("fence.i"); // FENCE
 
     return SCL_OK;
 }
 
 int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                        scl_process_t aes_process,
-                       scl_endianness_t data_endianness, 
-                       const uint8_t *const data_in, size_t data_len, uint8_t *const data_out)
+                       scl_endianness_t data_endianness,
+                       const uint8_t *const data_in, size_t data_len,
+                       uint8_t *const data_out)
 {
 
 #if __riscv_xlen == 64
@@ -122,30 +125,30 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
 
     // Set MODE
     hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
-                       HCA_REGISTER_CR_IFIFOTGT_OFFSET,
-                       HCA_REGISTER_CR_IFIFOTGT_MASK);
+                   HCA_REGISTER_CR_IFIFOTGT_OFFSET,
+                   HCA_REGISTER_CR_IFIFOTGT_MASK);
 
     // Set aes_mode
     hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_mode,
-                       HCA_REGISTER_AES_CR_MODE_OFFSET,
-                       HCA_REGISTER_AES_CR_MODE_MASK);
+                   HCA_REGISTER_AES_CR_MODE_OFFSET,
+                   HCA_REGISTER_AES_CR_MODE_MASK);
 
     // Set aes_process
     hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_process,
-                       HCA_REGISTER_AES_CR_PROCESS_OFFSET,
-                       HCA_REGISTER_AES_CR_PROCESS_MASK);
+                   HCA_REGISTER_AES_CR_PROCESS_OFFSET,
+                   HCA_REGISTER_AES_CR_PROCESS_MASK);
 
     // Set endianness
     hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
-                       HCA_REGISTER_CR_ENDIANNESS_OFFSET,
-                       HCA_REGISTER_CR_ENDIANNESS_MASK);
+                   HCA_REGISTER_CR_ENDIANNESS_OFFSET,
+                   HCA_REGISTER_CR_ENDIANNESS_MASK);
 
     if (aes_mode != SCL_AES_ECB)
     {
         // Set INIT
         hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 1,
-                           HCA_REGISTER_AES_CR_INIT_OFFSET,
-                           HCA_REGISTER_AES_CR_INIT_MASK);
+                       HCA_REGISTER_AES_CR_INIT_OFFSET,
+                       HCA_REGISTER_AES_CR_INIT_MASK);
     }
 
     NbBlocks128 = (data_len >> 4);
@@ -156,8 +159,10 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
     for (k = 0; k < NbBlocks128; k++)
     {
         // Wait for IFIFOEMPTY is cleared
-        while ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >> HCA_REGISTER_CR_IFIFOFULL_OFFSET) 
-                & HCA_REGISTER_CR_IFIFOFULL_MASK ) ;
+        while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
+                HCA_REGISTER_CR_IFIFOFULL_OFFSET) &
+               HCA_REGISTER_CR_IFIFOFULL_MASK)
+            ;
 #if __riscv_xlen == 64
         if ((uint64_t)data_in & 0x7)
         {
@@ -197,8 +202,10 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
 #endif /* __riscv_xlen */
 
         // Wait for OFIFOEMPTY is cleared
-        while ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >> HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) 
-                & HCA_REGISTER_CR_OFIFOEMPTY_MASK ) ;
+        while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
+                HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) &
+               HCA_REGISTER_CR_OFIFOEMPTY_MASK)
+            ;
 
             // Read AES result
 #if __riscv_xlen == 64
@@ -269,19 +276,21 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
     return SCL_OK;
 }
 
-int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
-                     scl_process_t aes_process,
-                     scl_endianness_t data_endianness, uint32_t auth_option,
-                     const uint8_t *const aad, size_t aad_byte_len, size_t payload_len)
+int32_t hca_aes_auth_init(const metal_scl_t *const scl,
+                          aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
+                          scl_process_t aes_process,
+                          scl_endianness_t data_endianness,
+                          uint32_t auth_option, const uint8_t *const aad,
+                          size_t aad_byte_len, size_t payload_len)
 {
 #if __riscv_xlen == 64
     uint64_t *aad64 = (uint64_t *)aad;
 #elif __riscv_xlen == 32
     uint32_t *aad32 = (uint32_t *)aad;
 #endif /* __riscv_xlen */
-    uint32_t i,j,k;
+    uint32_t i, j, k;
     uint64_t NbBlocks128;
-    uint64_t tmp[BLOCK128_NB_UINT64]                __attribute__ ((aligned (8)));
+    uint64_t tmp[BLOCK128_NB_UINT64] __attribute__((aligned(8)));
 
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
     {
@@ -301,24 +310,24 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 
     // Set MODE
     hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
-                       HCA_REGISTER_CR_IFIFOTGT_OFFSET,
-                       HCA_REGISTER_CR_IFIFOTGT_MASK);
+                   HCA_REGISTER_CR_IFIFOTGT_OFFSET,
+                   HCA_REGISTER_CR_IFIFOTGT_MASK);
 
     // Set aes_mode
     hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_mode,
-                       HCA_REGISTER_AES_CR_MODE_OFFSET,
-                       HCA_REGISTER_AES_CR_MODE_MASK);
+                   HCA_REGISTER_AES_CR_MODE_OFFSET,
+                   HCA_REGISTER_AES_CR_MODE_MASK);
 
     // Set aes_process
     hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, aes_process,
-                       HCA_REGISTER_AES_CR_PROCESS_OFFSET,
-                       HCA_REGISTER_AES_CR_PROCESS_MASK);
+                   HCA_REGISTER_AES_CR_PROCESS_OFFSET,
+                   HCA_REGISTER_AES_CR_PROCESS_MASK);
 
     // Set endianness
     hca_setfield32(scl, METAL_SIFIVE_HCA_CR, data_endianness,
-                       HCA_REGISTER_CR_ENDIANNESS_OFFSET,
-                       HCA_REGISTER_CR_ENDIANNESS_MASK);
-  
+                   HCA_REGISTER_CR_ENDIANNESS_OFFSET,
+                   HCA_REGISTER_CR_ENDIANNESS_MASK);
+
     // Set AES_ALEN
     METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_ALEN) = aad_byte_len;
 
@@ -329,12 +338,12 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
     {
         // Set CCMT
         hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, auth_option,
-                           HCA_REGISTER_AES_CR_CCMT_OFFSET,
-                           HCA_REGISTER_AES_CR_CCMT_MASK);
+                       HCA_REGISTER_AES_CR_CCMT_OFFSET,
+                       HCA_REGISTER_AES_CR_CCMT_MASK);
         // Set CCMQ
         hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, (auth_option >> 4),
-                           HCA_REGISTER_AES_CR_CCMQ_OFFSET,
-                           HCA_REGISTER_AES_CR_CCMQ_MASK);
+                       HCA_REGISTER_AES_CR_CCMQ_OFFSET,
+                       HCA_REGISTER_AES_CR_CCMQ_MASK);
     }
 
     if (aad_byte_len)
@@ -500,7 +509,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
         {
             return SCL_INVALID_INPUT;
         }
-        
+
         if (NULL == data_out)
         {
             return SCL_INVALID_INPUT;
@@ -523,9 +532,12 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 
     // PLD
     // Set DTYPE
-    // Wait for IFIFOFULL is cleared to be sure that we do not change the type of data of previous data
-    while ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >> HCA_REGISTER_CR_IFIFOFULL_OFFSET) 
-            & HCA_REGISTER_CR_IFIFOFULL_MASK ) ;
+    // Wait for IFIFOFULL is cleared to be sure that we do not change the type
+    // of data of previous data
+    while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
+            HCA_REGISTER_CR_IFIFOFULL_OFFSET) &
+           HCA_REGISTER_CR_IFIFOFULL_MASK)
+        ;
 
     hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, 1,
                        HCA_REGISTER_AES_CR_DTYPE_OFFSET,
@@ -583,10 +595,12 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 #endif /* __riscv_xlen */
 
         // Wait for OFIFOEMPTY is cleared
-        while ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >> HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) 
-                & HCA_REGISTER_CR_OFIFOEMPTY_MASK );
+        while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
+                HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) &
+               HCA_REGISTER_CR_OFIFOEMPTY_MASK)
+            ;
 
-        // Read output result
+            // Read output result
 #if __riscv_xlen == 64
         if (0 != (uint64_t)data_out % sizeof(uint64_t))
         {
@@ -655,8 +669,10 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
     for (k = 0; k < NbBlocks128; k++)
     {
         // Wait for IFIFOFULL is cleared
-        while ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >> HCA_REGISTER_CR_IFIFOFULL_OFFSET) 
-                & HCA_REGISTER_CR_IFIFOFULL_MASK ) ;
+        while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
+                HCA_REGISTER_CR_IFIFOFULL_OFFSET) &
+               HCA_REGISTER_CR_IFIFOFULL_MASK)
+            ;
 #if __riscv_xlen == 64
         if (0 != (uint64_t)data_in % sizeof(uint64_t))
         {
@@ -690,9 +706,11 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 #endif /* __riscv_xlen */
 
         // Wait for OFIFOEMPTY is cleared
-        while ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >> HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) 
-                & HCA_REGISTER_CR_OFIFOEMPTY_MASK );
-        // Read AES result
+        while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
+                HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) &
+               HCA_REGISTER_CR_OFIFOEMPTY_MASK)
+            ;
+            // Read AES result
 #if __riscv_xlen == 64
         if (0 != (uint64_t)data_out % sizeof(uint64_t))
         {
@@ -774,7 +792,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
     {
         if (ctx->buf_len < sizeof(uint64_t)) 
         {
-            for (i=0 ; i < ctx->buf_len; i++)
+            for (i = 0; i < ctx->buf_len; i++)
             {
                 ctx->buf[1] +=  ((uint64_t)(*((uint8_t *)(data_in + in_offset + i)))) << (i * __CHAR_BIT__);
             }
@@ -800,7 +818,9 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
     return SCL_OK;
 }
 
-int32_t hca_aes_auth_finish(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, uint8_t *const data_out, uint64_t *const tag)
+int32_t hca_aes_auth_finish(const metal_scl_t *const scl,
+                            aes_auth_ctx_t *const ctx, uint8_t *const data_out,
+                            uint64_t *const tag)
 {
 #if __riscv_xlen == 64
     uint64_t *in64 = (uint64_t *)(ctx->buf);
@@ -855,8 +875,10 @@ int32_t hca_aes_auth_finish(const metal_scl_t *const scl, aes_auth_ctx_t *const 
 #endif /* __riscv_xlen */
 
         // Wait for OFIFOEMPTY is cleared
-        while ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >> HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) 
-                & HCA_REGISTER_CR_OFIFOEMPTY_MASK );
+        while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >>
+                HCA_REGISTER_CR_OFIFOEMPTY_OFFSET) &
+               HCA_REGISTER_CR_OFIFOEMPTY_MASK)
+            ;
 
         // use ctx->buf for the output result
         ctx->buf[0] = 0;
@@ -909,7 +931,8 @@ int32_t hca_aes_auth_finish(const metal_scl_t *const scl, aes_auth_ctx_t *const 
 
    // Get tag
     tag[0] = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_AUTH);
-    tag[1] = METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_AES_AUTH + sizeof(uint64_t)) );
+    tag[1] = METAL_REG64(scl->hca_base,
+                         (METAL_SIFIVE_HCA_AES_AUTH + sizeof(uint64_t)));
 
     ctx->pld_len = 0;
     ctx->buf[0] = 0;
