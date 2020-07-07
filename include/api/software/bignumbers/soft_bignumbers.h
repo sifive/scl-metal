@@ -86,7 +86,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_compare(const uint64_t *const a,
  * @warning Warning the big number need to be little endian convert if necessary
  * @warning nb_32b_words is limited to 0x3FFFFFFF
  */
-CRYPTO_FUNCTION uint64_t soft_bignum_inc(const uint64_t *const array,
+CRYPTO_FUNCTION uint64_t soft_bignum_inc(uint64_t *const array,
                                          size_t nb_32b_words);
 
 /**
@@ -119,7 +119,7 @@ CRYPTO_FUNCTION uint64_t soft_bignum_add(const uint64_t *const in_a,
  * @warning carry is set when in_a < in_b (in case a positive number is
  * intended, you can do a bitwise not)
  */
-CRYPTO_FUNCTION uint32_t soft_bignum_sub(const uint64_t *const in_a,
+CRYPTO_FUNCTION uint64_t soft_bignum_sub(const uint64_t *const in_a,
                                          const uint64_t *const in_b,
                                          uint64_t *const out,
                                          size_t nb_32b_words);
