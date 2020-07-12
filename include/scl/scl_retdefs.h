@@ -78,6 +78,8 @@ typedef enum
     SCL_IGNORED = -15,
     /*! @brief error busy */
     SCL_BUSY = -16,
+    /*! @brief error busy */
+    SCL_ZERO_DIVISION = -17,
     /*! @brief error functionnality not present */
     SCL_NOT_PRESENT = -30,
     /*! @brief error functionnality not yet supported */
