@@ -251,6 +251,7 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
     size_t i = 0;
     uint64_t carry = 0;
     register uint64_t previous = 0;
+    register uint64_t current = 0;
 
     (void)scl;
 
@@ -267,23 +268,23 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
     for (i = 0; i < nb_32b_words / 2; i++)
     {
         previous = in_a[i];
-        out[i] = in_a[i] - carry;
-        carry = out[i] > previous ? 1 : 0;
+        current = in_a[i] - carry;
+        carry = current > previous ? 1 : 0;
 
-        previous = out[i];
-        out[i] = out[i] - in_b[i];
+        previous = current;
+        out[i] = current - in_b[i];
         carry |= out[i] > previous ? 1 : 0;
     }
 
     if (nb_32b_words % 2)
     {
         previous = *((uint32_t *)&in_a[i]);
-        *((uint32_t *)&out[i]) = *((uint32_t *)&in_a[i]) - carry;
-        carry = *((uint32_t *)&out[i]) > previous ? 1 : 0;
+        current = *((uint32_t *)&in_a[i]) - carry;
+        carry = current > previous ? 1 : 0;
 
-        previous = *((uint32_t *)&out[i]);
+        previous = current;
         *((uint32_t *)&out[i]) =
-            *((uint32_t *)&out[i]) - *((uint32_t *)&in_b[i]);
+            current - *((uint32_t *)&in_b[i]);
         carry |= *((uint32_t *)&out[i]) > previous ? 1 : 0;
     }
 
@@ -393,7 +394,7 @@ int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
     {
         i--;
         out[i] = in[i - bit_shift_div64] << bit_shift_mod64;
-        out[i] |= in[-bit_shift_div64 - 1] >> revshift;
+        out[i] |= in[i - bit_shift_div64 - 1] >> revshift;
     }
 
     if (i > bit_shift_div64)
@@ -676,6 +677,13 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
         return (SCL_OK);
     }
 
+    /** 
+     * the goal here is to have:
+     * p = b << bitshift_dico
+     * with
+     * p <= dividend < p << 1
+     */
+
     /* get highest bit of dividend */
     result = soft_bignum_get_msb_set(scl, dividend, dividend_nb_32b_words);
     if (0 > result)
@@ -683,21 +691,24 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
         return (result);
     }
 
-    bitshift_dico = result - 1;
+    bitshift_dico = result;
+
+    p_len = (bitshift_dico - 1) / (sizeof(uint32_t) * __CHAR_BIT__);
+
+    p_len += (bitshift_dico - 1) % (sizeof(uint32_t) * __CHAR_BIT__) ? 1: 0;
 
     /* get highest bit of divisor */
-    // result = soft_bignum_get_msb_set(scl, divisor, divisor_nb_32b_words);
-    // if (0 > result)
-    // {
-    //     return (result);
-    // }
+    result = soft_bignum_get_msb_set(scl, divisor, divisor_nb_32b_words);
+    if (0 > result)
+    {
+        return (result);
+    }
 
-    // bitshift_dico -= result;
+    bitshift_dico -= result;
 
     {
-        p_len = bitshift_dico / (sizeof(uint32_t) * __CHAR_BIT__);
+        // p_len = bitshift_dico / (sizeof(uint32_t) * __CHAR_BIT__) + divisor_nb_32b_words + 1;
 
-        p_len = MAX(p_len, divisor_nb_32b_words) + 1;
 
         /** p : representative of the calculations on b * 2 ^ n (the second
          * column in example) on which we do our multiplication and division by
@@ -708,16 +719,43 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
          * (third column in the example). */
         uint32_t aux[p_len] __attribute__((aligned(8)));
 
-        memset(&p[divisor_nb_32b_words], 0, (p_len - divisor_nb_32b_words) * sizeof(uint32_t)  );
-        memcpy(p, divisor, divisor_nb_32b_words * sizeof(uint32_t) );
+        /**
+         * We do a last comparison to make sure of:
+         * p = b << bitshift_dico
+         * with
+         * p <= dividend < p << 1
+         */
+        
+        /*
+         * We only copy p_len since dividend > divisor (at ths point)
+         */
+        memcpy(p, divisor, p_len * sizeof(uint32_t) );
         soft_bignum_leftshift(scl, (uint64_t *)p, (uint64_t *)p, bitshift_dico,
                               p_len);
+        
+        /**
+         * Compare p to dividend and adjust bitshisft_dico (just in case p is
+         * superior)
+         */
+        result = soft_bignum_compare_len_diff(scl, (uint64_t *)dividend,
+                                                  dividend_nb_32b_words,
+                                                  (uint64_t *)p, p_len);
+        if(0 > result) {
+            soft_bignum_rightshift(scl, (uint64_t *)p, (uint64_t *)p, 1,
+                                    p_len);
+        }
+
         memcpy(aux, p, p_len * sizeof(uint32_t) );
 
         if (NULL != quotient)
         {
             memset(quotient, 0,
                    dividend_nb_32b_words * sizeof(uint32_t) );
+            /**
+             * Please note that here +1 is safe since at least 32bits have been
+             * zeroise. So no chance to corrupt upper 32 bits in case the are
+             * not part of the buffer.
+             */
             quotient[0]++;
             soft_bignum_leftshift(scl, quotient, quotient, bitshift_dico,
                                   dividend_nb_32b_words);
@@ -749,12 +787,14 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
             }
         }
 
-        soft_bignum_sub(scl, (uint64_t *)dividend, (uint64_t *)aux,
-                        (uint64_t *)aux, p_len);
         if (NULL != remainder)
         {
+            soft_bignum_sub(scl, (uint64_t *)dividend, (uint64_t *)aux,
+                        (uint64_t *)aux, p_len);
+            memset(remainder, 0,
+                   divisor_nb_32b_words * sizeof(uint32_t));
             memcpy(remainder, aux,
-                   divisor_nb_32b_words * sizeof(uint32_t) );
+                   p_len * sizeof(uint32_t));
         }
     }
 
