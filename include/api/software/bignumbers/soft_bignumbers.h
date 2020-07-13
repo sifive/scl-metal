@@ -137,6 +137,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_inc(const metal_scl_t *const scl,
  * @return != 0 otherwise @ref scl_errors_t
  * @warning Warning the big number need to be little endian convert if necessary
  * @warning nb_32b_words is limited to 0x3FFFFFFF
+ * @note it is safe to reuse any input buffer as output buffer
  */
 CRYPTO_FUNCTION int32_t soft_bignum_add(const metal_scl_t *const scl,
                                         const uint64_t *const in_a,
@@ -159,6 +160,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_add(const metal_scl_t *const scl,
  * @warning bignumber in input are considered unsigned
  * @warning carry is set when in_a < in_b (in case a positive number is
  * intended, you can do a bitwise not)
+ * @note it is safe to reuse any input buffer as output buffer
  */
 CRYPTO_FUNCTION int32_t soft_bignum_sub(const metal_scl_t *const scl,
                                         const uint64_t *const in_a,
@@ -195,6 +197,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_mult(const metal_scl_t *const scl,
  * @param[in] nb_32b_words  size of the big integer in 32bits words
  * @return 0 success
  * @return != 0 otherwise @ref scl_errors_t
+ * @note it is safe to reuse any input buffer as output buffer
  */
 CRYPTO_FUNCTION int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
                                               const uint64_t *const in,
@@ -211,25 +214,13 @@ CRYPTO_FUNCTION int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
  * @param[in] nb_32b_words  size of the big integer in 32bits words
  * @return 0 success
  * @return != 0 otherwise @ref scl_errors_t
+ * @note it is safe to reuse any input buffer as output buffer
  */
 CRYPTO_FUNCTION int32_t soft_bignum_rightshift(const metal_scl_t *const scl,
                                                const uint64_t *const in,
                                                uint64_t *const out,
                                                size_t shift,
                                                size_t nb_32b_words);
-
-/**
- * @brief return number of non zero
- *
- * @param[in] scl           metal scl context
- * @param[in] array         input array (bignumber)
- * @param[in] nb_32b_words  size of the big integer in 32bits words
- * @return >= 0 success, it's the actual number of 32 words non null
- * @return < 0 in case of errors @ref scl_errors_t
- */
-CRYPTO_FUNCTION int32_t soft_bignum_nb_non_zero_32b_word(
-    const metal_scl_t *const scl, const uint64_t *const array,
-    size_t nb_32b_words);
 
 /**
  * @brief return most significant bit set in word
@@ -292,5 +283,27 @@ CRYPTO_FUNCTION int32_t soft_bignum_div(const metal_scl_t *const scl,
                                         size_t divisor_nb_32b_words,
                                         uint64_t *const remainder,
                                         uint64_t *const quotient);
+
+/**
+ * @brief compute modulus
+ * @details perform : remainder = in mod modulus
+ *
+ * @param[in] scl                   metal scl context
+ * @param[in] in                    input big integer (on which the modulus is
+ * applied)
+ * @param[in] in_nb_32b_words       number of 32 words in input array
+ * @param[in] modulus               modulus big integer to apply
+ * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
+ * @param[out] remainder            remainder array (big integer)
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @note remainder should be at least of length equal to modulus_nb_32b_words
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_mod(const metal_scl_t *const scl,
+                                        const uint64_t *const in,
+                                        size_t in_nb_32b_words,
+                                        const uint64_t *const modulus,
+                                        size_t modulus_nb_32b_words,
+                                        uint64_t *const remainder);
 
 #endif /* _SOFT_BIGNUMBERS_H */

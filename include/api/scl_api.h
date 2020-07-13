@@ -215,40 +215,72 @@ struct __trng_func
 struct __bignum_func
 {
     /**
-     * @brief big integer compare
+     * @brief compare two big interger of same length
      *
-     * @param[in] scl           metal scl context (not used in case of soft sha)
+     * @param[in] scl           metal scl context
      * @param[in] a             first array to compare
      * @param[in] b             second array to compare
-     * @param[in] word_size     number of 64 bits words to compare
+     * @param[in] nb_32b_words  number of 32 bits words to compare
      * @return 0            a == b
      * @return 1            a > b
      * @return -1           a < b
      * @warning No check on pointer value
      */
-    int32_t (*bignum_compare)(const metal_scl_t *const scl,
+    int32_t (*compare)(const metal_scl_t *const scl,
                               const uint64_t *const a, const uint64_t *const b,
-                              size_t word_size);
+                              size_t nb_32b_words);
+
+    /**
+     * @brief compare two big interger of different length
+     *
+     * @param[in] scl               metal scl context
+     * @param[in] a                 first array to compare
+     * @param[in] a_nb_32b_words    number of 32 bits words in first array
+     * @param[in] b                 second array to compare
+     * @param[in] b_nb_32b_words    number of 32 bits words in second array
+     * @return 0            a == b
+     * @return 1            a > b
+     * @return -1           a < b
+     * @warning No check on pointer value
+     */
+    int32_t (*compare_len_diff)(const metal_scl_t *const scl,
+                                       const uint64_t *const a,
+                                       size_t a_nb_32b_words,
+                                       const uint64_t *const b,
+                                       size_t b_nb_32b_words);
+
+    /**
+     * @brief check if the bignumber is null
+     *
+     * @param scl               metal scl context
+     * @param array             array of integers (big integer)
+     * @param nb_32b_words      number of 32 bits word in the array
+     * @return true (== 1)      if the big integer is null
+     * @return false (== 0)     if the big integer is not null
+     * @return <0               In case of error
+     */
+    int32_t (*is_null)(const metal_scl_t *const scl,
+                              const uint32_t *const array, size_t nb_32b_words);
 
     /**
      * @brief Increment big number by one
      *
-     * @param[in] scl           metal scl context (not used in case of soft sha)
-     * @param[in,out] array             Input array a
-     * @param[in] nb_32b_words          number of 32 bits words to use in calcul
+     * @param[in] scl           metal scl context
+     * @param[in,out] array     Input array a
+     * @param[in] nb_32b_words  number of 32 bits words to use in calcul
      * @return 0 success
      * @return != 0 otherwise @ref scl_errors_t
      * @warning Warning the big number need to be little endian convert if
      * necessary
      * @warning nb_32b_words is limited to 0x3FFFFFFF
      */
-    int32_t (*bignum_inc)(const metal_scl_t *const scl, uint64_t *const array,
+    int32_t (*inc)(const metal_scl_t *const scl, uint64_t *const array,
                           size_t nb_32b_words);
 
     /**
      * @brief Do big number addition
      *
-     * @param[in] scl           metal scl context (not used in case of soft sha)
+     * @param[in] scl           metal scl context
      * @param[in] in_a              Input array a
      * @param[in] in_b              Input array b
      * @param[out] out              Output array (addition result)
@@ -258,8 +290,9 @@ struct __bignum_func
      * @warning Warning the big number need to be little endian convert if
      * necessary
      * @warning nb_32b_words is limited to 0x3FFFFFFF
+     * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*bignum_add)(const metal_scl_t *const scl,
+    int32_t (*add)(const metal_scl_t *const scl,
                           const uint64_t *const in_a,
                           const uint64_t *const in_b, uint64_t *const out,
                           size_t nb_32b_words);
@@ -267,7 +300,7 @@ struct __bignum_func
     /**
      * @brief Do big number ber substraction
      *
-     * @param[in] scl           metal scl context (not used in case of soft sha)
+     * @param[in] scl           metal scl context
      * @param[in] in_a              Input array a
      * @param[in] in_b              Input array b
      * @param[out] out              Output array (substration result)
@@ -280,8 +313,9 @@ struct __bignum_func
      * @warning bignumber in input are considered unsigned
      * @warning carry is set when in_a < in_b (in case a positive number is
      * intended, you can do a bitwise not)
+     * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*bignum_sub)(const metal_scl_t *const scl,
+    int32_t (*sub)(const metal_scl_t *const scl,
                           const uint64_t *const in_a,
                           const uint64_t *const in_b, uint64_t *const out,
                           size_t nb_32b_words);
@@ -289,7 +323,7 @@ struct __bignum_func
     /**
      * @brief Big integer multiplication
      *
-     * @param[in] scl           metal scl context (not used in case of soft sha)
+     * @param[in] scl           metal scl context
      * @param[in] in_a          Input array a
      * @param[in] in_b          Input array a
      * @param[out] out          Output array, should be twice the size of input
@@ -299,7 +333,7 @@ struct __bignum_func
      * @return != 0 otherwise @ref scl_errors_t
      * @warning Output should be 2 time the size of Inputs arrays
      */
-    int32_t (*bignum_mult)(const metal_scl_t *const scl,
+    int32_t (*mult)(const metal_scl_t *const scl,
                            const uint64_t *const in_a,
                            const uint64_t *const in_b, uint64_t *const out,
                            size_t nb_32b_words);
@@ -307,58 +341,119 @@ struct __bignum_func
     /**
      * @brief bignumber left shift
      *
-     * @param[in] scl           metal scl context (not used in case of soft sha)
+     * @param[in] scl           metal scl context
      * @param[in] in            big integer array to left shift
      * @param[out] out          output big integer
      * @param[in] shift         number of bits to left shift
      * @param[in] nb_32b_words  size of the big integer in 32bits words
      * @return 0 success
      * @return != 0 otherwise @ref scl_errors_t
+     * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*bignum_leftshift)(const metal_scl_t *const scl,
+    int32_t (*leftshift)(const metal_scl_t *const scl,
                                 const uint64_t *const in, uint64_t *const out,
                                 size_t shift, size_t nb_32b_words);
 
     /**
      * @brief bignumber right shift
      *
-     * @param[in] scl           metal scl context (not used in case of soft sha)
+     * @param[in] scl           metal scl context
      * @param[in] in            big integer array to right shift
      * @param[out] out          output big integer
      * @param[in] shift         number of bits to right shift
      * @param[in] nb_32b_words  size of the big integer in 32bits words
      * @return 0 success
      * @return != 0 otherwise @ref scl_errors_t
+     * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*bignum_rightshift)(const metal_scl_t *const scl,
+    int32_t (*rightshift)(const metal_scl_t *const scl,
                                  const uint64_t *const in, uint64_t *const out,
                                  size_t shift, size_t nb_32b_words);
 
     /**
-     * @brief return number of non zero
+     * @brief return most significant bit set in word
      *
-     * @param[in] scl           metal scl context
-     * @param[in] array         input array
-     * @param[in] nb_32b_words  size of the big integer in 32bits words
-     * @return >= 0 success, it's the actual number of 32 words non null
-     * @return < 0 in case of errors @ref scl_errors_t
+     * @param[in] word_64b      64 bits word
+     * @return > 0          index of the most significant bit set
+     * @note the first bit has index 1, therefore no bit set return 0
      */
-    int32_t (*bignum_nb_non_zero_32b_word)(const metal_scl_t *const scl,
-                                           const uint64_t *const array,
-                                           size_t nb_32b_words);
+    int32_t (*msb_set_in_word)(uint64_t word_64b);
 
     /**
-     * @brief check if the bignumber is null
+     * @brief Get msb set in bignumber
      *
-     * @param scl               metal scl context
-     * @param array             array of integers (big integer)
-     * @param nb_32b_words      number of 32 bits word in the array
-     * @return true (== 1)      if the big integer is null
-     * @return false (== 0)     if the big integer is not null
-     * @return <0               In case of error
+     * @param[in] scl           metal scl context
+     * @param[in] array         input array (bignumber)
+     * @param[in] nb_32b_words  size of the big integer in 32bits words
+     * @return >= 0 success, it's the actual index of the most significant bit
+     * set
+     * @return < 0 in case of errors @ref scl_errors_t
+     * @note the first bit has index 1, therefore no bit set return 0
      */
-    int32_t (*bignum_is_null)(const metal_scl_t *const scl,
-                              const uint64_t *const array, size_t nb_32b_words);
+    int32_t (*get_msb_set)(const metal_scl_t *const scl,
+                                  const uint64_t *const array,
+                                  size_t nb_32b_words);
+
+    /**
+     * @brief set one bit in a big integer
+     *
+     * @param[in] scl           metal scl context
+     * @param[in/out] array     input array (bignumber)
+     * @param[in] nb_32b_words  size of the big integer in 32bits words
+     * @param[in] bit_2_set     index of the bit to set in the big integer
+     * @return >= 0 success
+     * @return < 0 in case of errors @ref scl_errors_t
+     */
+    int32_t (*set_bit)(const metal_scl_t *const scl,
+                              uint64_t *const array, size_t nb_32b_words,
+                              size_t bit_2_set);
+
+    /**
+     * @brief perform big integer division
+     *
+     * @param[in] scl                   metal scl context
+     * @param[in] dividend              dividend array (big integer)
+     * @param[in] dividend_nb_32b_words number of 32 words in dividend array
+     * @param[in] divisor               divisor array (big integer)
+     * @param[in] divisor_nb_32b_words  number of 32 words in divisor array
+     * @param[out] remainder            remainder array (big integer)
+     * @param[out] quotient             quotient array (big integer)
+     * @return >= 0 success
+     * @return < 0 in case of errors @ref scl_errors_t
+     * @note remainder should be at least of length equal to
+     * divisor_nb_32b_words
+     * @note quotient should be at least of length equal to
+     * dividend_nb_32b_words
+     * @note remainder and quotient are not mandatory
+     */
+    int32_t (*div)(const metal_scl_t *const scl,
+                          const uint64_t *const dividend,
+                          size_t dividend_nb_32b_words,
+                          const uint64_t *const divisor,
+                          size_t divisor_nb_32b_words,
+                          uint64_t *const remainder, uint64_t *const quotient);
+
+    /**
+     * @brief compute modulus
+     * @details perform : remainder = in mod modulus
+     *
+     * @param[in] scl                   metal scl context
+     * @param[in] in                    input big integer (on which the modulus
+     * is applied)
+     * @param[in] in_nb_32b_words       number of 32 words in input array
+     * @param[in] modulus               modulus big integer to apply
+     * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
+     * @param[out] remainder            remainder array (big integer)
+     * @return >= 0 success
+     * @return < 0 in case of errors @ref scl_errors_t
+     * @note remainder should be at least of length equal to
+     * modulus_nb_32b_words
+     */
+    int32_t (*mod)(const metal_scl_t *const scl,
+                          const uint32_t *const in, size_t in_nb_32b_words,
+                          const uint32_t *const modulus,
+                          size_t modulus_nb_32b_words,
+                          uint64_t *const remainder);
 };
 
 struct _metal_scl_struct
