@@ -540,18 +540,47 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
             ctx->buf[0] += ((uint64_t)(*((uint8_t *)(data_in + i)))) << ((ctx->buf_len - 8 + i) << 3);
         }
         in_offset += i;
-
+/*
+        if ( SCL_LITTLE_ENDIAN_MODE == ctx->data_endianness)
+        {
+            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[0];
+            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[1];
+        }
+        else
+        {
+            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[1];
+            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[0];
+        }
+*/
 #if __riscv_xlen == 64
         in64 = (uint64_t *)(ctx->buf);
-        METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[0];
-        METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[0];
+        if ( SCL_LITTLE_ENDIAN_MODE == ctx->data_endianness)
+        {
+            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[0];
+            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[1];
+        }
+        else
+        {
+            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[1];
+            METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[0];
+        }
         in64 = (uint64_t *)(data_in + in_offset);
 #elif __riscv_xlen == 32
         in32 = (uint32_t *)(ctx->buf);
-        METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[0];
-        METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[1];
-        METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[2];
-        METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[3];
+        if ( SCL_LITTLE_ENDIAN_MODE == ctx->data_endianness)
+        {
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[0];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[1];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[2];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[3];
+        }
+        else
+        {
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[2];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[3];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[0];
+            METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[1];
+        }
         in32 = (uint32_t *)(data_in + in_offset);
 #endif /* __riscv_xlen */
 
