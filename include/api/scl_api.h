@@ -122,11 +122,12 @@ struct __aes_func
      * @param[in] data_in           data payload to process
      * @param[in] data_len          length of the current data payload to process (in bytes)
      * @param[out] data_out         data output buffer
+     * @param[out] len_out          length of data (in bytes) write into output buffer
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
-    int32_t (*auth_core)(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_endianness_t data_endianness,
-                    const uint8_t *const data_in, size_t data_len, uint8_t *const data_out);
+    int32_t (*auth_core)(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
+                    const uint8_t *const data_in, size_t data_len, uint8_t *const data_out, size_t *len_out);
     /**
      * @brief finish AES cipher with authentication operation
      *

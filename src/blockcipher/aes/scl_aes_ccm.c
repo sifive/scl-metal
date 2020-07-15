@@ -142,7 +142,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
 }
 
 int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      uint8_t *const dst,
+                                      uint8_t *const dst, size_t *dst_byte_len,
                                       const uint8_t *const src, size_t src_byte_len)
 {
     if (NULL == scl_ctx)
@@ -150,7 +150,7 @@ int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
         return (SCL_INVALID_INPUT);
     }
 
-    return scl_ctx->aes_func.auth_core(scl_ctx, ctx, SCL_BIG_ENDIAN_MODE, src, src_byte_len, dst);
+    return scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst, dst_byte_len);
 }
 
 int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
@@ -159,6 +159,7 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
     int32_t ret;
     uint8_t tmp[16] __attribute__((aligned(8))) = {0};
     size_t i;
+    size_t dst_byte_len;
 
     if (NULL == scl_ctx)
     {
@@ -172,7 +173,7 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
 
     if ((NULL != src) && src_byte_len)
     {
-        ret = scl_ctx->aes_func.auth_core(scl_ctx, ctx, SCL_BIG_ENDIAN_MODE, src, src_byte_len, dst);
+        ret = scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst, &dst_byte_len);
         if (SCL_OK != ret)
         {
             return (ret);
@@ -185,7 +186,7 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
     }
     else
     {
-        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, &dst[src_byte_len], (uint64_t *)tmp);
+        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, &dst[dst_byte_len], (uint64_t *)tmp);
     }
     if (SCL_OK != ret)
     {
@@ -209,6 +210,7 @@ int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
 {
     int32_t ret;
     aes_auth_ctx_t ctx_aes_auth = {0};
+    size_t dst_byte_len;
 
     if (NULL == scl_ctx)
     {
@@ -221,13 +223,13 @@ int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
         return (ret);
     }
 
-    ret = scl_aes_ccm_core(scl_ctx, &ctx_aes_auth, dst, src, src_byte_len);
+    ret = scl_aes_ccm_core(scl_ctx, &ctx_aes_auth, dst, &dst_byte_len, src, src_byte_len);
     if (SCL_OK != ret)
     {
         return (ret);
     }
 
-    ret = scl_aes_ccm_finish(scl_ctx, &ctx_aes_auth, tag, tag_byte_len, NULL, NULL, 0);
+    ret = scl_aes_ccm_finish(scl_ctx, &ctx_aes_auth, tag, tag_byte_len, &dst[dst_byte_len], NULL, 0);
 
     return (ret);
 }
