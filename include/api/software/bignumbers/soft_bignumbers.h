@@ -116,8 +116,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_is_null(const metal_scl_t *const scl,
  * @param[in] scl           metal scl context
  * @param[in,out] array     Input array a
  * @param[in] nb_32b_words  number of 32 bits words to use in calcul
- * @return 0 success
- * @return != 0 otherwise @ref scl_errors_t
+ * @return >= 0 carry from the operation
+ * @return < 0 otherwise @ref scl_errors_t
  * @warning Warning the big number need to be little endian convert if necessary
  * @warning nb_32b_words is limited to 0x3FFFFFFF
  */
@@ -133,8 +133,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_inc(const metal_scl_t *const scl,
  * @param[in] in_b              Input array b
  * @param[out] out              Output array (addition result)
  * @param[in] nb_32b_words      number of 32 bits words to use in calcul
- * @return 0 success
- * @return != 0 otherwise @ref scl_errors_t
+ * @return >= 0  carry from the operation
+ * @return < 0 otherwise @ref scl_errors_t
  * @warning Warning the big number need to be little endian convert if necessary
  * @warning nb_32b_words is limited to 0x3FFFFFFF
  * @note it is safe to reuse any input buffer as output buffer
@@ -153,8 +153,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_add(const metal_scl_t *const scl,
  * @param[in] in_b              Input array b
  * @param[out] out              Output array (substration result)
  * @param[in] nb_32b_words      number of 32 bits words to use in calcul
- * @return 0 success
- * @return != 0 otherwise @ref scl_errors_t
+ * @return >= 0  borrow from the operation
+ * @return < 0 otherwise @ref scl_errors_t
  * @warning Warning the big number need to be little endian convert if necessary
  * @warning nb_32b_words is limited to 0x3FFFFFFF
  * @warning bignumber in input are considered unsigned

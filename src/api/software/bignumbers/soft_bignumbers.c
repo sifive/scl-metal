@@ -201,7 +201,7 @@ int32_t soft_bignum_inc(const metal_scl_t *const scl, uint64_t *const array,
         carry = *((uint32_t *)&array[i]) < previous ? 1 : 0;
     }
 
-    return (SCL_OK);
+    return (carry);
 }
 
 int32_t soft_bignum_add(const metal_scl_t *const scl,
@@ -241,7 +241,7 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
         carry = *((uint32_t *)&out[i]) < previous ? 1 : 0;
     }
 
-    return (SCL_OK);
+    return (carry);
 }
 
 int32_t soft_bignum_sub(const metal_scl_t *const scl,
@@ -249,7 +249,7 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
                         uint64_t *const out, size_t nb_32b_words)
 {
     size_t i = 0;
-    uint64_t carry = 0;
+    uint64_t borrow = 0;
     register uint64_t previous = 0;
     register uint64_t current = 0;
 
@@ -268,26 +268,26 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
     for (i = 0; i < nb_32b_words / 2; i++)
     {
         previous = in_a[i];
-        current = in_a[i] - carry;
-        carry = current > previous ? 1 : 0;
+        current = in_a[i] - borrow;
+        borrow = current > previous ? 1 : 0;
 
         previous = current;
         out[i] = current - in_b[i];
-        carry |= out[i] > previous ? 1 : 0;
+        borrow |= out[i] > previous ? 1 : 0;
     }
 
     if (nb_32b_words % 2)
     {
         previous = *((uint32_t *)&in_a[i]);
-        current = *((uint32_t *)&in_a[i]) - carry;
-        carry = current > previous ? 1 : 0;
+        current = *((uint32_t *)&in_a[i]) - borrow;
+        borrow = current > previous ? 1 : 0;
 
         previous = current;
         *((uint32_t *)&out[i]) = current - *((uint32_t *)&in_b[i]);
-        carry |= *((uint32_t *)&out[i]) > previous ? 1 : 0;
+        borrow |= *((uint32_t *)&out[i]) > previous ? 1 : 0;
     }
 
-    return (SCL_OK);
+    return (borrow);
 }
 
 int32_t soft_bignum_mult(const metal_scl_t *const scl,
@@ -651,6 +651,7 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
 
     bitshift_dico = result;
 
+    /* We allocate +1 word to manage overflow */
     p_len = (bitshift_dico - 1) / (sizeof(uint32_t) * __CHAR_BIT__) + 1;
 
     p_len += (bitshift_dico - 1) % (sizeof(uint32_t) * __CHAR_BIT__) ? 1 : 0;
@@ -778,6 +779,8 @@ int32_t soft_bignum_mod(const metal_scl_t *const scl, const uint64_t *const in,
     return (scl->bignum_func.div(scl, in, in_nb_32b_words, modulus,
                                  modulus_nb_32b_words, remainder, NULL));
 }
+
+
 
 /*************************************************/
 /*              Progress Line                    */
