@@ -379,13 +379,13 @@ int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
 
     if (0 != nb_32b_words % 2)
     {
-        *((uint32_t *)&out[i]) = *((uint32_t *)&in[i - bit_shift_div64])
-                                 << bit_shift_mod64;
+        *((uint32_t *)&out[i]) =
+            (uint32_t)(in[i - bit_shift_div64] << bit_shift_mod64);
 
         if (i > bit_shift_div64 + 1)
         {
             *((uint32_t *)&out[i]) |=
-                *((uint32_t *)&in[i - bit_shift_div64 - 1]) >> revshift;
+                (uint32_t)(in[i - bit_shift_div64 - 1] >> revshift);
         }
     }
 
@@ -456,7 +456,7 @@ int32_t soft_bignum_rightshift(const metal_scl_t *const scl,
     if (0 != nb_32b_words % 2)
     {
         *((uint32_t *)&out[i]) =
-            *((uint32_t *)&in[i + bit_shift_div64]) >> bit_shift_mod64;
+            (uint32_t)(in[i + bit_shift_div64] >> bit_shift_mod64);
     }
 
     memset((void *)((uint8_t *)&out_32b[nb_32b_words] -
@@ -587,23 +587,27 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
         return (SCL_INVALID_LENGTH);
     }
 
-    if ((NULL == scl->bignum_func.is_null) || (NULL == scl->bignum_func.compare_len_diff) ||
-        (NULL == scl->bignum_func.get_msb_set) || (NULL == scl->bignum_func.leftshift) ||
-        (NULL == scl->bignum_func.rightshift) || (NULL == scl->bignum_func.add) ||
-        (NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.set_bit))
+    if ((NULL == scl->bignum_func.is_null) ||
+        (NULL == scl->bignum_func.compare_len_diff) ||
+        (NULL == scl->bignum_func.get_msb_set) ||
+        (NULL == scl->bignum_func.leftshift) ||
+        (NULL == scl->bignum_func.rightshift) ||
+        (NULL == scl->bignum_func.add) || (NULL == scl->bignum_func.sub) ||
+        (NULL == scl->bignum_func.set_bit))
     {
-        return (SCL_INVALID_INPUT);
+        return (SCL_ERROR_API_ENTRY_POINT);
     }
 
     /* dividor pointer has already been checked */
-    if (scl->bignum_func.is_null(scl, (uint32_t *)divisor, divisor_nb_32b_words))
+    if (scl->bignum_func.is_null(scl, (uint32_t *)divisor,
+                                 divisor_nb_32b_words))
     {
         return (SCL_ZERO_DIVISION);
     }
 
     /* if dividend < divisor, then reminder = dividend and quotient = 0 */
-    result = scl->bignum_func.compare_len_diff(scl, dividend, dividend_nb_32b_words,
-                                          divisor, divisor_nb_32b_words);
+    result = scl->bignum_func.compare_len_diff(
+        scl, dividend, dividend_nb_32b_words, divisor, divisor_nb_32b_words);
     if (0 > result)
     {
         if (NULL != quotient)
@@ -647,7 +651,7 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
 
     bitshift_dico = result;
 
-    p_len = (bitshift_dico - 1) / (sizeof(uint32_t) * __CHAR_BIT__);
+    p_len = (bitshift_dico - 1) / (sizeof(uint32_t) * __CHAR_BIT__) + 1;
 
     p_len += (bitshift_dico - 1) % (sizeof(uint32_t) * __CHAR_BIT__) ? 1 : 0;
 
@@ -683,20 +687,23 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
         /*
          * We only copy p_len since dividend > divisor (at ths point)
          */
-        memcpy(p, divisor, p_len * sizeof(uint32_t));
-        scl->bignum_func.leftshift(scl, (uint64_t *)p, (uint64_t *)p, bitshift_dico,
-                              p_len);
+        memset(p, 0, p_len * sizeof(uint32_t));
+        memcpy(p, divisor, MIN(divisor_nb_32b_words, p_len) * sizeof(uint32_t));
+
+        scl->bignum_func.leftshift(scl, (uint64_t *)p, (uint64_t *)p,
+                                   bitshift_dico, p_len);
 
         /**
          * Compare p to dividend and adjust bitshisft_dico (just in case p is
          * superior)
          */
         result = scl->bignum_func.compare_len_diff(scl, (uint64_t *)dividend,
-                                              dividend_nb_32b_words,
-                                              (uint64_t *)p, p_len);
+                                                   dividend_nb_32b_words,
+                                                   (uint64_t *)p, p_len);
         if (0 > result)
         {
-            scl->bignum_func.rightshift(scl, (uint64_t *)p, (uint64_t *)p, 1, p_len);
+            scl->bignum_func.rightshift(scl, (uint64_t *)p, (uint64_t *)p, 1,
+                                        p_len);
         }
 
         memcpy(aux, p, p_len * sizeof(uint32_t));
@@ -711,39 +718,41 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
              */
             quotient[0]++;
             scl->bignum_func.leftshift(scl, quotient, quotient, bitshift_dico,
-                                  dividend_nb_32b_words);
+                                       dividend_nb_32b_words);
         }
 
         while (bitshift_dico > 0)
         {
-            scl->bignum_func.rightshift(scl, (uint64_t *)p, (uint64_t *)p, 1, p_len);
+            scl->bignum_func.rightshift(scl, (uint64_t *)p, (uint64_t *)p, 1,
+                                        p_len);
             bitshift_dico--;
 
             scl->bignum_func.add(scl, (uint64_t *)aux, (uint64_t *)p,
-                            (uint64_t *)aux, p_len);
+                                 (uint64_t *)aux, p_len);
 
-            result = scl->bignum_func.compare_len_diff(scl, (uint64_t *)dividend,
-                                                  dividend_nb_32b_words,
-                                                  (uint64_t *)aux, p_len);
+            result = scl->bignum_func.compare_len_diff(
+                scl, (uint64_t *)dividend, dividend_nb_32b_words,
+                (uint64_t *)aux, p_len);
             if (result >= 0)
             {
                 if (NULL != quotient)
                 {
                     scl->bignum_func.set_bit(scl, (uint64_t *)quotient,
-                                        dividend_nb_32b_words, bitshift_dico);
+                                             dividend_nb_32b_words,
+                                             bitshift_dico);
                 }
             }
             else
             {
                 scl->bignum_func.sub(scl, (uint64_t *)aux, (uint64_t *)p,
-                                (uint64_t *)aux, p_len);
+                                     (uint64_t *)aux, p_len);
             }
         }
 
         if (NULL != remainder)
         {
             scl->bignum_func.sub(scl, (uint64_t *)dividend, (uint64_t *)aux,
-                            (uint64_t *)aux, p_len);
+                                 (uint64_t *)aux, p_len);
             memset(remainder, 0, divisor_nb_32b_words * sizeof(uint32_t));
             memcpy(remainder, aux, p_len * sizeof(uint32_t));
         }
@@ -763,11 +772,11 @@ int32_t soft_bignum_mod(const metal_scl_t *const scl, const uint64_t *const in,
 
     if (NULL == scl->bignum_func.div)
     {
-        return (SCL_INVALID_INPUT);
+        return (SCL_ERROR_API_ENTRY_POINT);
     }
 
     return (scl->bignum_func.div(scl, in, in_nb_32b_words, modulus,
-                            modulus_nb_32b_words, remainder, NULL));
+                                 modulus_nb_32b_words, remainder, NULL));
 }
 
 /*************************************************/

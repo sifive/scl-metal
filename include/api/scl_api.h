@@ -226,9 +226,8 @@ struct __bignum_func
      * @return -1           a < b
      * @warning No check on pointer value
      */
-    int32_t (*compare)(const metal_scl_t *const scl,
-                              const uint64_t *const a, const uint64_t *const b,
-                              size_t nb_32b_words);
+    int32_t (*compare)(const metal_scl_t *const scl, const uint64_t *const a,
+                       const uint64_t *const b, size_t nb_32b_words);
 
     /**
      * @brief compare two big interger of different length
@@ -244,10 +243,8 @@ struct __bignum_func
      * @warning No check on pointer value
      */
     int32_t (*compare_len_diff)(const metal_scl_t *const scl,
-                                       const uint64_t *const a,
-                                       size_t a_nb_32b_words,
-                                       const uint64_t *const b,
-                                       size_t b_nb_32b_words);
+                                const uint64_t *const a, size_t a_nb_32b_words,
+                                const uint64_t *const b, size_t b_nb_32b_words);
 
     /**
      * @brief check if the bignumber is null
@@ -260,7 +257,7 @@ struct __bignum_func
      * @return <0               In case of error
      */
     int32_t (*is_null)(const metal_scl_t *const scl,
-                              const uint32_t *const array, size_t nb_32b_words);
+                       const uint32_t *const array, size_t nb_32b_words);
 
     /**
      * @brief Increment big number by one
@@ -275,7 +272,7 @@ struct __bignum_func
      * @warning nb_32b_words is limited to 0x3FFFFFFF
      */
     int32_t (*inc)(const metal_scl_t *const scl, uint64_t *const array,
-                          size_t nb_32b_words);
+                   size_t nb_32b_words);
 
     /**
      * @brief Do big number addition
@@ -292,10 +289,9 @@ struct __bignum_func
      * @warning nb_32b_words is limited to 0x3FFFFFFF
      * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*add)(const metal_scl_t *const scl,
-                          const uint64_t *const in_a,
-                          const uint64_t *const in_b, uint64_t *const out,
-                          size_t nb_32b_words);
+    int32_t (*add)(const metal_scl_t *const scl, const uint64_t *const in_a,
+                   const uint64_t *const in_b, uint64_t *const out,
+                   size_t nb_32b_words);
 
     /**
      * @brief Do big number ber substraction
@@ -315,10 +311,9 @@ struct __bignum_func
      * intended, you can do a bitwise not)
      * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*sub)(const metal_scl_t *const scl,
-                          const uint64_t *const in_a,
-                          const uint64_t *const in_b, uint64_t *const out,
-                          size_t nb_32b_words);
+    int32_t (*sub)(const metal_scl_t *const scl, const uint64_t *const in_a,
+                   const uint64_t *const in_b, uint64_t *const out,
+                   size_t nb_32b_words);
 
     /**
      * @brief Big integer multiplication
@@ -333,10 +328,9 @@ struct __bignum_func
      * @return != 0 otherwise @ref scl_errors_t
      * @warning Output should be 2 time the size of Inputs arrays
      */
-    int32_t (*mult)(const metal_scl_t *const scl,
-                           const uint64_t *const in_a,
-                           const uint64_t *const in_b, uint64_t *const out,
-                           size_t nb_32b_words);
+    int32_t (*mult)(const metal_scl_t *const scl, const uint64_t *const in_a,
+                    const uint64_t *const in_b, uint64_t *const out,
+                    size_t nb_32b_words);
 
     /**
      * @brief bignumber left shift
@@ -350,9 +344,9 @@ struct __bignum_func
      * @return != 0 otherwise @ref scl_errors_t
      * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*leftshift)(const metal_scl_t *const scl,
-                                const uint64_t *const in, uint64_t *const out,
-                                size_t shift, size_t nb_32b_words);
+    int32_t (*leftshift)(const metal_scl_t *const scl, const uint64_t *const in,
+                         uint64_t *const out, size_t shift,
+                         size_t nb_32b_words);
 
     /**
      * @brief bignumber right shift
@@ -367,8 +361,8 @@ struct __bignum_func
      * @note it is safe to reuse any input buffer as output buffer
      */
     int32_t (*rightshift)(const metal_scl_t *const scl,
-                                 const uint64_t *const in, uint64_t *const out,
-                                 size_t shift, size_t nb_32b_words);
+                          const uint64_t *const in, uint64_t *const out,
+                          size_t shift, size_t nb_32b_words);
 
     /**
      * @brief return most significant bit set in word
@@ -391,8 +385,7 @@ struct __bignum_func
      * @note the first bit has index 1, therefore no bit set return 0
      */
     int32_t (*get_msb_set)(const metal_scl_t *const scl,
-                                  const uint64_t *const array,
-                                  size_t nb_32b_words);
+                           const uint64_t *const array, size_t nb_32b_words);
 
     /**
      * @brief set one bit in a big integer
@@ -404,9 +397,8 @@ struct __bignum_func
      * @return >= 0 success
      * @return < 0 in case of errors @ref scl_errors_t
      */
-    int32_t (*set_bit)(const metal_scl_t *const scl,
-                              uint64_t *const array, size_t nb_32b_words,
-                              size_t bit_2_set);
+    int32_t (*set_bit)(const metal_scl_t *const scl, uint64_t *const array,
+                       size_t nb_32b_words, size_t bit_2_set);
 
     /**
      * @brief perform big integer division
@@ -426,12 +418,10 @@ struct __bignum_func
      * dividend_nb_32b_words
      * @note remainder and quotient are not mandatory
      */
-    int32_t (*div)(const metal_scl_t *const scl,
-                          const uint64_t *const dividend,
-                          size_t dividend_nb_32b_words,
-                          const uint64_t *const divisor,
-                          size_t divisor_nb_32b_words,
-                          uint64_t *const remainder, uint64_t *const quotient);
+    int32_t (*div)(const metal_scl_t *const scl, const uint64_t *const dividend,
+                   size_t dividend_nb_32b_words, const uint64_t *const divisor,
+                   size_t divisor_nb_32b_words, uint64_t *const remainder,
+                   uint64_t *const quotient);
 
     /**
      * @brief compute modulus
@@ -449,11 +439,9 @@ struct __bignum_func
      * @note remainder should be at least of length equal to
      * modulus_nb_32b_words
      */
-    int32_t (*mod)(const metal_scl_t *const scl,
-                          const uint32_t *const in, size_t in_nb_32b_words,
-                          const uint32_t *const modulus,
-                          size_t modulus_nb_32b_words,
-                          uint64_t *const remainder);
+    int32_t (*mod)(const metal_scl_t *const scl, const uint64_t *const in,
+                   size_t in_nb_32b_words, const uint64_t *const modulus,
+                   size_t modulus_nb_32b_words, uint64_t *const remainder);
 };
 
 struct _metal_scl_struct

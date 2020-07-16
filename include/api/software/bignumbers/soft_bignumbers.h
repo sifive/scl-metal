@@ -275,6 +275,9 @@ CRYPTO_FUNCTION int32_t soft_bignum_set_bit(const metal_scl_t *const scl,
  * @note remainder should be at least of length equal to divisor_nb_32b_words
  * @note quotient should be at least of length equal to dividend_nb_32b_words
  * @note remainder and quotient are not mandatory
+ * @note the implementation is based on Egyptian method (slightly adapted),
+ * described here
+ * http://compoasso.free.fr/primelistweb/page/prime/euclide_en.php (method 4)
  */
 CRYPTO_FUNCTION int32_t soft_bignum_div(const metal_scl_t *const scl,
                                         const uint64_t *const dividend,
