@@ -40,28 +40,6 @@
 #include <api/bignumbers/bignumbers.h>
 #include <api/scl_api.h>
 
-#if __riscv_xlen == 32
-#define SCL_WORD_MAX_VALUE 0xFFFFFFFF
-#define SCL_WORD_HALF_VALUE 0xFFFF
-#define SCL_MAX_DIGITS (SCL_BIGNUMBERS_MAXBYTESIZE / 4 + 1)
-#define SCL_WORD_BITS 32
-#define SCL_HALFWORD_BITS 16
-#define SCL_DOUBLE_WORD_BITS 64
-#define SCL_DOUBLE_WORD_BYTES 8
-#define SCL_WORD_BYTES 4
-#define SCL_BYTE_BITS 8
-#elif __riscv_xlen == 64
-// #ifdef SCL_WORD64
-#define SCL_WORD_MAX_VALUE 0xFFFFFFFF
-#define SCL_WORD_HALF_VALUE 0xFFFF
-#define SCL_MAX_DIGITS (SCL_BIGNUMBERS_MAXBYTESIZE / 4 + 1)
-#define SCL_WORD_BITS 32
-#define SCL_HALFWORD_BITS 16
-#define SCL_DOUBLE_WORD_BITS 64
-#define SCL_WORD_BYTES 4
-#define SCL_BYTE_BITS 8
-#endif
-
 /**
  * @brief compare two big interger of same length
  *
@@ -146,12 +124,12 @@ CRYPTO_FUNCTION int32_t soft_bignum_add(const metal_scl_t *const scl,
                                         size_t nb_32b_words);
 
 /**
- * @brief Do big number ber substraction
+ * @brief Do big number ber subtraction
  *
  * @param[in] scl           metal scl context
  * @param[in] in_a              Input array a
  * @param[in] in_b              Input array b
- * @param[out] out              Output array (substration result)
+ * @param[out] out              Output array (subtration result)
  * @param[in] nb_32b_words      number of 32 bits words to use in calcul
  * @return >= 0  borrow from the operation
  * @return < 0 otherwise @ref scl_errors_t
@@ -308,5 +286,81 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod(const metal_scl_t *const scl,
                                         const uint64_t *const modulus,
                                         size_t modulus_nb_32b_words,
                                         uint64_t *const remainder);
+
+/**
+ * @brief register new modulus array
+ *
+ * @param[in] scl                   metal scl context
+ * @param[out] ctx                  bignumber context that will be updated
+ * @param[in] modulus               modulus to use for the next modular
+ * operations
+ * @param[in] modulus_nb_32b_words  size of the modulus array
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_set_modulus(const metal_scl_t *const scl,
+                                                bignum_ctx_t *const ctx,
+                                                const uint64_t *const modulus,
+                                                size_t modulus_nb_32b_words);
+
+/**
+ * @brief Modular addition
+ *
+ * @param[in] scl               metal scl context
+ * @param[in] ctx               bignumber context (contain modulus info)
+ * @param[in] in_a              Input array a
+ * @param[in] in_b              Input array b
+ * @param[out] out              Output array (addition result)
+ * @param[in] nb_32b_words      number of 32 bits words to use in calcul
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @warning the modulus used should be of nb_32b_words size
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_mod_add(const metal_scl_t *const scl,
+                                            const bignum_ctx_t *const ctx,
+                                            const uint64_t *const in_a,
+                                            const uint64_t *const in_b,
+                                            uint64_t *const out,
+                                            size_t nb_32b_words);
+
+/**
+ * @brief Modular subtraction
+ *
+ * @param[in] scl               metal scl context
+ * @param[in] ctx               bignumber context (contain modulus info)
+ * @param[in] in_a              Input array a
+ * @param[in] in_b              Input array b
+ * @param[out] out              Output array (subtraction result)
+ * @param[in] nb_32b_words      number of 32 bits words to use in calcul
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @warning the modulus used should be of nb_32b_words size
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_mod_sub(const metal_scl_t *const scl,
+                                            const bignum_ctx_t *const ctx,
+                                            const uint64_t *const in_a,
+                                            const uint64_t *const in_b,
+                                            uint64_t *const out,
+                                            size_t nb_32b_words);
+
+/**
+ * @brief Modular multiplication
+ *
+ * @param[in] scl           metal scl context
+ * @param[in] ctx           bignumber context (contain modulus info)
+ * @param[in] in_a          Input array a
+ * @param[in] in_b          Input array b
+ * @param[out] out          Output array
+ * @param[in] nb_32b_words  Number of words, of inputs arrays and output array
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @warning the modulus used should be of nb_32b_words size
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
+                                             const bignum_ctx_t *const ctx,
+                                             const uint64_t *const in_a,
+                                             const uint64_t *const in_b,
+                                             uint64_t *const out,
+                                             size_t nb_32b_words);
 
 #endif /* _SOFT_BIGNUMBERS_H */
