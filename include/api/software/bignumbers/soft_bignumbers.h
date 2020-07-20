@@ -319,6 +319,24 @@ CRYPTO_FUNCTION int32_t soft_bignum_set_modulus(const metal_scl_t *const scl,
                                                 size_t modulus_nb_32b_words);
 
 /**
+ * @brief Modular negate
+ * @details out = -in mod modulus
+ *
+ * @param[in] scl               metal scl context
+ * @param[out] ctx              bignumber context that will be updated
+ * @param[in] in_a              Input array
+ * @param[out] out              Output array
+ * @param[in] nb_32b_words      number of 32 bits words to use in calcul
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_mod_neg(const metal_scl_t *const scl,
+                                            const bignum_ctx_t *const ctx,
+                                            const uint64_t *const in,
+                                            uint64_t *const out,
+                                            size_t nb_32b_words);
+
+/**
  * @brief Modular addition
  *
  * @param[in] scl               metal scl context

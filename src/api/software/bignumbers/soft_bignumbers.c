@@ -168,6 +168,46 @@ int32_t soft_bignum_is_null(const metal_scl_t *const scl,
     return (true);
 }
 
+int32_t soft_bignum_negate(const metal_scl_t *const scl, uint64_t *const array,
+                           size_t nb_32b_words)
+{
+    int32_t result = 0;
+    size_t i = 0;
+
+    if ((NULL == scl) || (NULL == array))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if (NULL == scl->bignum_func.inc)
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    if (0 == nb_32b_words)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    for (i = 0; i < nb_32b_words / 2; i++)
+    {
+        array[i] = ~array[i];
+    }
+
+    if (0 != nb_32b_words % 2)
+    {
+        *((uint32_t *)&array[i]) = ~(uint32_t)array[i];
+    }
+
+    result = scl->bignum_func.inc(scl, array, nb_32b_words);
+    if (0 > result)
+    {
+        return (result);
+    }
+
+    return SCL_OK;
+}
+
 int32_t soft_bignum_inc(const metal_scl_t *const scl, uint64_t *const array,
                         size_t nb_32b_words)
 {
@@ -754,9 +794,11 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
         if (NULL != remainder)
         {
             scl->bignum_func.sub(scl, (uint64_t *)dividend, (uint64_t *)aux,
-                                 (uint64_t *)aux, MIN(dividend_nb_32b_words, p_len));
+                                 (uint64_t *)aux,
+                                 MIN(dividend_nb_32b_words, p_len));
             memset(remainder, 0, divisor_nb_32b_words * sizeof(uint32_t));
-            memcpy(remainder, aux, MIN(divisor_nb_32b_words, p_len) * sizeof(uint32_t));
+            memcpy(remainder, aux,
+                   MIN(divisor_nb_32b_words, p_len) * sizeof(uint32_t));
         }
     }
 
@@ -786,7 +828,7 @@ int32_t soft_bignum_set_modulus(const metal_scl_t *const scl,
                                 const uint64_t *const modulus,
                                 size_t modulus_nb_32b_words)
 {
-    (void) scl;
+    (void)scl;
     if ((NULL == ctx) || (NULL == modulus))
     {
         return (SCL_INVALID_INPUT);
@@ -797,10 +839,60 @@ int32_t soft_bignum_set_modulus(const metal_scl_t *const scl,
         return (SCL_INVALID_LENGTH);
     }
 
-    ctx->modulus = (uint64_t * )modulus;
+    ctx->modulus = (uint64_t *)modulus;
     ctx->modulus_nb_32b_words = modulus_nb_32b_words;
 
-    return(SCL_OK);
+    return (SCL_OK);
+}
+
+int32_t soft_bignum_mod_neg(const metal_scl_t *const scl,
+                            const bignum_ctx_t *const ctx,
+                            const uint64_t *const in, uint64_t *const out,
+                            size_t nb_32b_words)
+{
+    int32_t result;
+    uint32_t neg_result[nb_32b_words] __attribute__((aligned(8)));
+
+    if ((NULL == scl) || (NULL == ctx) || (NULL == ctx->modulus))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.mod))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    /* output should be modulus size */
+    if (nb_32b_words != ctx->modulus_nb_32b_words)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    result =
+        scl->bignum_func.mod(scl, in, nb_32b_words, ctx->modulus,
+                             ctx->modulus_nb_32b_words, (uint64_t *)neg_result);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result =
+        scl->bignum_func.sub(scl, ctx->modulus, (uint64_t *)neg_result,
+                             (uint64_t *)neg_result, ctx->modulus_nb_32b_words);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result = scl->bignum_func.mod(scl, (uint64_t *)neg_result, nb_32b_words,
+                                  ctx->modulus, ctx->modulus_nb_32b_words, out);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    return (SCL_OK);
 }
 
 int32_t soft_bignum_mod_add(const metal_scl_t *const scl,
@@ -830,7 +922,7 @@ int32_t soft_bignum_mod_add(const metal_scl_t *const scl,
 
     add_result[nb_32b_words] = (uint32_t)scl->bignum_func.add(
         scl, in_a, in_b, (uint64_t *)add_result, nb_32b_words);
-    if (0 > (int32_t)add_result[nb_32b_words])
+    if (SCL_OK > (int32_t)add_result[nb_32b_words])
     {
         return ((int32_t)add_result[nb_32b_words]);
     }
@@ -859,7 +951,8 @@ int32_t soft_bignum_mod_sub(const metal_scl_t *const scl,
         return (SCL_INVALID_INPUT);
     }
 
-    if ((NULL == scl->bignum_func.sub) || (NULL == ctx->modulus))
+    if ((NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.negate) ||
+        (NULL == ctx->modulus))
     {
         return (SCL_ERROR_API_ENTRY_POINT);
     }
@@ -870,17 +963,46 @@ int32_t soft_bignum_mod_sub(const metal_scl_t *const scl,
         return (SCL_INVALID_LENGTH);
     }
 
-    result = scl->bignum_func.sub(scl, in_a, in_b, (uint64_t *)sub_result, nb_32b_words);
-    if (0 > result)
+    result = scl->bignum_func.sub(scl, in_a, in_b, (uint64_t *)sub_result,
+                                  nb_32b_words);
+    if (SCL_OK > result)
     {
         return (result);
     }
 
-    result = scl->bignum_func.mod(scl, (uint64_t *)sub_result, nb_32b_words, ctx->modulus,
-                                  ctx->modulus_nb_32b_words, out);
-    if (SCL_OK > result)
+    if (0 < result)
     {
-        return (result);
+        result =
+            scl->bignum_func.negate(scl, (uint64_t *)sub_result, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result = scl->bignum_func.mod(scl, (uint64_t *)sub_result, nb_32b_words,
+                                      ctx->modulus, ctx->modulus_nb_32b_words,
+                                      (uint64_t *)sub_result);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result = scl->bignum_func.sub(scl, ctx->modulus, (uint64_t *)sub_result,
+                                      out, ctx->modulus_nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+    }
+    else
+    {
+        result =
+            scl->bignum_func.mod(scl, (uint64_t *)sub_result, nb_32b_words,
+                                 ctx->modulus, ctx->modulus_nb_32b_words, out);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
     }
 
     return (SCL_OK);
@@ -911,14 +1033,16 @@ int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
         return (SCL_INVALID_LENGTH);
     }
 
-    result = scl->bignum_func.mult(scl, in_a, in_b, (uint64_t *)mult_result, nb_32b_words);
-    if (0 > result)
+    result = scl->bignum_func.mult(scl, in_a, in_b, (uint64_t *)mult_result,
+                                   nb_32b_words);
+    if (SCL_OK > result)
     {
         return (result);
     }
 
-    result = scl->bignum_func.mod(scl, (uint64_t *)mult_result, nb_32b_words * 2,
-                                  ctx->modulus, ctx->modulus_nb_32b_words, out);
+    result =
+        scl->bignum_func.mod(scl, (uint64_t *)mult_result, nb_32b_words * 2,
+                             ctx->modulus, ctx->modulus_nb_32b_words, out);
     if (SCL_OK > result)
     {
         return (result);
