@@ -89,6 +89,21 @@ CRYPTO_FUNCTION int32_t soft_bignum_is_null(const metal_scl_t *const scl,
                                             size_t nb_32b_words);
 
 /**
+ * @brief negate bignumber
+ * @details perform array = -array
+ *
+ * @param[in] scl           metal scl context
+ * @param[in,out] array     Input array a
+ * @param[in] nb_32b_words  number of 32 bits words to use in calcul
+ * @return >= 0 carry from the operation
+ * @return < 0 otherwise @ref scl_errors_t
+ * @warning This function can be used in case of negative substration result
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_negate(const metal_scl_t *const scl,
+                                           uint64_t *const array,
+                                           size_t nb_32b_words);
+
+/**
  * @brief Increment big number by one
  *
  * @param[in] scl           metal scl context

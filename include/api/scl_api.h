@@ -39,9 +39,9 @@
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
 
+#include <api/bignumbers/bignumbers.h>
 #include <api/blockcipher/aes/aes.h>
 #include <api/hash/sha.h>
-#include <api/bignumbers/bignumbers.h>
 
 /**
  * \addtogroup COMMON
@@ -259,6 +259,19 @@ struct __bignum_func
      */
     int32_t (*is_null)(const metal_scl_t *const scl,
                        const uint32_t *const array, size_t nb_32b_words);
+
+    /**
+     * @brief negate bignumber
+     *
+     * @param[in] scl           metal scl context
+     * @param[in,out] array     Input array a
+     * @param[in] nb_32b_words  number of 32 bits words to use in calcul
+     * @return >= 0 carry from the operation
+     * @return < 0 otherwise @ref scl_errors_t
+     * @warning This function can be used in case of negative substration result
+     */
+    int32_t (*negate)(const metal_scl_t *const scl, uint64_t *const array,
+                      size_t nb_32b_words);
 
     /**
      * @brief Increment big number by one
