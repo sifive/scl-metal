@@ -31,6 +31,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
+#include <string.h>
+
 #include <scl_cfg.h>
 
 #include <api/scl_api.h>
@@ -54,7 +56,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
 {
     int32_t ret;
     uint64_t formated[4] = {0};
-    uint64_t tmp[2] = {0};
+    uint64_t tmp_iv[2] = {0};
     uint8_t ccmt_tab[BLOCK128_NB_BYTE + 1] = {
         -1, -1, -1, -1, 1, -1, 2, -1, 3, -1, 4, -1, 5, -1, 6, -1, 7};
     uint8_t ccmt, ccmq;
@@ -123,9 +125,9 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
 
     if (SCL_OK == ret)
     {
-        scl_format_iv(iv, iv_byte_len, tmp);
+        scl_format_iv(iv, iv_byte_len, tmp_iv);
 
-        ret = scl_ctx->aes_func.setiv(scl_ctx, tmp);
+        ret = scl_ctx->aes_func.setiv(scl_ctx, tmp_iv);
     }
 
     /* @FIXME: */
@@ -157,11 +159,16 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
                                  uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst, const uint8_t *const src, size_t src_byte_len)
 {
     int32_t ret;
-    uint8_t tmp[16] __attribute__((aligned(8))) = {0};
+    uint8_t tmp_tag[16] __attribute__((aligned(8))) = {0};
     size_t i;
-    size_t dst_byte_len;
+    size_t dst_byte_len = 0;
 
     if (NULL == scl_ctx)
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if (NULL == ctx)
     {
         return (SCL_INVALID_INPUT);
     }
@@ -182,11 +189,11 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
 
     if (NULL == dst)
     {
-        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, NULL, (uint64_t *)tmp);
+        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, NULL, (uint64_t *)tmp_tag);
     }
     else
     {
-        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, &dst[dst_byte_len], (uint64_t *)tmp);
+        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, &dst[dst_byte_len], (uint64_t *)tmp_tag);
     }
     if (SCL_OK != ret)
     {
@@ -195,8 +202,12 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
 
     for (i = 0; i < tag_byte_len; i++ )
     {
-        tag[i]=tmp[15-i];
+        tag[i]=tmp_tag[15-i];
     }
+
+    /* @FIXME: */
+    /* ctx should be erased and be sure compiler optimization do not remove this operation */
+    memset(ctx,0,sizeof(aes_auth_ctx_t));
 
     return (ret);
 }

@@ -88,7 +88,7 @@ SCL_FUNCTION int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
  * @param[in] iv_byte_len       length in bytes of iv
  * @param[in] aad               Additional Authenticated Data (aad) use for the AES-CCM operation
  * @param[in] aad_byte_len      length in bytes of aad
- * @param[in] data_byte_len     length in bytes of data
+ * @param[in] pld_byte_len      length in bytes of data payload
  * @param[in] tag_byte_len      length in bytes of tag returned
  * @param[in] mode              type of operation @ref scl_process_t
  * @return 0    in case of SUCCESS
@@ -107,14 +107,14 @@ SCL_FUNCTION int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth
  * @param[in,out] ctx           AES authenticate context
  * @param[out] dst              output buffer - result of AES-CCM operation
  * @param[out] dst_byte_len     length of data (in bytes) write into output buffer
- * @param[in] src               data to process
- * @param[in] src_byte_len      length in bytes of data
+ * @param[in] pld               data payload to process
+ * @param[in] pld_byte_len      length in bytes of data payload
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @ref scl_errors_t
  */
 SCL_FUNCTION int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
                                       uint8_t *const dst, size_t *dst_byte_len,
-                                      const uint8_t *const src, size_t src_byte_len);
+                                      const uint8_t *const pld, size_t pld_byte_len);
 
 /**
  * @brief Finalize AES-CCM computation and returning Authenticate tag
@@ -124,12 +124,12 @@ SCL_FUNCTION int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth
  * @param[out] tag              output tag buffer - result of AES-CCM operation
  * @param[in] tag_byte_len      length in bytes of tag
  * @param[out] dst              output buffer - result of AES-CCM operation
- * @param[in] src               data to process
- * @param[in] src_byte_len      length in bytes of data
+ * @param[in] pld               data payload to process
+ * @param[in] pld_byte_len      length in bytes of data payload
  */
 SCL_FUNCTION int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
                                  uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst,
-                                 const uint8_t *const src, size_t src_byte_len);
+                                 const uint8_t *const pld, size_t pld_byte_len);
 
 /** @}*/
  
