@@ -51,6 +51,7 @@
  * @return 1            a > b
  * @return -1           a < b
  * @warning No check on pointer value
+ * @warning Not time constant
  */
 CRYPTO_FUNCTION int32_t soft_bignum_compare(const metal_scl_t *const scl,
                                             const uint64_t *const a,
@@ -395,5 +396,23 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
                                              const uint64_t *const in_b,
                                              uint64_t *const out,
                                              size_t nb_32b_words);
+
+/**
+ * @brief Modular inverse
+ *
+ * @param[in] scl           metal scl context
+ * @param[in] ctx           bignumber context (contain modulus info)
+ * @param[in] in            Input array
+ * @param[out] out          Output array
+ * @param[in] nb_32b_words  Number of words, of inputs arrays and output array
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @warning input should be prime with ctx->modulus
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
+                                            const bignum_ctx_t *const ctx,
+                                            const uint64_t *const in,
+                                            uint64_t *const out,
+                                            size_t nb_32b_words);
 
 #endif /* _SOFT_BIGNUMBERS_H */

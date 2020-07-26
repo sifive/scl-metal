@@ -495,8 +495,8 @@ int32_t soft_bignum_rightshift(const metal_scl_t *const scl,
 
     if (0 != nb_32b_words % 2)
     {
-        *((uint32_t *)&out[i]) =
-            (uint32_t)(in[i + bit_shift_div64] >> bit_shift_mod64);
+        *((uint32_t *)&out[i]) = (uint32_t)(
+            (*((uint32_t *)&in[i + bit_shift_div64])) >> bit_shift_mod64);
     }
 
     memset((void *)((uint8_t *)&out_32b[nb_32b_words] -
@@ -946,13 +946,12 @@ int32_t soft_bignum_mod_sub(const metal_scl_t *const scl,
     int32_t result;
     uint32_t sub_result[nb_32b_words] __attribute__((aligned(8)));
 
-    if ((NULL == scl) || (NULL == ctx))
+    if ((NULL == scl) || (NULL == ctx) || (NULL == ctx->modulus))
     {
         return (SCL_INVALID_INPUT);
     }
 
-    if ((NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.negate) ||
-        (NULL == ctx->modulus))
+    if ((NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.negate))
     {
         return (SCL_ERROR_API_ENTRY_POINT);
     }
@@ -1017,12 +1016,12 @@ int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
     int32_t result;
     uint32_t mult_result[nb_32b_words * 2] __attribute__((aligned(8)));
 
-    if ((NULL == scl) || (NULL == ctx))
+    if ((NULL == scl) || (NULL == ctx) || (NULL == ctx->modulus))
     {
         return (SCL_INVALID_INPUT);
     }
 
-    if ((NULL == scl->bignum_func.mult) || (NULL == ctx->modulus))
+    if (NULL == scl->bignum_func.mult)
     {
         return (SCL_ERROR_API_ENTRY_POINT);
     }
@@ -1046,6 +1045,221 @@ int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
     if (SCL_OK > result)
     {
         return (result);
+    }
+
+    return (SCL_OK);
+}
+
+int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
+                            const bignum_ctx_t *const ctx,
+                            const uint64_t *const input, uint64_t *const out,
+                            size_t nb_32b_words)
+{
+    int32_t result = 0;
+    /* x in Hoac, x = input*/
+    const uint64_t *x = input;
+    /* y in Hoac, y = modulus */
+    const uint64_t *y = ctx->modulus;
+
+    if ((NULL == scl) || (NULL == ctx) || (NULL == ctx->modulus))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl->bignum_func.is_null) ||
+        (NULL == scl->bignum_func.negate) ||
+        (NULL == scl->bignum_func.rightshift) ||
+        (NULL == scl->bignum_func.add) || (NULL == scl->bignum_func.sub))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    /* output should be modulus size */
+    if (nb_32b_words != ctx->modulus_nb_32b_words)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    /* check that both input and modulus ar positive integer */
+    if (scl->bignum_func.is_null(scl, (uint32_t *)input, nb_32b_words) ||
+        scl->bignum_func.is_null(scl, (uint32_t *)ctx->modulus, nb_32b_words))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    /**
+     * We use simplification base on the fact that the modulus is odd, so we
+     * check it
+     */
+    if (0 == (y[0] & 1))
+    {
+        return (SCL_ERR_PARITY);
+    }
+
+    /**
+     * We use here the Extended Euclidiean algorithm to compute the gcd, and
+     * get the modular multiplicative inverse.
+     * Please note that we will try to keep Hoac (Handbook of applied
+     * Cryptography) notation in order to be accessible for the reader.
+     */
+    {
+        /* Initialisation */
+        uint32_t u[nb_32b_words] __attribute__((aligned(8)));
+        uint32_t v[nb_32b_words] __attribute__((aligned(8)));
+        /* A in Hoac */
+        uint32_t a[nb_32b_words + 1] __attribute__((aligned(8)));
+        /* C in Hoac */
+        uint32_t c[nb_32b_words + 1] __attribute__((aligned(8)));
+
+        /* A = 1 */
+        memset(a, 0, sizeof(a));
+        a[0] = 1;
+
+        /* C = 0 */
+        memset(c, 0, sizeof(c));
+
+        /* u = x */
+        memcpy(u, x, sizeof(u));
+        /* v = y */
+        memcpy(v, y, sizeof(v));
+
+        while (false == scl->bignum_func.is_null(scl, u, nb_32b_words))
+        {
+            while (0 == (u[0] & 1))
+            {
+                (void)scl->bignum_func.rightshift(
+                    scl, (uint64_t *)u, (uint64_t *)u, 1, nb_32b_words);
+                if ((0 == (a[0] & 1)))
+                {
+                    (void)scl->bignum_func.rightshift(
+                        scl, (uint64_t *)a, (uint64_t *)a, 1, nb_32b_words);
+                }
+                else
+                {
+                    a[nb_32b_words] = (uint32_t)scl->bignum_func.add(
+                        scl, (uint64_t *)a, y, (uint64_t *)a, nb_32b_words);
+                    if (0 > (int32_t)a[nb_32b_words])
+                    {
+                        return ((int32_t)a[nb_32b_words]);
+                    }
+                    (void)scl->bignum_func.rightshift(
+                        scl, (uint64_t *)a, (uint64_t *)a, 1, nb_32b_words + 1);
+                }
+            }
+
+            while (0 == (v[0] & 1))
+            {
+                (void)scl->bignum_func.rightshift(
+                    scl, (uint64_t *)v, (uint64_t *)v, 1, nb_32b_words);
+                if ((0 == (c[0] & 1)))
+                {
+                    (void)scl->bignum_func.rightshift(
+                        scl, (uint64_t *)c, (uint64_t *)c, 1, nb_32b_words);
+                }
+                else
+                {
+                    c[nb_32b_words] = scl->bignum_func.add(
+                        scl, (uint64_t *)c, y, (uint64_t *)c, nb_32b_words);
+                    if (0 > (int32_t)c[nb_32b_words])
+                    {
+                        return ((int32_t)c[nb_32b_words]);
+                    }
+                    (void)scl->bignum_func.rightshift(
+                        scl, (uint64_t *)c, (uint64_t *)c, 1, nb_32b_words + 1);
+                }
+            }
+
+            if (0 <= scl->bignum_func.compare(scl, (uint64_t *)u, (uint64_t *)v,
+                                              nb_32b_words))
+            {
+                result = scl->bignum_func.sub(scl, (uint64_t *)u, (uint64_t *)v,
+                                              (uint64_t *)u, nb_32b_words);
+                if (0 != result)
+                {
+                    asm volatile("ebreak \n");
+                }
+
+                /* This is some kind of modular substraction here */
+                result = scl->bignum_func.sub(scl, (uint64_t *)a, (uint64_t *)c,
+                                              (uint64_t *)a, nb_32b_words);
+                if (1 == result)
+                {
+                    (void)scl->bignum_func.negate(scl, (uint64_t *)a,
+                                                  nb_32b_words);
+                    (void)scl->bignum_func.sub(scl, (uint64_t *)y,
+                                               (uint64_t *)a, (uint64_t *)a,
+                                               nb_32b_words);
+                }
+            }
+            else
+            {
+                result = scl->bignum_func.sub(scl, (uint64_t *)v, (uint64_t *)u,
+                                              (uint64_t *)v, nb_32b_words);
+                if (0 != result)
+                {
+                    asm volatile("ebreak \n");
+                }
+
+                /* This is some kind of modular substraction here */
+                result = scl->bignum_func.sub(scl, (uint64_t *)c, (uint64_t *)a,
+                                              (uint64_t *)c, nb_32b_words);
+                if (1 == result)
+                {
+                    (void)scl->bignum_func.negate(scl, (uint64_t *)c,
+                                                  nb_32b_words);
+                    (void)scl->bignum_func.sub(scl, (uint64_t *)y,
+                                               (uint64_t *)c, (uint64_t *)c,
+                                               nb_32b_words);
+                }
+            }
+
+            // if (0 <= scl->bignum_func.compare(scl, (uint64_t *)u, (uint64_t
+            // *)v,
+            //                                   nb_32b_words))
+            // {
+            //     /* This is some kind of modular substraction here */
+            //     (void)scl->bignum_func.sub(scl, (uint64_t *)u, (uint64_t *)v,
+            //                                (uint64_t *)u, nb_32b_words);
+
+            //     if(0 > scl->bignum_func.compare(scl, (uint64_t *)a, (uint64_t
+            //     *)c, nb_32b_words)) {
+            //         a[nb_32b_words] = scl->bignum_func.add(scl, y, (uint64_t
+            //         *)a, (uint64_t *)a, nb_32b_words);
+            //         // if(0 != a[nb_32b_words]) {
+            //         //     asm volatile("ebreak \n");
+            //         // }
+            //     }
+            //     scl->bignum_func.sub(scl, (uint64_t *)a, (uint64_t *)c,
+            //                                   (uint64_t *)a, nb_32b_words +
+            //                                   1);
+            // }
+            // else
+            // {
+            //     (void)scl->bignum_func.sub(scl, (uint64_t *)v, (uint64_t *)u,
+            //                                (uint64_t *)v, nb_32b_words);
+
+            //     if(0 > scl->bignum_func.compare(scl, (uint64_t *)c, (uint64_t
+            //     *)a ,nb_32b_words)) {
+            //         c[nb_32b_words] = scl->bignum_func.add(scl, (uint64_t
+            //         *)y, (uint64_t *)c, (uint64_t *)c, nb_32b_words);
+            //         // if(0 != c[nb_32b_words]) {
+            //         //     asm volatile("ebreak \n");
+            //         // }
+            //     }
+            //     scl->bignum_func.sub(scl, (uint64_t *)c, (uint64_t *)a,
+            //                                   (uint64_t *)c, nb_32b_words +
+            //                                   1);
+            // }
+        }
+
+        /* check inversible, v = 1 */
+        if ((v[0] != 1) ||
+            (false == scl->bignum_func.is_null(scl, &v[1], nb_32b_words - 1)))
+        {
+            return (SCL_NOT_INVERSIBLE);
+        }
+
+        memcpy(out, c, nb_32b_words * sizeof(uint32_t));
     }
 
     return (SCL_OK);
