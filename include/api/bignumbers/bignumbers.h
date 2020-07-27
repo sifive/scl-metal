@@ -35,6 +35,13 @@
 
 #include <stdint.h>
 
+/** 
+ * \addtogroup COMMON
+ * \addtogroup BIGNUM
+ * \ingroup COMMON
+ *  @{
+ */
+
 /*! @brief bignumber context */
 typedef struct
 {
@@ -43,5 +50,7 @@ typedef struct
     /*! @brief bignumber modulus nb 32 bits words */
     size_t modulus_nb_32b_words;
 } bignum_ctx_t;
+
+/** @}*/
 
 #endif /* _BIGNUMBERS_H */

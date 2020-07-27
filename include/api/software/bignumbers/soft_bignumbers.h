@@ -41,6 +41,13 @@
 #include <api/scl_api.h>
 
 /**
+ * \addtogroup SOFTWARE
+ * \addtogroup SOFT_API_SHA
+ * \ingroup SOFTWARE
+ *  @{
+ */
+
+/**
  * @brief compare two big interger of same length
  *
  * @param[in] scl           metal scl context
@@ -414,5 +421,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
                                             const uint64_t *const in,
                                             uint64_t *const out,
                                             size_t nb_32b_words);
+
+/** @}*/
 
 #endif /* _SOFT_BIGNUMBERS_H */
