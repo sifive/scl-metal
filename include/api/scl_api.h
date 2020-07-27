@@ -543,6 +543,24 @@ struct __bignum_func
                         const bignum_ctx_t *const ctx,
                         const uint64_t *const in_a, const uint64_t *const in_b,
                         uint64_t *const out, size_t nb_32b_words);
+
+    /**
+     * @brief Modular inverse
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] ctx           bignumber context (contain modulus info)
+     * @param[in] in            Input array
+     * @param[out] out          Output array
+     * @param[in] nb_32b_words  Number of words, of inputs arrays and output
+     * array
+     * @return >= 0 success
+     * @return < 0 in case of errors @ref scl_errors_t
+     * @warning input should be prime with ctx->modulus, otherwise an error is
+     * returned
+     */
+    int32_t (*mod_inv)(const metal_scl_t *const scl,
+                       const bignum_ctx_t *const ctx, const uint64_t *const in,
+                       uint64_t *const out, size_t nb_32b_words);
 };
 
 struct _metal_scl_struct
