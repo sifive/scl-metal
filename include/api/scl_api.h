@@ -50,8 +50,11 @@
  *  @{
  */
 
+
+/*! @brief Low level API entry points */
 struct _metal_scl_struct;
 
+/*! @see _metal_scl_struct */
 typedef struct _metal_scl_struct metal_scl_t;
 
 /*! @brief AESlow level API entry points */
@@ -193,6 +196,7 @@ struct __hash_func
                           uint8_t *const hash, size_t *const hash_len);
 };
 
+/*! @brief True Random Number Generator low level API entry points */
 struct __trng_func
 {
     /**
@@ -213,6 +217,7 @@ struct __trng_func
     int32_t (*get_data)(const metal_scl_t *const scl, uint32_t *data_out);
 };
 
+/*! @brief Big integer arithmetic low level API entry points */
 struct __bignum_func
 {
     /**
@@ -250,9 +255,9 @@ struct __bignum_func
     /**
      * @brief check if the bignumber is null
      *
-     * @param scl               metal scl context
-     * @param array             array of integers (big integer)
-     * @param nb_32b_words      number of 32 bits word in the array
+     * @param[in] scl               metal scl context
+     * @param[in] array             array of integers (big integer)
+     * @param[in] nb_32b_words      number of 32 bits word in the array
      * @return true (== 1)      if the big integer is null
      * @return false (== 0)     if the big integer is not null
      * @return <0               In case of error
@@ -563,6 +568,7 @@ struct __bignum_func
                        uint64_t *const out, size_t nb_32b_words);
 };
 
+/*! @see _metal_scl_struct */
 struct _metal_scl_struct
 {
 #if __riscv_xlen == 64

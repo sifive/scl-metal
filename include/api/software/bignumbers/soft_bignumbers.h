@@ -85,9 +85,9 @@ CRYPTO_FUNCTION int32_t soft_bignum_compare_len_diff(
 /**
  * @brief check if the bignumber is null
  *
- * @param scl               metal scl context
- * @param array             array of integers (big integer)
- * @param nb_32b_words      number of 32 bits word in the array
+ * @param[in] scl               metal scl context
+ * @param[in] array             array of integers (big integer)
+ * @param[in] nb_32b_words      number of 32 bits word in the array
  * @return true (== 1)      if the big integer is null
  * @return false (== 0)     if the big integer is not null
  * @return <0               In case of error
@@ -248,9 +248,9 @@ CRYPTO_FUNCTION int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
 
 /**
  * @brief set one bit in a big integer
- *
+ * 
  * @param[in] scl           metal scl context
- * @param[in/out] array     input array (bignumber)
+ * @param[in,out] array     input array (bignumber)
  * @param[in] nb_32b_words  size of the big integer in 32bits words
  * @param[in] bit_2_set     index of the bit to set in the big integer
  * @return >= 0 success
@@ -332,7 +332,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_set_modulus(const metal_scl_t *const scl,
  *
  * @param[in] scl               metal scl context
  * @param[out] ctx              bignumber context that will be updated
- * @param[in] in_a              Input array
+ * @param[in] in                Input array
  * @param[out] out              Output array
  * @param[in] nb_32b_words      number of 32 bits words to use in calcul
  * @return >= 0 success

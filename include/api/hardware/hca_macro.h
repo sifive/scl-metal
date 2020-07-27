@@ -46,16 +46,20 @@
  *  @{
  */
 
+/*! @brief Macro to access a 64 bits register */
 #define METAL_REG64(base, offset)                                              \
     (__METAL_ACCESS_ONCE((uint64_t *)((base) + (offset))))
+/*! @brief Macro to access a 32 bits register */
 #define METAL_REG32(base, offset)                                              \
     (__METAL_ACCESS_ONCE((uint32_t *)((base) + (offset))))
 
+/*! @brief Macro to copy 32 (no alignement constraint) to 32 (aligned) */
 #define GET_32BITS(data, k)                                                    \
     (((uint32_t) * ((uint8_t *)data + k + 3) << 24) +                          \
      ((uint32_t) * ((uint8_t *)data + k + 2) << 16) +                          \
      ((uint32_t) * ((uint8_t *)data + k + 1) << 8) +                           \
      ((uint32_t) * ((uint8_t *)data + k)))
+/*! @brief Macro to copy 64 (no alignement constraint) to 64 (aligned) */
 #define GET_64BITS(data, k)                                                    \
     ((((uint64_t)GET_32BITS((uint8_t *)data, (k + 4))) << 32) +                \
      (uint64_t)GET_32BITS((uint8_t *)data, k))
