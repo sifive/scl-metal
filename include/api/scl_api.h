@@ -50,7 +50,6 @@
  *  @{
  */
 
-
 /*! @brief Low level API entry points */
 struct _metal_scl_struct;
 

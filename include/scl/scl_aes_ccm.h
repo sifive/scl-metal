@@ -118,17 +118,9 @@ SCL_FUNCTION int32_t scl_aes_ccm_init(
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @ref scl_errors_t
  */
-<<<<<<< HEAD
 SCL_FUNCTION int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
                                       uint8_t *const dst, size_t *const dst_byte_len,
                                       const uint8_t *const pld, size_t pld_byte_len);
-=======
-SCL_FUNCTION int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx,
-                                      aes_auth_ctx_t *const ctx,
-                                      uint8_t *const dst,
-                                      const uint8_t *const src,
-                                      size_t src_byte_len);
->>>>>>> 276d01a... Apply check-format
 
 /**
  * @brief Finalize AES-CCM computation and returning Authenticate tag
@@ -141,18 +133,9 @@ SCL_FUNCTION int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx,
  * @param[in] pld               data payload to process
  * @param[in] pld_byte_len      length in bytes of data payload
  */
-<<<<<<< HEAD
 SCL_FUNCTION int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
                                  uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst,
                                  const uint8_t *const pld, size_t pld_byte_len);
-=======
-SCL_FUNCTION int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx,
-                                        aes_auth_ctx_t *const ctx,
-                                        uint8_t *const tag, size_t tag_byte_len,
-                                        uint8_t *const dst,
-                                        const uint8_t *const src,
-                                        size_t src_byte_len);
->>>>>>> 276d01a... Apply check-format
 
 /** @}*/
 

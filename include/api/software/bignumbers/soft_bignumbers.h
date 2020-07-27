@@ -248,7 +248,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
 
 /**
  * @brief set one bit in a big integer
- * 
+ *
  * @param[in] scl           metal scl context
  * @param[in,out] array     input array (bignumber)
  * @param[in] nb_32b_words  size of the big integer in 32bits words
