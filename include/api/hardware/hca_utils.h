@@ -34,6 +34,6 @@
 #define _HCA_UTILS_H
 
 void hca_setfield32(const metal_scl_t *const scl, uint32_t reg, uint32_t value,
-                    char offset, uint32_t mask);
+                    size_t offset, uint32_t mask);
 
 #endif /* _HCA_UTILS_H */

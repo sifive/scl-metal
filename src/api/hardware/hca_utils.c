@@ -33,7 +33,7 @@
 #include <api/hardware/hca_macro.h>
 
 void hca_setfield32(const metal_scl_t *const scl, uint32_t reg, uint32_t value,
-                    char offset, uint32_t mask)
+                    size_t offset, uint32_t mask)
 {
     uint32_t reg32;
     reg32 = METAL_REG32(scl->hca_base, reg);
