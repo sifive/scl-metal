@@ -42,7 +42,7 @@
 
 /**
  * @addtogroup SOFTWARE
- * @addtogroup SOFT_API_SHA
+ * @addtogroup SOFT_API_BIGNUM
  * @ingroup SOFTWARE
  *  @{
  */
