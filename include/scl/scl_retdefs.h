@@ -80,16 +80,16 @@ typedef enum
     SCL_BUSY = -16,
     /*! @brief error zero division */
     SCL_ZERO_DIVISION = -17,
-    /*! @brief error not modular inversion possible */
-    SCL_NOT_INVERSIBLE = -18,
-    /*! @brief error on parity */
-    SCL_ERR_PARITY = -19,
-
     /**
      * @brief One of the entry point, use by this function or in the call tree
      * use an API pointer undeclared or misplaced
      */
     SCL_ERROR_API_ENTRY_POINT = -18,
+    /*! @brief error not modular inversion possible */
+    SCL_NOT_INVERSIBLE = -19,
+    /*! @brief error on parity */
+    SCL_ERR_PARITY = -20,
+
     /*! @brief error functionnality not present */
     SCL_NOT_PRESENT = -30,
     /*! @brief error functionnality not yet supported */
