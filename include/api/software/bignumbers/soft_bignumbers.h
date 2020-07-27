@@ -279,6 +279,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_set_bit(const metal_scl_t *const scl,
  * @note the implementation is based on Egyptian method (slightly adapted),
  * described here
  * http://compoasso.free.fr/primelistweb/page/prime/euclide_en.php (method 4)
+ * @warning This function use internally 2 buffer allocated on stack that can
+ * reach dividend_nb_32b_words
  */
 CRYPTO_FUNCTION int32_t soft_bignum_div(const metal_scl_t *const scl,
                                         const uint64_t *const dividend,
@@ -302,6 +304,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_div(const metal_scl_t *const scl,
  * @return >= 0 success
  * @return < 0 in case of errors @ref scl_errors_t
  * @note remainder should be at least of length equal to modulus_nb_32b_words
+ * @warning This function might call @ref soft_bignum_div depending on scl
+ * content and therefore have buffer allocation on stack
  */
 CRYPTO_FUNCTION int32_t soft_bignum_mod(const metal_scl_t *const scl,
                                         const uint64_t *const in,
@@ -337,6 +341,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_set_modulus(const metal_scl_t *const scl,
  * @param[in] nb_32b_words      number of 32 bits words to use in calcul
  * @return >= 0 success
  * @return < 0 in case of errors @ref scl_errors_t
+ * @warning This function allocates internally 1 buffer on stack that can reach
+ * nb_32b_words and the ones from @ref soft_bignum_mod
  */
 CRYPTO_FUNCTION int32_t soft_bignum_mod_neg(const metal_scl_t *const scl,
                                             const bignum_ctx_t *const ctx,
@@ -356,6 +362,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_neg(const metal_scl_t *const scl,
  * @return >= 0 success
  * @return < 0 in case of errors @ref scl_errors_t
  * @warning the modulus used should be of nb_32b_words size
+ * @warning This function allocates internally 1 buffer on stack that can reach
+ * nb_32b_words + 1 and the ones from @ref soft_bignum_mod
  */
 CRYPTO_FUNCTION int32_t soft_bignum_mod_add(const metal_scl_t *const scl,
                                             const bignum_ctx_t *const ctx,
@@ -376,6 +384,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_add(const metal_scl_t *const scl,
  * @return >= 0 success
  * @return < 0 in case of errors @ref scl_errors_t
  * @warning the modulus used should be of nb_32b_words size
+ * @warning This function allocates internally 1 buffer on stack that can reach
+ * nb_32b_words and the ones from @ref soft_bignum_mod
  */
 CRYPTO_FUNCTION int32_t soft_bignum_mod_sub(const metal_scl_t *const scl,
                                             const bignum_ctx_t *const ctx,
@@ -396,6 +406,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_sub(const metal_scl_t *const scl,
  * @return >= 0 success
  * @return < 0 in case of errors @ref scl_errors_t
  * @warning the modulus used should be of nb_32b_words size
+ * @warning This function allocates internally 1 buffer on stack that can reach
+ * 2 * nb_32b_words and the ones from @ref soft_bignum_mod
  */
 CRYPTO_FUNCTION int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
                                              const bignum_ctx_t *const ctx,
@@ -415,6 +427,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
  * @return >= 0 success
  * @return < 0 in case of errors @ref scl_errors_t
  * @warning input should be prime with ctx->modulus
+ * @warning This function allocates internally 1 buffer on stack that can reach
+ * 4 * nb_32b_words + 2.
  */
 CRYPTO_FUNCTION int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
                                             const bignum_ctx_t *const ctx,
