@@ -42,9 +42,9 @@
 #include <api/hash/sha512.h>
 
 /**
- * \addtogroup SOFTWARE
- * \addtogroup SOFT_SHA
- * \ingroup SOFTWARE
+ * @addtogroup SOFTWARE
+ * @addtogroup SOFT_SHA
+ * @ingroup SOFTWARE
  *  @{
  */
 

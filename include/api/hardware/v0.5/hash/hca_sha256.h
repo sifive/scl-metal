@@ -41,9 +41,9 @@
 #include <api/hash/sha256.h>
 
 /**
- * \addtogroup HCA
- * \addtogroup HCA_SHA
- * \ingroup HCA
+ * @addtogroup HCA
+ * @addtogroup HCA_SHA
+ * @ingroup HCA
  *  @{
  */
 

@@ -39,9 +39,9 @@
 #include <api/hash/sha256.h>
 
 /** 
- * \addtogroup COMMON
- * \addtogroup SHA
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup SHA
+ * @ingroup COMMON
  *  @{
  */
 

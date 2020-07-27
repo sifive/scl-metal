@@ -35,9 +35,9 @@
 #define SCL_RETDEFS_H
 
 /**
- * \addtogroup SCL
- * \addtogroup SCL_DEFS
- * \ingroup SCL
+ * @addtogroup SCL
+ * @addtogroup SCL_DEFS
+ * @ingroup SCL
  *  @{
  */
 

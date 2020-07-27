@@ -41,9 +41,9 @@
 #include <api/hash/sha256.h>
 
 /**
- * \addtogroup SOFTWARE
- * \addtogroup SOFT_SHA
- * \ingroup SOFTWARE
+ * @addtogroup SOFTWARE
+ * @addtogroup SOFT_SHA
+ * @ingroup SOFTWARE
  *  @{
  */
 

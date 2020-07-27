@@ -40,9 +40,9 @@
 #include <api/hardware/hca_utils.h>
 
 /**
- * \addtogroup HCA
- * \addtogroup HCA_MACRO
- * \ingroup HCA
+ * @addtogroup HCA
+ * @addtogroup HCA_MACRO
+ * @ingroup HCA
  *  @{
  */
 

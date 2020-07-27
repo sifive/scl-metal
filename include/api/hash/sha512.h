@@ -37,9 +37,9 @@
 #include <stdint.h>
 
 /** 
- * \addtogroup COMMON
- * \addtogroup SHA
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup SHA
+ * @ingroup COMMON
  *  @{
  */
 

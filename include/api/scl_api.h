@@ -44,9 +44,9 @@
 #include <api/hash/sha.h>
 
 /**
- * \addtogroup COMMON
- * \addtogroup API
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup API
+ * @ingroup COMMON
  *  @{
  */
 

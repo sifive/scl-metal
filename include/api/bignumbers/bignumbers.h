@@ -36,9 +36,9 @@
 #include <stdint.h>
 
 /** 
- * \addtogroup COMMON
- * \addtogroup BIGNUM
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup BIGNUM
+ * @ingroup COMMON
  *  @{
  */
 

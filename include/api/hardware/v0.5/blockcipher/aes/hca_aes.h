@@ -44,9 +44,9 @@
 #include <scl/scl_retdefs.h>
 
 /**
- * \addtogroup HCA
- * \addtogroup HCA_API_AES
- * \ingroup HCA
+ * @addtogroup HCA
+ * @addtogroup HCA_API_AES
+ * @ingroup HCA
  *  @{
  */
 

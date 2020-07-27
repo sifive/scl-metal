@@ -43,9 +43,9 @@
 #include <scl_cfg.h>
 
 /**
- * \addtogroup SCL
- * \addtogroup SCL_INIT
- * \ingroup SCL
+ * @addtogroup SCL
+ * @addtogroup SCL_INIT
+ * @ingroup SCL
  *  @{
  */
 

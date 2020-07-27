@@ -46,9 +46,9 @@
 #include <api/scl_api.h>
 
 /**
- * \addtogroup SCL
- * \addtogroup SCL_SHA
- * \ingroup SCL
+ * @addtogroup SCL
+ * @addtogroup SCL_SHA
+ * @ingroup SCL
  *  @{
  */
 

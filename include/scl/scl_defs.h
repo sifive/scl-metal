@@ -37,9 +37,9 @@
 #include <api/hash/sha.h>
 
 /**
- * \addtogroup SCL
- * \addtogroup SCL_DEFS
- * \ingroup SCL
+ * @addtogroup SCL
+ * @addtogroup SCL_DEFS
+ * @ingroup SCL
  *  @{
  */
 

@@ -34,9 +34,9 @@
 #define _DEFS_H
 
 /**
- * \addtogroup COMMON
- * \addtogroup DEFS
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup DEFS
+ * @ingroup COMMON
  *  @{
  */
 

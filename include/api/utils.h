@@ -39,9 +39,9 @@
 #include <crypto_cfg.h>
 
 /**
- * \addtogroup COMMON
- * \addtogroup UTILS
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup UTILS
+ * @ingroup COMMON
  *  @{
  */
 

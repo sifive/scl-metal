@@ -36,9 +36,9 @@
 #include <scl/scl_defs.h>
 
 /** 
- * \addtogroup COMMON
- * \addtogroup AES
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup AES
+ * @ingroup COMMON
  *  @{
  */
 

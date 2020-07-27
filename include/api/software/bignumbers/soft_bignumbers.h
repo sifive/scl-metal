@@ -41,9 +41,9 @@
 #include <api/scl_api.h>
 
 /**
- * \addtogroup SOFTWARE
- * \addtogroup SOFT_API_SHA
- * \ingroup SOFTWARE
+ * @addtogroup SOFTWARE
+ * @addtogroup SOFT_API_SHA
+ * @ingroup SOFTWARE
  *  @{
  */
 
