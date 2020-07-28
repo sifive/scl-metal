@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _HCA_TRNG_H
-#define _HCA_TRNG_H
+#ifndef SCL_BACKEND_HCA_TRNG_H
+#define SCL_BACKEND_HCA_TRNG_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -57,4 +57,4 @@ CRYPTO_FUNCTION int32_t hca_trng_getdata(const metal_scl_t *const scl,
 
 /** @}*/
 
-#endif /* _HCA_TRNG_H */
+#endif /* SCL_BACKEND_HCA_TRNG_H */

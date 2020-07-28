@@ -30,10 +30,10 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _HCA_UTILS_H
-#define _HCA_UTILS_H
+#ifndef SCL_BACKEND_HCA_UTILS_H
+#define SCL_BACKEND_HCA_UTILS_H
 
 void hca_setfield32(const metal_scl_t *const scl, uint32_t reg, uint32_t value,
                     size_t offset, uint32_t mask);
 
-#endif /* _HCA_UTILS_H */
+#endif /* SCL_BACKEND_HCA_UTILS_H */

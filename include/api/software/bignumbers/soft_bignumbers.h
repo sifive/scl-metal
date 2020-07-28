@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SOFT_BIGNUMBERS_H
-#define _SOFT_BIGNUMBERS_H
+#ifndef SCL_BACKEND_SOFT_BIGNUMBERS_H
+#define SCL_BACKEND_SOFT_BIGNUMBERS_H
 
 #include <crypto_cfg.h>
 #include <stddef.h>
@@ -438,4 +438,4 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
 
 /** @}*/
 
-#endif /* _SOFT_BIGNUMBERS_H */
+#endif /* SCL_BACKEND_SOFT_BIGNUMBERS_H */

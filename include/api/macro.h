@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _MACRO_H
-#define _MACRO_H
+#ifndef SCL_BACKEND_MACRO_H
+#define SCL_BACKEND_MACRO_H
 
 #include <machine/endian.h>
 
@@ -101,4 +101,4 @@
 
 /** @}*/
 
-#endif /* _MACRO_H */
+#endif /* SCL_BACKEND_MACRO_H */

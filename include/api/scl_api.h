@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_API_H
-#define _SCL_API_H
+#ifndef SCL_BACKEND_SCL_API_H
+#define SCL_BACKEND_SCL_API_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -709,4 +709,5 @@ static __inline__ int32_t default_trng_getdata(metal_scl_t *scl,
 }
 
 /** @}*/
-#endif
+
+#endif /* SCL_BACKEND_SCL_API_H */

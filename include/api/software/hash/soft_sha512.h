@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SOFT_SHA512_H
-#define _SOFT_SHA512_H
+#ifndef SCL_BACKEND_SOFT_SHA512_H
+#define SCL_BACKEND_SOFT_SHA512_H
 
 #include <stdint.h>
 
@@ -109,4 +109,4 @@ CRYPTO_FUNCTION void soft_sha512_append_bit_len(uint8_t *const buffer,
 
 /** @}*/
 
-#endif /* _SOFT_SHA512_H */
+#endif /* SCL_BACKEND_SOFT_SHA512_H */

@@ -23,38 +23,20 @@
  ******************************************************************************/
 
 /**
- * @file defs.h
- * @brief Low level API common definitions
+ * @file scl_soft.h
+ * @brief
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef SCL_BACKEND_DEFS_H
-#define SCL_BACKEND_DEFS_H
+#ifndef SCL_BACKEND_SCL_SOFT_H
+#define SCL_BACKEND_SCL_SOFT_H
 
-/**
- * @addtogroup COMMON
- * @addtogroup DEFS
- * @ingroup COMMON
- *  @{
- */
+#include <stdint.h>
+#include <stdio.h>
 
-/**
- * @brief endianess supported by the scl library
- * @note On classic cryptographic data representation, data are big endian words
- * for exemple a 128 bits AES key is a usually considered as a big number big
- * endian 128 bits word.
- * @warning The only mode supported by the software implementation is Big Endian
- */
-typedef enum
-{
-    /*! @brief little endian words */
-    SCL_LITTLE_ENDIAN_MODE = 0,
-    /*! @brief big endian words */
-    SCL_BIG_ENDIAN_MODE = 1
-} endianness_t;
+#include <api/software/bignumbers/soft_bignumbers.h>
+#include <api/software/hash/soft_sha.h>
 
-/** @}*/
-
-#endif /* SCL_BACKEND_DEFS_H */
+#endif /* SCL_BACKEND_SCL_SOFT_H */

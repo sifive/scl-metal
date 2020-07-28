@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SHA256_H
-#define _SHA256_H
+#ifndef SCL_BACKEND_SHA256_H
+#define SCL_BACKEND_SHA256_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -69,4 +69,4 @@ typedef struct
 
 /** @}*/
 
-#endif /* _SHA256_H */
+#endif /* SCL_BACKEND_SHA256_H */

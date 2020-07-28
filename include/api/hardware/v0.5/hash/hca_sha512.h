@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _HCA_SHA512_H
-#define _HCA_SHA512_H
+#ifndef SCL_BACKEND_HCA_SHA512_H
+#define SCL_BACKEND_HCA_SHA512_H
 
 #include <stdint.h>
 
@@ -103,4 +103,4 @@ CRYPTO_FUNCTION int32_t hca_sha512_read(const metal_scl_t *const scl,
 
 /** @}*/
 
-#endif /* _HCA_SHA512_H */
+#endif /* SCL_BACKEND_HCA_SHA512_H */

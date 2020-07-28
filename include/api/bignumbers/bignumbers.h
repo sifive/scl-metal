@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _BIGNUMBERS_H
-#define _BIGNUMBERS_H
+#ifndef SCL_BACKEND_BIGNUMBERS_H
+#define SCL_BACKEND_BIGNUMBERS_H
 
 #include <stdint.h>
 
@@ -53,4 +53,4 @@ typedef struct
 
 /** @}*/
 
-#endif /* _BIGNUMBERS_H */
+#endif /* SCL_BACKEND_BIGNUMBERS_H */

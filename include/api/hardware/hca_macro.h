@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _HCA_MACRO_H
-#define _HCA_MACRO_H
+#ifndef SCL_BACKEND_HCA_MACRO_H
+#define SCL_BACKEND_HCA_MACRO_H
 
 #include <metal/io.h>
 
@@ -66,4 +66,4 @@
 
 /** @}*/
 
-#endif
+#endif /* SCL_BACKEND_HCA_MACRO_H */

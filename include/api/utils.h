@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _UTILS_H
-#define _UTILS_H
+#ifndef SCL_BACKEND_UTILS_H
+#define SCL_BACKEND_UTILS_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -120,4 +120,4 @@ void memcpy_u64(uint64_t *const dest, const uint64_t *const source,
 
 /** @}*/
 
-#endif /* _UTILS_H */
+#endif /* SCL_BACKEND_UTILS_H */
