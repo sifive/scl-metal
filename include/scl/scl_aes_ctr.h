@@ -31,8 +31,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_AES_CTR_H
-#define _SCL_AES_CTR_H
+#ifndef SCL_AES_CTR_H
+#define SCL_AES_CTR_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -112,4 +112,4 @@ SCL_FUNCTION int32_t scl_aes_ctr_core(const metal_scl_t *const scl_ctx,
 
 /** @}*/
 
-#endif /* _SCL_AES_CTR_H */
+#endif /* SCL_AES_CTR_H */

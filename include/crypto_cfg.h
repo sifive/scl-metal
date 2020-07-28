@@ -30,10 +30,10 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _CRYPTO_CFG_H
-#define _CRYPTO_CFG_H
+#ifndef SCL_CRYPTO_CFG_H
+#define SCL_CRYPTO_CFG_H
 
 #define CRYPTO_FUNCTION __attribute__((section("crypto_functions")))
 #define CRYPTO_DATA __attribute__((section("crypto_data")))
 
-#endif /* _CRYPTO_CFG_H */
+#endif /* SCL_CRYPTO_CFG_H */

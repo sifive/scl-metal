@@ -31,8 +31,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_SHA_H
-#define _SCL_SHA_H
+#ifndef SCL_SHA_H
+#define SCL_SHA_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -130,4 +130,4 @@ SCL_FUNCTION int32_t scl_valid_hash_digest_length(size_t inputlength);
 
 /** @}*/
 
-#endif /* _SCL_SHA_H */
+#endif /* SCL_SHA_H */

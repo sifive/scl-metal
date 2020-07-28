@@ -34,8 +34,8 @@
  *
  */
 
-#ifndef _SCL_UTILS_H
-#define _SCL_UTILS_H
+#ifndef SCL_UTILS_H
+#define SCL_UTILS_H
 
 #include <stdint.h>
 
@@ -50,4 +50,4 @@ SCL_FUNCTION void scl_format_iv(const uint8_t *const iv,
                                 const size_t iv_byte_len,
                                 uint64_t *iv_formated);
 
-#endif /* _SCL_UTILS_H */
+#endif /* SCL_UTILS_H */

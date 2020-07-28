@@ -30,10 +30,10 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_CFG_H
-#define _SCL_CFG_H
+#ifndef SCL_CFG_H
+#define SCL_CFG_H
 
 #define SCL_FUNCTION __attribute__((section("scl_functions")))
 #define SCL_DATA __attribute__((section("scl_data")))
 
-#endif /* _SCL_CFG_H */
+#endif /* SCL_CFG_H */

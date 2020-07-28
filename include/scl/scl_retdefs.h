@@ -98,4 +98,4 @@ typedef enum
 
 /** @}*/
 
-#endif // _SCL_RETDEFS_H
+#endif /* SCL_RETDEFS_H */

@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_DEFS_H
-#define _SCL_DEFS_H
+#ifndef SCL_DEFS_H
+#define SCL_DEFS_H
 
 #include <api/defs.h>
 #include <api/hash/sha.h>
@@ -94,4 +94,4 @@ typedef hash_mode_t scl_hash_mode_t;
 
 /** @}*/
 
-#endif //_SCL_DEFS_H
+#endif /* SCL_DEFS_H */
