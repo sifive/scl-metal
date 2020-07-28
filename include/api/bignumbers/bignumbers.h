@@ -46,7 +46,7 @@
 typedef struct
 {
     /*! @brief bignumber modulus */
-    uint64_t *modulus;
+    /*@null@*/ const uint64_t *modulus;
     /*! @brief bignumber modulus nb 32 bits words */
     size_t modulus_nb_32b_words;
 } bignum_ctx_t;

@@ -231,8 +231,9 @@ struct __bignum_func
      * @return -1           a < b
      * @warning No check on pointer value
      */
-    int32_t (*compare)(const metal_scl_t *const scl, const uint64_t *const a,
-                       const uint64_t *const b, size_t nb_32b_words);
+    int32_t (*compare)(/*@in@*/ const metal_scl_t *const scl,
+                       /*@in@*/ const uint64_t *const a,
+                       /*@in@*/ const uint64_t *const b, size_t nb_32b_words);
 
     /**
      * @brief compare two big interger of different length
@@ -247,9 +248,11 @@ struct __bignum_func
      * @return -1           a < b
      * @warning No check on pointer value
      */
-    int32_t (*compare_len_diff)(const metal_scl_t *const scl,
-                                const uint64_t *const a, size_t a_nb_32b_words,
-                                const uint64_t *const b, size_t b_nb_32b_words);
+    int32_t (*compare_len_diff)(/*@in@*/ const metal_scl_t *const scl,
+                                /*@in@*/ const uint64_t *const a,
+                                size_t a_nb_32b_words,
+                                /*@in@*/ const uint64_t *const b,
+                                size_t b_nb_32b_words);
 
     /**
      * @brief check if the bignumber is null
@@ -261,8 +264,9 @@ struct __bignum_func
      * @return false (== 0)     if the big integer is not null
      * @return <0               In case of error
      */
-    int32_t (*is_null)(const metal_scl_t *const scl,
-                       const uint32_t *const array, size_t nb_32b_words);
+    int32_t (*is_null)(/*@in@*/ const metal_scl_t *const scl,
+                       /*@in@*/ const uint32_t *const array,
+                       size_t nb_32b_words);
 
     /**
      * @brief negate bignumber
@@ -274,8 +278,8 @@ struct __bignum_func
      * @return < 0 otherwise @ref scl_errors_t
      * @warning This function can be used in case of negative substration result
      */
-    int32_t (*negate)(const metal_scl_t *const scl, uint64_t *const array,
-                      size_t nb_32b_words);
+    int32_t (*negate)(/*@in@*/ const metal_scl_t *const scl,
+                      /*@in@*/ uint64_t *const array, size_t nb_32b_words);
 
     /**
      * @brief Increment big number by one
@@ -289,7 +293,8 @@ struct __bignum_func
      * necessary
      * @warning nb_32b_words is limited to 0x3FFFFFFF
      */
-    int32_t (*inc)(const metal_scl_t *const scl, uint64_t *const array,
+    int32_t (*inc)(/*@in@*/ const metal_scl_t *const scl,
+                   /*@in@*/ /*@out@*/ uint64_t *const array,
                    size_t nb_32b_words);
 
     /**
@@ -307,9 +312,10 @@ struct __bignum_func
      * @warning nb_32b_words is limited to 0x3FFFFFFF
      * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*add)(const metal_scl_t *const scl, const uint64_t *const in_a,
-                   const uint64_t *const in_b, uint64_t *const out,
-                   size_t nb_32b_words);
+    int32_t (*add)(const metal_scl_t *const scl,
+                   /*@in@*/ const uint64_t *const in_a,
+                   /*@in@*/ const uint64_t *const in_b,
+                   /*@out@*/ uint64_t *const out, size_t nb_32b_words);
 
     /**
      * @brief Do big number ber substraction
@@ -329,9 +335,10 @@ struct __bignum_func
      * intended, you can do a bitwise not)
      * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*sub)(const metal_scl_t *const scl, const uint64_t *const in_a,
-                   const uint64_t *const in_b, uint64_t *const out,
-                   size_t nb_32b_words);
+    int32_t (*sub)(const metal_scl_t *const scl,
+                   /*@in@*/ const uint64_t *const in_a,
+                   /*@in@*/ const uint64_t *const in_b,
+                   /*@out@*/ uint64_t *const out, size_t nb_32b_words);
 
     /**
      * @brief Big integer multiplication
@@ -346,9 +353,10 @@ struct __bignum_func
      * @return != 0 otherwise @ref scl_errors_t
      * @warning Output should be 2 time the size of Inputs arrays
      */
-    int32_t (*mult)(const metal_scl_t *const scl, const uint64_t *const in_a,
-                    const uint64_t *const in_b, uint64_t *const out,
-                    size_t nb_32b_words);
+    int32_t (*mult)(const metal_scl_t *const scl,
+                    /*@in@*/ const uint64_t *const in_a,
+                    /*@in@*/ const uint64_t *const in_b,
+                    /*@out@*/ uint64_t *const out, size_t nb_32b_words);
 
     /**
      * @brief bignumber left shift
@@ -362,8 +370,9 @@ struct __bignum_func
      * @return != 0 otherwise @ref scl_errors_t
      * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*leftshift)(const metal_scl_t *const scl, const uint64_t *const in,
-                         uint64_t *const out, size_t shift,
+    int32_t (*leftshift)(/*@in@*/ const metal_scl_t *const scl,
+                         /*@in@*/ const uint64_t *const in,
+                         /*@out@*/ uint64_t *const out, size_t shift,
                          size_t nb_32b_words);
 
     /**
@@ -378,9 +387,10 @@ struct __bignum_func
      * @return != 0 otherwise @ref scl_errors_t
      * @note it is safe to reuse any input buffer as output buffer
      */
-    int32_t (*rightshift)(const metal_scl_t *const scl,
-                          const uint64_t *const in, uint64_t *const out,
-                          size_t shift, size_t nb_32b_words);
+    int32_t (*rightshift)(/*@in@*/ const metal_scl_t *const scl,
+                          /*@in@*/ const uint64_t *const in,
+                          /*@out@*/ uint64_t *const out, size_t shift,
+                          size_t nb_32b_words);
 
     /**
      * @brief return most significant bit set in word
@@ -402,8 +412,9 @@ struct __bignum_func
      * @return < 0 in case of errors @ref scl_errors_t
      * @note the first bit has index 1, therefore no bit set return 0
      */
-    int32_t (*get_msb_set)(const metal_scl_t *const scl,
-                           const uint64_t *const array, size_t nb_32b_words);
+    int32_t (*get_msb_set)(/*@in@*/ const metal_scl_t *const scl,
+                           /*@in@*/ const uint64_t *const array,
+                           size_t nb_32b_words);
 
     /**
      * @brief set one bit in a big integer
@@ -415,7 +426,8 @@ struct __bignum_func
      * @return >= 0 success
      * @return < 0 in case of errors @ref scl_errors_t
      */
-    int32_t (*set_bit)(const metal_scl_t *const scl, uint64_t *const array,
+    int32_t (*set_bit)(/*@in@*/ const metal_scl_t *const scl,
+                       /*@in@*/ /*@out@*/ uint64_t *const array,
                        size_t nb_32b_words, size_t bit_2_set);
 
     /**
@@ -436,10 +448,13 @@ struct __bignum_func
      * dividend_nb_32b_words
      * @note remainder and quotient are not mandatory
      */
-    int32_t (*div)(const metal_scl_t *const scl, const uint64_t *const dividend,
-                   size_t dividend_nb_32b_words, const uint64_t *const divisor,
-                   size_t divisor_nb_32b_words, uint64_t *const remainder,
-                   uint64_t *const quotient);
+    int32_t (*div)(const metal_scl_t *const scl,
+                   /*@in@*/ const uint64_t *const dividend,
+                   size_t dividend_nb_32b_words,
+                   /*@in@*/ const uint64_t *const divisor,
+                   size_t divisor_nb_32b_words,
+                   /*@out@*/ /*@null@*/ uint64_t *const remainder,
+                   /*@out@*/ /*@null@*/ uint64_t *const quotient);
 
     /**
      * @brief compute modulus
@@ -457,9 +472,11 @@ struct __bignum_func
      * @note remainder should be at least of length equal to
      * modulus_nb_32b_words
      */
-    int32_t (*mod)(const metal_scl_t *const scl, const uint64_t *const in,
-                   size_t in_nb_32b_words, const uint64_t *const modulus,
-                   size_t modulus_nb_32b_words, uint64_t *const remainder);
+    int32_t (*mod)(/*@in@*/ const metal_scl_t *const scl,
+                   /*@in@*/ const uint64_t *const in, size_t in_nb_32b_words,
+                   /*@in@*/ const uint64_t *const modulus,
+                   size_t modulus_nb_32b_words,
+                   /*@out@*/ uint64_t *const remainder);
 
     /**
      * @brief register new modulus array
@@ -472,9 +489,9 @@ struct __bignum_func
      * @return >= 0 success
      * @return < 0 in case of errors @ref scl_errors_t
      */
-    int32_t (*set_modulus)(const metal_scl_t *const scl,
-                           bignum_ctx_t *const ctx,
-                           const uint64_t *const modulus,
+    int32_t (*set_modulus)(/*@in@*/ const metal_scl_t *const scl,
+                           /*@out@*/ bignum_ctx_t *const ctx,
+                           /*@in@*/ const uint64_t *const modulus,
                            size_t modulus_nb_32b_words);
 
     /**
@@ -489,9 +506,10 @@ struct __bignum_func
      * @return >= 0 success
      * @return < 0 in case of errors @ref scl_errors_t
      */
-    int32_t (*mod_neg)(const metal_scl_t *const scl,
-                       const bignum_ctx_t *const ctx, const uint64_t *const in,
-                       uint64_t *const out, size_t nb_32b_words);
+    int32_t (*mod_neg)(/*@in@*/ const metal_scl_t *const scl,
+                       /*@in@*/ const bignum_ctx_t *const ctx,
+                       /*@in@*/ const uint64_t *const in,
+                       /*@out@*/ uint64_t *const out, size_t nb_32b_words);
 
     /**
      * @brief Modular addition
@@ -506,10 +524,11 @@ struct __bignum_func
      * @return < 0 in case of errors @ref scl_errors_t
      * @warning the modulus used should be of nb_32b_words size
      */
-    int32_t (*mod_add)(const metal_scl_t *const scl,
-                       const bignum_ctx_t *const ctx,
-                       const uint64_t *const in_a, const uint64_t *const in_b,
-                       uint64_t *const out, size_t nb_32b_words);
+    int32_t (*mod_add)(/*@in@*/ const metal_scl_t *const scl,
+                       /*@in@*/ const bignum_ctx_t *const ctx,
+                       /*@in@*/ const uint64_t *const in_a,
+                       /*@in@*/ const uint64_t *const in_b,
+                       /*@out@*/ uint64_t *const out, size_t nb_32b_words);
 
     /**
      * @brief Modular subtraction
@@ -524,10 +543,11 @@ struct __bignum_func
      * @return < 0 in case of errors @ref scl_errors_t
      * @warning the modulus used should be of nb_32b_words size
      */
-    int32_t (*mod_sub)(const metal_scl_t *const scl,
-                       const bignum_ctx_t *const ctx,
-                       const uint64_t *const in_a, const uint64_t *const in_b,
-                       uint64_t *const out, size_t nb_32b_words);
+    int32_t (*mod_sub)(/*@in@*/ const metal_scl_t *const scl,
+                       /*@in@*/ const bignum_ctx_t *const ctx,
+                       /*@in@*/ const uint64_t *const in_a,
+                       /*@in@*/ const uint64_t *const in_b,
+                       /*@out@*/ uint64_t *const out, size_t nb_32b_words);
 
     /**
      * @brief Modular multiplication
@@ -543,10 +563,11 @@ struct __bignum_func
      * @return < 0 in case of errors @ref scl_errors_t
      * @warning the modulus used should be of nb_32b_words size
      */
-    int32_t (*mod_mult)(const metal_scl_t *const scl,
-                        const bignum_ctx_t *const ctx,
-                        const uint64_t *const in_a, const uint64_t *const in_b,
-                        uint64_t *const out, size_t nb_32b_words);
+    int32_t (*mod_mult)(/*@in@*/ const metal_scl_t *const scl,
+                        /*@in@*/ const bignum_ctx_t *const ctx,
+                        /*@in@*/ const uint64_t *const in_a,
+                        /*@in@*/ const uint64_t *const in_b,
+                        /*@out@*/ uint64_t *const out, size_t nb_32b_words);
 
     /**
      * @brief Modular inverse
@@ -562,9 +583,10 @@ struct __bignum_func
      * @warning input should be prime with ctx->modulus, otherwise an error is
      * returned
      */
-    int32_t (*mod_inv)(const metal_scl_t *const scl,
-                       const bignum_ctx_t *const ctx, const uint64_t *const in,
-                       uint64_t *const out, size_t nb_32b_words);
+    int32_t (*mod_inv)(/*@in@*/ const metal_scl_t *const scl,
+                       /*@in@*/ const bignum_ctx_t *const ctx,
+                       /*@in@*/ const uint64_t *const in,
+                       /*@out@*/ uint64_t *const out, size_t nb_32b_words);
 };
 
 /*! @see _metal_scl_struct */
@@ -581,27 +603,33 @@ struct _metal_scl_struct
     const struct __bignum_func bignum_func;
 };
 
-static __inline__ int32_t
+/*@unused@*/ static __inline__ int32_t
 default_aes_setkey(metal_scl_t *scl, scl_aes_key_type_t type, uint64_t *key)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)type;
     (void)key;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t default_aes_setiv(metal_scl_t *scl, uint64_t *initvec)
+/*@unused@*/ static __inline__ int32_t default_aes_setiv(metal_scl_t *scl,
+                                                         uint64_t *initvec)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)initvec;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t
+/*@unused@*/ static __inline__ int32_t
 default_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
                    scl_process_t aes_process, scl_endianness_t data_endianness,
                    uint32_t NbBlocks128, uint8_t *data_in, uint8_t *data_out)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)aes_mode;
     (void)aes_process;
@@ -609,17 +637,18 @@ default_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     (void)NbBlocks128;
     (void)data_in;
     (void)data_out;
-
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t
+/*@unused@*/ static __inline__ int32_t
 default_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
                       scl_aes_mode_t aes_mode, scl_process_t aes_process,
                       scl_endianness_t data_endianness, uint32_t auth_option,
                       const uint8_t *const aad, size_t aad_len,
                       size_t payload_len)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)ctx;
     (void)aes_mode;
@@ -629,82 +658,92 @@ default_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
     (void)aad;
     (void)aad_len;
     (void)payload_len;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t default_aes_auth_core(const metal_scl_t *const scl,
-                                                aes_auth_ctx_t *const ctx,
-                                                const uint8_t *const data_in,
-                                                size_t data_len,
-                                                uint8_t *const data_out)
+/*@unused@*/ static __inline__ int32_t
+default_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
+                      const uint8_t *const data_in, size_t data_len,
+                      uint8_t *const data_out)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)ctx;
     (void)data_in;
     (void)data_len;
     (void)data_out;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t default_aes_auth_finish(const metal_scl_t *const scl,
-                                                  aes_auth_ctx_t *const ctx,
-                                                  uint8_t *const data_out,
-                                                  uint64_t *const tag)
+/*@unused@*/ static __inline__ int32_t
+default_aes_auth_finish(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
+                        uint8_t *const data_out, uint64_t *const tag)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)ctx;
     (void)data_out;
     (void)tag;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t default_sha_init(const metal_scl_t *const scl,
-                                           sha_ctx_t *const ctx,
-                                           hash_mode_t hash_mode,
-                                           endianness_t data_endianness)
+/*@unused@*/ static __inline__ int32_t
+default_sha_init(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+                 hash_mode_t hash_mode, endianness_t data_endianness)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)ctx;
     (void)hash_mode;
     (void)data_endianness;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t default_sha_core(const metal_scl_t *const scl,
-                                           sha_ctx_t *const ctx,
-                                           const uint8_t *const data,
-                                           size_t data_byte_len)
+/*@unused@*/ static __inline__ int32_t
+default_sha_core(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+                 const uint8_t *const data, size_t data_byte_len)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)ctx;
     (void)data;
     (void)data_byte_len;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t default_sha_finish(const metal_scl_t *const scl,
-                                             sha_ctx_t *const ctx,
-                                             uint8_t *const hash,
-                                             size_t *const hash_len)
+/*@unused@*/ static __inline__ int32_t
+default_sha_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
+                   uint8_t *const hash, size_t *const hash_len)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)ctx;
     (void)hash;
     (void)hash_len;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t default_trng_init(metal_scl_t *scl)
+/*@unused@*/ static __inline__ int32_t default_trng_init(metal_scl_t *scl)
 {
+    /*@-noeffect@*/
     (void)scl;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 
-static __inline__ int32_t default_trng_getdata(metal_scl_t *scl,
-                                               uint32_t *data_out)
+/*@unused@*/ static __inline__ int32_t default_trng_getdata(metal_scl_t *scl,
+                                                            uint32_t *data_out)
 {
+    /*@-noeffect@*/
     (void)scl;
     (void)data_out;
+    /*@+noeffect@*/
     return SCL_ERROR;
 }
 

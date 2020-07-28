@@ -47,6 +47,7 @@
  *  @{
  */
 
+/*@-exportlocal@*/
 /**
  * @brief compare two big interger of same length
  *
@@ -287,8 +288,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_div(const metal_scl_t *const scl,
                                         size_t dividend_nb_32b_words,
                                         const uint64_t *const divisor,
                                         size_t divisor_nb_32b_words,
-                                        uint64_t *const remainder,
-                                        uint64_t *const quotient);
+                                        /*@null@*/ uint64_t *const remainder,
+                                        /*@null@*/ uint64_t *const quotient);
 
 /**
  * @brief compute modulus
@@ -316,6 +317,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod(const metal_scl_t *const scl,
 
 /**
  * @brief register new modulus array
+ * @details register ref of modulus in context
  *
  * @param[in] scl                   metal scl context
  * @param[out] ctx                  bignumber context that will be updated
@@ -329,6 +331,18 @@ CRYPTO_FUNCTION int32_t soft_bignum_set_modulus(const metal_scl_t *const scl,
                                                 bignum_ctx_t *const ctx,
                                                 const uint64_t *const modulus,
                                                 size_t modulus_nb_32b_words);
+
+/**
+ * @brief Clear context modulus
+ * @details clear ref of modulus in context
+ *
+ * @param[in] scl                   metal scl context
+ * @param[in,out] ctx                  bignumber context that will be updated
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_clear_modulus(const metal_scl_t *const scl,
+                                                  bignum_ctx_t *const ctx);
 
 /**
  * @brief Modular negate
@@ -435,6 +449,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
                                             const uint64_t *const in,
                                             uint64_t *const out,
                                             size_t nb_32b_words);
+
+/*@+exportlocal@*/
 
 /** @}*/
 
