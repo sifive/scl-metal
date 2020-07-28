@@ -664,7 +664,7 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
     {
         return (result);
     }
-    else if ((int32_t) true == result)
+    else if ((int32_t) false != result)
     {
         return (SCL_ZERO_DIVISION);
     }
@@ -1180,7 +1180,7 @@ int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
     {
         return (result);
     }
-    else if ((int32_t) true == result)
+    else if ((int32_t) false != result)
     {
         return (SCL_INVALID_INPUT);
     }
@@ -1191,7 +1191,7 @@ int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
     {
         return (result);
     }
-    else if ((int32_t) true == result)
+    else if ((int32_t) false != result)
     {
         return (SCL_INVALID_INPUT);
     }
