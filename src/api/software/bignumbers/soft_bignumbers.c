@@ -219,7 +219,7 @@ int32_t soft_bignum_inc(const metal_scl_t *const scl, uint64_t *const array,
 {
     size_t i = 0;
     uint64_t carry = 1;
-    register uint64_t previous = 0;
+    uint64_t previous = 0;
     /*@-noeffect@*/
     (void)scl;
     /*@+noeffect@*/
@@ -244,7 +244,7 @@ int32_t soft_bignum_inc(const metal_scl_t *const scl, uint64_t *const array,
     if (0 != nb_32b_words % 2)
     {
         previous = *((uint32_t *)&array[i]);
-        *((uint32_t *)&array[i]) += carry;
+        *((uint32_t *)&array[i]) += (uint32_t)carry;
         carry = *((uint32_t *)&array[i]) < previous ? (uint64_t)1 : (uint64_t)0;
     }
 
@@ -258,7 +258,7 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
 {
     size_t i = 0;
     uint64_t carry = 0;
-    register uint64_t previous = 0;
+    uint64_t previous = 0;
     /*@-noeffect@*/
     (void)scl;
     /*@+noeffect@*/
@@ -286,7 +286,7 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
         previous = *((const uint32_t *)&in_a[i]);
         *((uint32_t *)&out[i]) =
             *((const uint32_t *)&in_a[i]) + *((const uint32_t *)&in_b[i]);
-        *((uint32_t *)&out[i]) += carry;
+        *((uint32_t *)&out[i]) += (uint32_t)carry;
         carry = *((uint32_t *)&out[i]) < previous ? (uint64_t)1 : (uint64_t)0;
     }
 
@@ -300,8 +300,8 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
 {
     size_t i = 0;
     uint64_t borrow = 0;
-    register uint64_t previous = 0;
-    register uint64_t current = 0;
+    uint64_t previous = 0;
+    uint64_t current = 0;
     /*@-noeffect@*/
     (void)scl;
     /*@+noeffect@*/
@@ -334,7 +334,8 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
         borrow = current > previous ? (uint64_t)1 : (uint64_t)0;
 
         previous = current;
-        *((uint32_t *)&out[i]) = current - *((const uint32_t *)&in_b[i]);
+        *((uint32_t *)&out[i]) =
+            (uint32_t)current - *((const uint32_t *)&in_b[i]);
         borrow |= *((uint32_t *)&out[i]) > previous ? (uint64_t)1 : (uint64_t)0;
     }
 
@@ -389,14 +390,14 @@ int32_t soft_bignum_mult(const metal_scl_t *const scl,
                 carry = 0;
             }
 
-            res[i + j] += (ab & UINT32_MAX);
-            if (res[i + j] < (ab & UINT32_MAX))
+            res[i + j] += (uint32_t)ab;
+            if (res[i + j] < (uint32_t)ab)
             {
                 carry++;
             }
 
             /* load 32 bits msb into carry */
-            carry += (ab >> (sizeof(uint32_t) * __CHAR_BIT__));
+            carry += (uint32_t)(ab >> (sizeof(uint32_t) * __CHAR_BIT__));
         }
         res[i + nb_32b_words] += carry;
     }
@@ -572,7 +573,8 @@ int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
         if (0 != (uint32_t)array[i])
         {
             shift_word = i * sizeof(uint64_t) * __CHAR_BIT__;
-            shift_word += soft_bignum_msb_set_in_word((uint32_t)array[i]);
+            shift_word +=
+                (size_t)soft_bignum_msb_set_in_word((uint32_t)array[i]);
             return ((int32_t)shift_word);
         }
     }
@@ -584,7 +586,7 @@ int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
         if (0 != array[i])
         {
             shift_word = i * sizeof(uint64_t) * __CHAR_BIT__;
-            shift_word += soft_bignum_msb_set_in_word(array[i]);
+            shift_word += (size_t)soft_bignum_msb_set_in_word(array[i]);
             return ((int32_t)shift_word);
         }
     }
@@ -730,7 +732,7 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
         return (result);
     }
 
-    bitshift_dico -= result;
+    bitshift_dico -= (size_t)result;
 
     {
         // p_len = bitshift_dico / (sizeof(uint32_t) * __CHAR_BIT__) +
