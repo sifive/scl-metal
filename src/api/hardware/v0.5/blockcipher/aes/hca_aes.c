@@ -103,11 +103,11 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
 {
 
 #if __riscv_xlen == 64
-    uint64_t *in64 = (uint64_t *)data_in;
+    const uint64_t *in64 = (const uint64_t *)data_in;
     uint64_t *out64 = (uint64_t *)data_out;
     register uint64_t val;
 #elif __riscv_xlen == 32
-    uint32_t *in32 = (uint32_t *)data_in;
+    const uint32_t *in32 = (const uint32_t *)data_in;
     uint32_t *out32 = (uint32_t *)data_out;
     register uint32_t val;
 #endif
@@ -284,9 +284,9 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl,
                           size_t aad_byte_len, size_t payload_len)
 {
 #if __riscv_xlen == 64
-    uint64_t *aad64 = (uint64_t *)aad;
+    const uint64_t *aad64 = (const uint64_t *)aad;
 #elif __riscv_xlen == 32
-    uint32_t *aad32 = (uint32_t *)aad;
+    const uint32_t *aad32 = (const uint32_t *)aad;
 #endif /* __riscv_xlen */
     uint32_t i, j, k;
     uint64_t NbBlocks128;
@@ -475,11 +475,11 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
                      const uint8_t *const data_in, size_t data_len, uint8_t *const data_out, size_t *const len_out)
 {
 #if __riscv_xlen == 64
-    uint64_t *in64 = (uint64_t *)data_in;
+    const uint64_t *in64 = (const uint64_t *)data_in;
     uint64_t *out64 = (uint64_t *)data_out;
     register uint64_t val;
 #elif __riscv_xlen == 32
-    uint32_t *in32 = (uint32_t *)data_in;
+    const uint32_t *in32 = (const uint32_t *)data_in;
     uint32_t *out32 = (uint32_t *)data_out;
     register uint32_t val;
 #endif /* __riscv_xlen */

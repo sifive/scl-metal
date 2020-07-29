@@ -48,9 +48,9 @@ int32_t hca_sha_block(const metal_scl_t *const scl, hash_mode_t hash_mode,
                       uint32_t NbBlocks512, const uint8_t *const data_in)
 {
 #if __riscv_xlen == 64
-    uint64_t *in64 = (uint64_t *)data_in;
+    const uint64_t *in64 = (const uint64_t *)data_in;
 #elif __riscv_xlen == 32
-    uint32_t *in32 = (uint32_t *)data_in;
+    const uint32_t *in32 = (const uint32_t *)data_in;
 #endif
     register int i;
 
