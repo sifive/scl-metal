@@ -91,8 +91,6 @@ int32_t soft_bignum_compare_len_diff(const metal_scl_t *const scl,
     (void)scl;
     /*@+noeffect@*/
 
-    i = 0;
-
     /* check if upper part of the longest array is null */
     if (a_nb_32b_words > b_nb_32b_words)
     {
