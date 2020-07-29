@@ -75,7 +75,11 @@ override SPHINX_DIR = $(DOCS_DIR)/sphinx
 #                        COMPILATION FLAGS
 ################################################################################
 
-override CFLAGS += -I $(INCLUDE_DIR) -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual -Wunreachable-code -Wstrict-aliasing -Wdangling-else -Wconversion -Wsign-conversion
+override CFLAGS += -I $(INCLUDE_DIR) 
+override CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual \
+					-Wunreachable-code -Wstrict-aliasing -Wdangling-else \
+					-Wconversion -Wsign-conversion -Wmissing-include-dirs \
+					-Wduplicated-branches -Wduplicated-cond -Warray-bounds 
 
 override ASFLAGS = $(CFLAGS)
 
@@ -129,7 +133,7 @@ splint: $(SPLINT_RESULTS)
 
 $(BUILD_DIR)/splint/%.c.splint: $(SOURCE_DIR)/%.c
 	$(HIDE) mkdir -p $(dir $@)
-	$(HIDE) splint -preproc -forcehints -standard -I $(INCLUDE_DIR) $< > $@ ; true
+	$(HIDE) splint -preproc -standard -I $(INCLUDE_DIR) $< > $@ ; true
 
 .PHONY : docs
 docs: generate-doxygen
