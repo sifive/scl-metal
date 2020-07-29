@@ -104,7 +104,7 @@ int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
 }
 
 int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      uint8_t *const dst, size_t *dst_byte_len,
+                                      uint8_t *const dst, size_t *const dst_byte_len,
                                       const uint8_t *const src, size_t src_byte_len)
 {
     if (NULL == scl_ctx)
@@ -119,7 +119,7 @@ int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
                                  uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst, const uint8_t *const src, size_t src_byte_len)
 {
     int32_t ret;
-    uint8_t tmp_tag[16] = {0};
+    uint8_t tmp_tag[BLOCK128_NB_BYTE] = {0};
     size_t i;
     size_t dst_byte_len = 0;
 
@@ -158,7 +158,7 @@ int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
 
     for (i = 0; i < tag_byte_len; i++ )
     {
-        tag[i]=tmp_tag[15-i];
+        tag[i]=tmp_tag[sizeof(tmp_tag) - 1 - i];
     }
 
     /* @FIXME: */

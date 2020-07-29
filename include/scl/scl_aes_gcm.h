@@ -111,7 +111,7 @@ SCL_FUNCTION int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx, aes_auth
  * @return != 0 in case of errors @ref scl_errors_t
  */
 SCL_FUNCTION int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      uint8_t *const dst, size_t *dst_byte_len,
+                                      uint8_t *const dst, size_t *const dst_byte_len,
                                       const uint8_t *const src, size_t src_byte_len);
 
 /**

@@ -69,7 +69,7 @@ CRYPTO_FUNCTION int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth
                      const uint8_t *const aad, size_t aad_byte_len, size_t payload_len);
 
 CRYPTO_FUNCTION int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
-                                          const uint8_t *const data_in, size_t data_len, uint8_t *const data_out, size_t *out_len);
+                                          const uint8_t *const data_in, size_t data_len, uint8_t *const data_out, size_t *const out_len);
 
 CRYPTO_FUNCTION int32_t hca_aes_auth_finish(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, uint8_t *const data_out, uint64_t *const tag);
 
