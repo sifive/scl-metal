@@ -99,7 +99,7 @@ struct __aes_func
      * @brief initiliaze AES cipher with authentication operation
      *
      * @param[in] scl               metal scl context
-     * @param[in] ctx               aes authenticate context
+     * @param[in,out] ctx           aes authenticate context
      * @param[in] aes_mode          AES mode
      * @param[in] aes_process       aes process (encrypt or decrypt)
      * @param[in] data_endianness   endianess of the input data
@@ -118,7 +118,7 @@ struct __aes_func
      * @brief perform AES cipher with authentication operation
      *
      * @param[in] scl               metal scl context
-     * @param[in] ctx               aes authenticate context
+     * @param[in,out] ctx           aes authenticate context
      * @param[in] data_in           data payload to process
      * @param[in] data_len          length of the current data payload to process (in bytes)
      * @param[out] data_out         data output buffer
@@ -132,7 +132,7 @@ struct __aes_func
      * @brief finish AES cipher with authentication operation
      *
      * @param[in] scl               metal scl context
-     * @param[in] ctx               aes authenticate context
+     * @param[in,out] ctx           aes authenticate context
      * @param[out] data_out         data output buffer to complete operation
      * @param[out] tag              tag output buffer (128 bits)
      * @return 0                    SUCCESS
