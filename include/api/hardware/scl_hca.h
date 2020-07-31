@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_hca.h
- * @brief 
- * 
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- * 
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file scl_hca.h
+ * @brief
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SCL_HCA_H
 #define _SCL_HCA_H
 
@@ -40,6 +41,11 @@
 
 #include <api/hardware/hca_macro.h>
 
+/**
+ * \addtogroup HCA
+ *  @{
+ */
+
 typedef enum
 {
     SCL_HCA_AES_MODE = 0,
@@ -49,10 +55,12 @@ typedef enum
 #define HCA_VERSION(a, b, c) (((a) << 16) + ((b) << 8) + (c))
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
-#include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 #include <api/hardware/v0.5/blockcipher/aes/hca_aes.h>
 #include <api/hardware/v0.5/hash/hca_sha.h>
 #include <api/hardware/v0.5/random/hca_trng.h>
+#include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 #endif /* METAL_SIFIVE_HCA_VERSION */
+
+/** @}*/
 
 #endif /*_SCL_HCA_H */

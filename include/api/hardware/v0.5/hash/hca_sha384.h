@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha384.h
- * @brief software sha384 implementation
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file hca_sha384.h
+ * @brief software sha384 implementation
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _HCA_SHA384_H
 #define _HCA_SHA384_H
 
@@ -39,13 +40,42 @@
 #include <api/defs.h>
 #include <api/hash/sha384.h>
 
+/**
+ * \addtogroup HCA
+ * \addtogroup HCA_SHA
+ * \ingroup HCA
+ *  @{
+ */
+
+/**
+ * @brief Compute final hash value of the concatenated block pass to
+ * hca_sha512_core()
+ *
+ * @param[in] scl               metal scl context
+ * @param[in] ctx               sha context
+ * @param[out] hash             hash output buffer
+ * @param[in,out] hash_len      length of the hash buffer/length of the hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t hca_sha384_finish(const metal_scl_t *const scl,
                                           sha_ctx_t *const ctx,
                                           uint8_t *const hash,
                                           size_t *const hash_len);
 
+/**
+ * @brief Read hash result from HCA output FIFO
+ *
+ * @param[in] scl               metal scl context
+ * @param[out] data_out         output buffer
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ * @warning data_out buffer should be long enough to contain SHA output
+ * (48 bytes)
+ */
 CRYPTO_FUNCTION int32_t hca_sha384_read(const metal_scl_t *const scl,
-                                        hash_mode_t hash_mode,
                                         uint8_t *const data_out);
+
+/** @}*/
 
 #endif /* _HCA_SHA384_H */

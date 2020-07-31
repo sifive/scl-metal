@@ -23,9 +23,9 @@
  ******************************************************************************/
 
 /**
- * @file scl_aes_ecb.c
- * @brief ECB mode for the AES.
- * AES is NIST FIPS-197, ECB follow NIST SP800-38A
+ * @file scl_aes_cbc.c
+ * @brief CBC mode for the AES.
+ * AES is NIST FIPS-197,
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -34,6 +34,7 @@
 #include <scl_cfg.h>
 
 #include <api/scl_api.h>
+#include <api/utils.h>
 
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
@@ -41,21 +42,23 @@
 
 #include <api/blockcipher/aes/aes.h>
 
-#include <scl/scl_aes_ecb.h>
+#include <scl/scl_aes_cbc.h>
 
-int32_t scl_aes_ecb_init(const metal_scl_t *const scl_ctx,
+int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
                          const uint8_t *const key, size_t key_byte_len,
+                         const uint8_t *const iv, size_t iv_byte_len,
                          scl_process_t mode)
 {
     int ret;
-    uint64_t key_formated[4] = {0};
+    uint64_t formated[4] = {0};
+    uint64_t tmp[2] = {0};
 
     if (NULL == scl_ctx)
     {
         return (SCL_INVALID_INPUT);
     }
 
-    ret = scl_format_key(key, key_byte_len, key_formated);
+    ret = scl_format_key(key, key_byte_len, formated);
 
     if (SCL_OK != ret)
         return (ret);
@@ -63,32 +66,39 @@ int32_t scl_aes_ecb_init(const metal_scl_t *const scl_ctx,
     switch (key_byte_len)
     {
     case SCL_KEY128:
-        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY128, key_formated,
-                                       mode);
+        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY128, formated, mode);
         break;
     case SCL_KEY192:
-        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY192, key_formated,
-                                       mode);
+        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY192, formated, mode);
         break;
     case SCL_KEY256:
-        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY256, key_formated,
-                                       mode);
+        ret = scl_ctx->aes_func.setkey(scl_ctx, SCL_AES_KEY256, formated, mode);
         break;
     default:
         ret = SCL_INVALID_INPUT;
     }
 
-    /* @FIXME: */
+    if (SCL_OK == ret)
+    {
+        copy_n_u8_2_m_u64_be(formated, 2, iv, iv_byte_len);
+        tmp[0] = formated[1];
+        tmp[1] = formated[0];
+
+        ret = scl_ctx->aes_func.setiv(scl_ctx, tmp);
+    }
+
+    /* @FIXME: /*
     /* key_formated should be secure erased */
 
     return (ret);
 }
 
 // for any input length, multiple of blocks
-int32_t scl_aes_ecb_core(const metal_scl_t *const scl_ctx, uint8_t *const dst,
+int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx, uint8_t *const dst,
                          const uint8_t *const src, size_t src_byte_len,
                          scl_process_t mode)
 {
+    int i;
     int ret;
 
     if (NULL == scl_ctx)
@@ -97,19 +107,18 @@ int32_t scl_aes_ecb_core(const metal_scl_t *const scl_ctx, uint8_t *const dst,
     }
 
     if (src_byte_len & 0xF)
-    {
         return (SCL_INVALID_INPUT);
-    }
 
-    ret = scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_ECB, mode,
-                                   SCL_BIG_ENDIAN_MODE, src, src_byte_len, dst);
+    scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_CBC, mode, SCL_BIG_ENDIAN_MODE,
+                             src, src_byte_len, dst);
 
     return (ret);
 }
 
-int32_t scl_aes_ecb(const metal_scl_t *const scl_ctx, uint8_t *const dst,
+int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx, uint8_t *const dst,
                     const uint8_t *const src, size_t src_byte_len,
                     const uint8_t *const key, size_t key_byte_len,
+                    const uint8_t *const iv, size_t iv_byte_len,
                     scl_process_t mode)
 {
     int ret;
@@ -135,12 +144,12 @@ int32_t scl_aes_ecb(const metal_scl_t *const scl_ctx, uint8_t *const dst,
         return (SCL_INVALID_INPUT);
     }
 
-    ret = scl_aes_ecb_init(scl_ctx, key, key_byte_len, mode);
+    ret = scl_aes_cbc_init(scl_ctx, key, key_byte_len, iv, iv_byte_len, mode);
     if (SCL_OK != ret)
     {
         return (ret);
     }
-    ret = scl_aes_ecb_core(scl_ctx, dst, src, src_byte_len, mode);
+    ret = scl_aes_cbc_core(scl_ctx, dst, src, src_byte_len, mode);
 
     if (SCL_OK != ret)
     {

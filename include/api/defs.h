@@ -3,15 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file defs.h
- * @brief
- * @version 0.1
- * @date 2020-06-02
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -31,13 +22,39 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file defs.h
+ * @brief Low level API common definitions
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _DEFS_H
 #define _DEFS_H
 
+/**
+ * \addtogroup COMMON
+ * \addtogroup DEFS
+ * \ingroup COMMON
+ *  @{
+ */
+
+/**
+ * @brief endianess supported by the scl library
+ * @note On classic cryptographic data representation, data are big endian words
+ * for exemple a 128 bits AES key is a usually considered as a big number big
+ * endian 128 bits word.
+ * @warning The only mode supported by the software implementation is Big Endian
+ */
 typedef enum
 {
+    /*! @brief little endian words */
     SCL_LITTLE_ENDIAN_MODE = 0,
+    /*! @brief big endian words */
     SCL_BIG_ENDIAN_MODE = 1
 } endianness_t;
+
+/** @}*/
 
 #endif /* _DEFS_H */

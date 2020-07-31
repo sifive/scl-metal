@@ -3,15 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file utils.c
- * @brief
- * @version 0.1
- * @date 2020-06-03
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -30,6 +21,16 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+/**
+ * @file utils.c
+ * @brief
+ * @version 0.1
+ * @date 2020-06-03
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
 
 #include <api/utils.h>
 #include <scl/scl_retdefs.h>
@@ -140,6 +141,52 @@ int32_t copy_u64_2_u8_be(uint8_t *const dest, const uint64_t *const src,
         dest[index + 5] = (uint8_t)(src[i] >> 16);
         dest[index + 6] = (uint8_t)(src[i] >> 8);
         dest[index + 7] = (uint8_t)(src[i]);
+    }
+
+    return (SCL_OK);
+}
+
+int32_t copy_n_u8_2_m_u64_be(uint64_t *const dest, size_t len_dest,
+                             const uint8_t *const src, size_t len_src)
+{
+    size_t i, j, k;
+
+    if ((NULL == dest) || (NULL == src))
+    {
+        return (SCL_ERROR);
+    }
+
+    for (k = 0; k < len_dest; k++)
+    {
+        dest[k] = 0;
+    }
+
+    i = ((len_src >> 3) + (len_src & 7) ? 1 : 0);
+    if (((len_src >> 3) + (len_src & 7) ? 1 : 0) > len_dest)
+    {
+        return (SCL_ERROR);
+    }
+
+    k = 0;
+    i = len_src;
+    while (i >> 3)
+    {
+        dest[len_dest - 1 - k] =
+            ((uint64_t)src[i - 8] << 56) ^ ((uint64_t)src[i - 7] << 48) ^
+            ((uint64_t)src[i - 6] << 40) ^ ((uint64_t)src[i - 5] << 32) ^
+            ((uint64_t)src[i - 4] << 24) ^ ((uint64_t)src[i - 3] << 16) ^
+            ((uint64_t)src[i - 2] << 8) ^ ((uint64_t)src[i - 1]);
+        i -= sizeof(uint64_t);
+        k++;
+    }
+
+    j = 0;
+    while (i)
+    {
+        dest[len_dest - 1 - k] =
+            (dest[len_dest - 1 - k] << 8) ^ (uint64_t)src[j];
+        j++;
+        i--;
     }
 
     return (SCL_OK);

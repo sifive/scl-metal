@@ -3,15 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha384.c
- * @brief
- * @version 0.1
- * @date 2020-06-06
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -30,6 +21,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+/**
+ * @file hca_sha384.c
+ * @brief
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
 
 #include <string.h>
 
@@ -129,7 +128,7 @@ int32_t hca_sha384_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     }
 
     // retrieving the hash result
-    result = hca_sha384_read(scl, ctx->mode, hash);
+    result = hca_sha384_read(scl, hash);
     if (SCL_OK != result)
     {
         return (result);
@@ -140,7 +139,7 @@ int32_t hca_sha384_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_OK);
 }
 
-int32_t hca_sha384_read(const metal_scl_t *const scl, hash_mode_t hash_mode,
+int32_t hca_sha384_read(const metal_scl_t *const scl,
                         uint8_t *const data_out)
 {
     uint64_t *out64 = (uint64_t *)data_out;

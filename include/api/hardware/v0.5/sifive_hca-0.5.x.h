@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file sifive_hca-0.5.x.h
- * @brief 
- * 
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- * 
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,8 +22,18 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file sifive_hca-0.5.x.h
+ * @brief
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef SIFIVE_HCA_0_5_X_H
 #define SIFIVE_HCA_0_5_X_H
+
+//! @cond Doxygen_Suppress
 
 // hasAES
 #define HCA_HAS_AES
@@ -409,5 +412,7 @@
 
 #define HCA_REGISTER_TRNG_REV_TYPE_OFFSET 12UL
 #define HCA_REGISTER_TRNG_REV_TYPE_MASK 15UL
+
+//! @endcond
 
 #endif

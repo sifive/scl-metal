@@ -18,6 +18,7 @@ override SOURCE_DIRS += \
 ifeq ($(HCA_VERSION),0.5)
 override SOURCE_DIRS += \
 		$(SOURCE_DIR)/api/hardware/v0.5 \
+		$(SOURCE_DIR)/api/hardware/v0.5/blockcipher/aes \
 		$(SOURCE_DIR)/api/hardware/v0.5/hash 
 endif
 
@@ -40,6 +41,7 @@ override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/api/software/hash \
 	$(CURRENT_DIR)/include/api/hardware \
 	$(CURRENT_DIR)/include/api/hardware/v0.5 \
+	$(CURRENT_DIR)/include/api/hardware/v0.5/blockcipher/aes \
 	$(CURRENT_DIR)/include/api/hardware/v0.5/hash
  # SCL
 override INCLUDE_DIRS += \
@@ -52,6 +54,16 @@ override SOURCES := $(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
 override INCLUDES := $(foreach dir,$(INCLUDE_DIRS),$(wildcard $(dir)/*.h))
 
 override OBJS := $(subst $(SOURCE_DIR),$(BUILD_DIR),$(SOURCES:.c=.o))
+
+override SPLINT_RESULTS := $(subst $(SOURCE_DIR),$(BUILD_DIR)/splint,$(SOURCES:.c=.c.splint))
+
+################################################################################
+#                        	DOCUMENTATION
+################################################################################
+
+override DOCS_DIR = $(CURRENT_DIR)/docs
+override DOXYGEN_DIR = $(DOCS_DIR)/doxygen
+override SPHINX_DIR = $(DOCS_DIR)/sphinx
 
 ################################################################################
 #                        COMPILATION FLAGS
@@ -100,6 +112,27 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c err
 .PHONY : check-format
 check-format:
 	clang-format -i $(SOURCES) $(INCLUDES)
+
+.PHONY : splint
+splint: $(SPLINT_RESULTS)
+	$(HIDE) splint -preproc -forcehints -standard -I $(INCLUDE_DIR) $(SOURCES) > $(BUILD_DIR)/splint/all_warnings.splint ; true
+
+$(BUILD_DIR)/splint/%.c.splint: $(SOURCE_DIR)/%.c
+	$(HIDE) mkdir -p $(dir $@)
+	$(HIDE) splint -preproc -forcehints -standard -I $(INCLUDE_DIR) $< > $@ ; true
+
+.PHONY : docs
+docs: generate-doxygen
+	$(HIDE) cd $(SPHINX_DIR); make html
+
+.PHONY : generate-doxygen
+generate-doxygen: clean-doxygen
+	$(HIDE) mkdir -p $(DOXYGEN_DIR)/build
+	$(HIDE) (cat $(DOXYGEN_DIR)/Doxyfile; echo "INPUT = $(INCLUDE_DIRS)") | doxygen - 
+
+.PHONY : clean-doxygen
+clean-doxygen:
+	rm -rf $(DOXYGEN_DIR)/build
 
 .PHONY: err
 err: 

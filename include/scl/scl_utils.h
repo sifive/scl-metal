@@ -3,6 +3,9 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
+ * Copyright 2020 SiFive, Inc
+ * SPDX-License-Identifier: MIT
+ ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -23,49 +26,24 @@
  ******************************************************************************/
 
 /**
- * @file hca_macro.h
- * @brief macro definition specific to hca
+ * @file scl_utils.h
+ * @brief scl initialization functions
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
+ *
  */
 
-#ifndef _HCA_MACRO_H
-#define _HCA_MACRO_H
+#ifndef _SCL_UTILS_H
+#define _SCL_UTILS_H
 
-#include <metal/io.h>
+#include <stdint.h>
 
 #include <api/scl_api.h>
+#include <scl_cfg.h>
 
-/**
- * \addtogroup HCA
- * \addtogroup HCA_MACRO
- * \ingroup HCA
- *  @{
- */
+SCL_FUNCTION int32_t scl_format_key(const uint8_t *const key,
+                                    const size_t key_byte_len,
+                                    uint64_t *key_formated);
 
-#define METAL_REG64(base, offset)                                              \
-    (__METAL_ACCESS_ONCE((uint64_t *)((base) + (offset))))
-#define METAL_REG32(base, offset)                                              \
-    (__METAL_ACCESS_ONCE((uint32_t *)((base) + (offset))))
-
-static __inline__ void hca_setfield32(const metal_scl_t *const scl,
-                                      uint32_t reg, uint32_t value, char offset,
-                                      uint32_t mask)
-{
-    METAL_REG32(scl->hca_base, reg) &= ~(mask << offset);
-    METAL_REG32(scl->hca_base, reg) |= ((value & mask) << offset);
-}
-
-#define GET_32BITS(data, k)                                                    \
-    (((uint32_t) * ((uint8_t *)data + k + 3) << 24) +                          \
-     ((uint32_t) * ((uint8_t *)data + k + 2) << 16) +                          \
-     ((uint32_t) * ((uint8_t *)data + k + 1) << 8) +                           \
-     ((uint32_t) * ((uint8_t *)data + k)))
-#define GET_64BITS(data, k)                                                    \
-    ((((uint64_t)GET_32BITS((uint8_t *)data, (k + 4))) << 32) +                \
-     (uint64_t)GET_32BITS((uint8_t *)data, k))
-
-/** @}*/
-
-#endif
+#endif /* _SCL_UTILS_H */

@@ -3,15 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha_miscellaneous.c
- * @brief
- * @version 0.1
- * @date 2020-05-28
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -30,6 +21,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  ******************************************************************************/
+
+/**
+ * @file hca_sha_miscellaneous.c
+ * @brief
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
 
 #include <stdint.h>
 #include <stdio.h>
@@ -87,21 +86,21 @@ int32_t hca_sha_block(const metal_scl_t *const scl, hash_mode_t hash_mode,
         {
             i = k << 6;
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, i);
+                GET_64BITS(data_in, i);
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 8));
+                GET_64BITS(data_in, (i + 8));
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 16));
+                GET_64BITS(data_in, (i + 16));
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 24));
+                GET_64BITS(data_in, (i + 24));
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 32));
+                GET_64BITS(data_in, (i + 32));
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 40));
+                GET_64BITS(data_in, (i + 40));
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 48));
+                GET_64BITS(data_in, (i + 48));
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT64(data_in, (i + 56));
+                GET_64BITS(data_in, (i + 56));
         }
         else
         {
@@ -120,37 +119,37 @@ int32_t hca_sha_block(const metal_scl_t *const scl, hash_mode_t hash_mode,
         {
             i = k << 6;
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, i);
+                GET_32BITS(data_in, i);
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 4));
+                GET_32BITS(data_in, (i + 4));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 8));
+                GET_32BITS(data_in, (i + 8));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 12));
+                GET_32BITS(data_in, (i + 12));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 16));
+                GET_32BITS(data_in, (i + 16));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 20));
+                GET_32BITS(data_in, (i + 20));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 24));
+                GET_32BITS(data_in, (i + 24));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 28));
+                GET_32BITS(data_in, (i + 28));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 32));
+                GET_32BITS(data_in, (i + 32));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 36));
+                GET_32BITS(data_in, (i + 36));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 40));
+                GET_32BITS(data_in, (i + 40));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 44));
+                GET_32BITS(data_in, (i + 44));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 48));
+                GET_32BITS(data_in, (i + 48));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 52));
+                GET_32BITS(data_in, (i + 52));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 56));
+                GET_32BITS(data_in, (i + 56));
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
-                GET_UNIT32(data_in, (i + 60));
+                GET_32BITS(data_in, (i + 60));
         }
         else
         {

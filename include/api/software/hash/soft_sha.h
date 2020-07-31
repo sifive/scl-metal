@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file soft_sha.h
- * @brief software sha implementation
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- * 
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file soft_sha.h
+ * @brief software sha implementation
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SOFT_SHA_H
 #define _SOFT_SHA_H
 
@@ -42,19 +43,60 @@
 
 #include <scl/scl_retdefs.h>
 
+/**
+ * \addtogroup SOFTWARE
+ * \addtogroup SOFT_API_SHA
+ * \ingroup SOFTWARE
+ *  @{
+ */
+
+/**
+ * @brief Init software sha context
+ *
+ * @param[in] scl               metal scl context (not used in case of soft sha)
+ * @param[out] ctx              sha context
+ * @param[in] hash_mode         hash mode
+ * @param[in] data_endianness   endianess of the input data
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ * @warning only SCL_BIG_ENDIAN_MODE is supported
+ */
 CRYPTO_FUNCTION int32_t soft_sha_init(const metal_scl_t *const scl,
                                       sha_ctx_t *const ctx,
                                       hash_mode_t hash_mode,
                                       endianness_t data_endianness);
 
+/**
+ * @brief Compute intermediate hash value of the chunk of data in parameter
+ *
+ * @param[in] scl               metal scl context (not used in case of soft sha)
+ * @param[in,out] ctx           sha context
+ * @param[in] data              data to hash
+ * @param[in] data_byte_len     data length to hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha_core(const metal_scl_t *const scl,
                                       sha_ctx_t *const ctx,
                                       const uint8_t *const data,
                                       size_t data_byte_len);
 
+/**
+ * @brief Compute final hash value of the concatenated block pass to
+ * soft_sha_core()
+ *
+ * @param[in] scl               metal scl context (not used in case of soft sha)
+ * @param[in] ctx               sha context
+ * @param[out] hash             hash output buffer
+ * @param[in,out] hash_len      length of the hash buffer/length of the hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha_finish(const metal_scl_t *const scl,
                                         sha_ctx_t *const ctx,
                                         uint8_t *const hash,
                                         size_t *const hash_len);
+
+/** @}*/
 
 #endif /* _SOFT_SHA_H */

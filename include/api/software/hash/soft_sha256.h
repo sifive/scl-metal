@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file soft_sha256.h
- * @brief software sha256 implementation
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file soft_sha256.h
+ * @brief software sha256 implementation
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SOFT_SHA256_H
 #define _SOFT_SHA256_H
 
@@ -39,21 +40,72 @@
 #include <api/defs.h>
 #include <api/hash/sha256.h>
 
+/**
+ * \addtogroup SOFTWARE
+ * \addtogroup SOFT_SHA
+ * \ingroup SOFTWARE
+ *  @{
+ */
+
+/**
+ * @brief Compute one SHA256 bock
+ *
+ * @param[in] ctx               sha256 context
+ * @param[in] words             64 bytes block to be treated
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha256_block(sha256_ctx_t *const ctx,
                                           const uint8_t *const words);
 
+/**
+ * @brief Init software sha256 context
+ *
+ * @param[out] ctx              sha256 context
+ * @param[in] data_endianness   endianess of the input data
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ * @warning only SCL_BIG_ENDIAN_MODE is supported
+ */
 CRYPTO_FUNCTION int32_t soft_sha256_init(sha256_ctx_t *const ctx,
                                          endianness_t data_endianness);
 
+/**
+ * @brief Compute intermediate sha256 value of the chunk of data in parameter
+ *
+ * @param[in,out] ctx           sha256 context
+ * @param[in] data              data to hash
+ * @param[in] data_byte_len     data lengtth to hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha256_core(sha256_ctx_t *const ctx,
                                          const uint8_t *const data,
                                          size_t data_byte_len);
 
+/**
+ * @brief Compute final hash value of the concatenated block pass to
+ * soft_sha256_core()
+ *
+ * @param[in] ctx               sha256 context
+ * @param[out] hash             hash output buffer
+ * @param[in,out] hash_len      length of the hash buffer/length of the hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ */
 CRYPTO_FUNCTION int32_t soft_sha256_finish(sha256_ctx_t *const ctx,
                                            uint8_t *const hash,
                                            size_t *hash_len);
 
+/**
+ * @brief append 64 bits bit length to a block buffer to complete padding
+ *
+ * @param buffer    pointer on block buffer last 64 bits
+ * @param length    pointer on bit length to copy on the block's 64 last bits
+ */
 CRYPTO_FUNCTION void soft_sha256_append_bit_len(uint8_t *const buffer,
                                                 uint64_t *const length);
+
+/** @}*/
 
 #endif /* _SOFT_SHA256_H */

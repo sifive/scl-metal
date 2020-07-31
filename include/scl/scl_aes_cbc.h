@@ -23,27 +23,21 @@
  ******************************************************************************/
 
 /**
- * @file scl_aes.h
- * @brief defines the AES.
+ * @file scl_aes_cbc.h
+ * @brief defines the AES for the CBC mode.
  * AES is NIST FIPS-197
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_AES_H
-#define _SCL_AES_H
+#ifndef _SCL_AES_CBC_H
+#define _SCL_AES_CBC_H
 
-#include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #include <scl_cfg.h>
-
-#include <scl/scl_defs.h>
-#include <scl/scl_retdefs.h>
-
-#include <api/blockcipher/aes/aes.h>
-#include <api/scl_api.h>
 
 /**
  * \addtogroup SCL
@@ -52,10 +46,21 @@
  *  @{
  */
 
-SCL_FUNCTION int32_t scl_aes(const metal_scl_t *const scl_ctx, uint8_t *dst,
-                             uint8_t *src, uint8_t *key, int key_byte_len,
-                             scl_process_t mode);
+SCL_FUNCTION int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
+                                      const uint8_t *const key,
+                                      size_t key_byte_len,
+                                      const uint8_t *const iv,
+                                      size_t iv_byte_len, scl_process_t mode);
+SCL_FUNCTION int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx,
+                                      uint8_t *const dst,
+                                      const uint8_t *const src,
+                                      size_t src_byte_len, scl_process_t mode);
+SCL_FUNCTION int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx,
+                                 uint8_t *const dst, const uint8_t *const src,
+                                 size_t src_byte_len, const uint8_t *const key,
+                                 size_t key_byte_len, const uint8_t *const iv,
+                                 size_t iv_byte_len, scl_process_t mode);
 
 /** @}*/
 
-#endif /* _SCL_AES_H */
+#endif /* _SCL_AES_ECB_H */

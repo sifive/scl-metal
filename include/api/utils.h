@@ -3,15 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file utils.h
- * @brief
- * @version 0.1
- * @date 2020-06-03
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -31,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file utils.h
+ * @brief Low level API common utilitarian functions
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _UTILS_H
 #define _UTILS_H
 
@@ -40,11 +39,18 @@
 #include <crypto_cfg.h>
 
 /**
+ * \addtogroup COMMON
+ * \addtogroup UTILS
+ * \ingroup COMMON
+ *  @{
+ */
+
+/**
  * @brief copy 8 bits array into unsigned 32 bits array (big endian)
  *
- * @param dest              destination buffer (uint32_t)
- * @param src               source buffer (uint8_t)
- * @param len               length to copy in byte
+ * @param[out] dest         destination buffer (uint32_t)
+ * @param[in] src           source buffer (uint8_t)
+ * @param[in] len           length to copy in byte
  * @return SCL_OK           In case of success
  * @return SCL_ERROR        In case of failure
  * @warning lenght to copy shall be a multiple of 4 bytes
@@ -55,9 +61,9 @@ CRYPTO_FUNCTION int32_t copy_u8_2_u32_be(uint32_t *const dest,
 /**
  * @brief copy 8 bits array into unsigned 64 bits array (big endian)
  *
- * @param dest              destination buffer (uint32_t)
- * @param src               source buffer (uint8_t)
- * @param len               length to copy in byte
+ * @param[out] dest         destination buffer (uint32_t)
+ * @param[in] src           source buffer (uint8_t)
+ * @param[in] len           length to copy in byte
  * @return SCL_OK           In case of success
  * @return SCL_ERROR        In case of failure
  * @warning lenght to copy shall be a multiple of 8 bytes
@@ -68,9 +74,9 @@ CRYPTO_FUNCTION int32_t copy_u8_2_u64_be(uint64_t *const dest,
 /**
  * @brief copy 8 bits array into unsigned 64 bits array (big endian)
  *
- * @param dest              destination buffer (uint8_t)
- * @param src               source buffer (uint32_t)
- * @param len               length to copy in byte
+ * @param[out] dest         destination buffer (uint8_t)
+ * @param[in] src           source buffer (uint32_t)
+ * @param[in] len           length to copy in byte
  * @return SCL_OK           In case of success
  * @return SCL_ERROR        In case of failure
  * @warning lenght to copy shall be a multiple of 4 bytes
@@ -81,14 +87,21 @@ CRYPTO_FUNCTION int32_t copy_u32_2_u8_be(uint8_t *const dest,
 /**
  * @brief copy 8 bits array into unsigned 64 bits array (big endian)
  *
- * @param dest              destination buffer (uint8_t)
- * @param src               source buffer (uint32_t)
- * @param len               length to copy in byte
+ * @param[out] dest         destination buffer (uint8_t)
+ * @param[in] src           source buffer (uint32_t)
+ * @param[in] len           length to copy in byte
  * @return SCL_OK           In case of success
  * @return SCL_ERROR        In case of failure
  * @warning lenght to copy shall be a multiple of 8 bytes
  */
 CRYPTO_FUNCTION int32_t copy_u64_2_u8_be(uint8_t *const dest,
                                          const uint64_t *const src, size_t len);
+
+CRYPTO_FUNCTION int32_t copy_n_u8_2_m_u64_be(uint64_t *const dest,
+                                             size_t len_dest,
+                                             const uint8_t *const src,
+                                             size_t len_src);
+
+/** @}*/
 
 #endif /* _UTILS_H */

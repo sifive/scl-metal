@@ -1,13 +1,6 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- *
- ******************************************************************************
- * @file sha384.h
- * @brief sha384 implementation/wrapper
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
  * 
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,6 +22,14 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file sha384.h
+ * @brief sha384 implementation/wrapper
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef _SHA384_H
 #define _SHA384_H
 
@@ -37,8 +38,22 @@
 
 #include <api/hash/sha512.h>
 
+/** 
+ * \addtogroup COMMON
+ * \addtogroup SHA
+ * \ingroup COMMON
+ *  @{
+ */
+
 #define SHA384_BYTE_HASHSIZE 48
 
+/**
+ * @brief SHA384 context
+ * @note Since SHA384 use SHA512 block computation, it can also use the same
+ * context
+ */
 typedef sha512_ctx_t sha384_ctx_t;
+
+/** @}*/
 
 #endif /* _SHA384_H */

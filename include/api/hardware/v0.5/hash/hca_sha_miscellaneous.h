@@ -3,13 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file hca_sha_miscellaneous.h
- * @brief hardware sha implementation/wrapper
- *
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- *
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -29,6 +22,15 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file hca_sha_miscellaneous.h
+ * @brief hardware sha implementation/wrapper
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ *
+ */
+
 #ifndef _HCA_SHA_MISCELLANEOUS_H
 #define _HCA_SHA_MISCELLANEOUS_H
 
@@ -39,16 +41,32 @@
 
 #include <api/scl_api.h>
 
-#include <scl/scl_retdefs.h>
 #include <api/hash/sha.h>
+#include <scl/scl_retdefs.h>
 
+/**
+ * \addtogroup HCA
+ * \addtogroup HCA_SHA
+ * \ingroup HCA
+ *  @{
+ */
+
+/**
+ * @brief Compute one or more 512 blocks using HCA
+ *
+ * @param[in] scl               metal scl context
+ * @param[in] hash_mode         hash mode
+ * @param[in] NbBlocks512       number of 512 bits blocks
+ * @param[in] data_in           Pointer on data to hash
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @see scl_errors_t
+ * @note For SHA384 and SHA512 the number of blocks should be a multiple of 2
+ */
 CRYPTO_FUNCTION int32_t hca_sha_block(const metal_scl_t *const scl,
                                       hash_mode_t hash_mode,
                                       uint32_t NbBlocks512,
                                       const uint8_t *const data_in);
 
-CRYPTO_FUNCTION int32_t hca_sha_read(const metal_scl_t *const scl,
-                                     hash_mode_t hash_mode,
-                                     uint8_t *const data_out);
+/** @}*/
 
 #endif /* _HCA_SHA_MISCELLANEOUS_H */

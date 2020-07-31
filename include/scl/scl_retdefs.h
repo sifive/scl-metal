@@ -3,14 +3,6 @@
  * SiFive Cryptographic Library (SCL)
  *
  ******************************************************************************
- * @file scl_retdefs.h
- * @brief defines the values returned by the functions: that's mainly error 
- * codes
- * 
- * @copyright Copyright (c) 2020 SiFive, Inc
- * @copyright SPDX-License-Identifier: MIT
- * 
- ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -30,29 +22,66 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
+/**
+ * @file scl_retdefs.h
+ * @brief defines the values returned by the functions: that's mainly error
+ * codes
+ *
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ */
+
 #ifndef SCL_RETDEFS_H
 #define SCL_RETDEFS_H
 
-#define SCL_TRUE 1
-#define SCL_FALSE 0
+/**
+ * \addtogroup SCL
+ * \addtogroup SCL_DEFS
+ * \ingroup SCL
+ *  @{
+ */
 
-#define SCL_OK 0
-#define SCL_ERROR -1
-#define SCL_INVALID_INPUT -2
-#define SCL_INVALID_OUTPUT -3
-#define SCL_INVALID_MODE -4
-#define SCL_INVALID_LENGTH -5
-#define SCL_STACK_OVERFLOW -6
-#define SCL_STACK_NOT_INITIALIZED -7
-#define SCL_STACK_ALREADY_INITIALIZED -8
-#define SCL_ALREADY_INITIALIZED -9
-#define SCL_STACK_INIT_ERROR -10
-#define SCL_STACK_FREE_ERROR -11
-#define SCL_STACK_ERROR -12
-#define SCL_RNG_ERROR -13
-#define SCL_RESEED_REQUIRED -14
-#define SCL_IGNORED -15
-#define SCL_NOT_PRESENT -30
-#define SCL_NOT_YET_SUPPORTED -31
+/*! @brief SCL library error codes */
+typedef enum
+{
+    /*! @brief no error */
+    SCL_OK = 0,
+    /*! @brief generic error code */
+    SCL_ERROR = -1,
+    /*! @brief error on input parameter */
+    SCL_INVALID_INPUT = -2,
+    /*! @brief error on output parameter */
+    SCL_INVALID_OUTPUT = -3,
+    /*! @brief error invalid operation mode selected */
+    SCL_INVALID_MODE = -4,
+    /*! @brief error invalid length */
+    SCL_INVALID_LENGTH = -5,
+    /*! @brief error potential overflow detected */
+    SCL_STACK_OVERFLOW = -6,
+    /*! @brief error stack not initialized (deprecated) */
+    SCL_STACK_NOT_INITIALIZED = -7,
+    /*! @brief error stack already initialized (deprecated) */
+    SCL_STACK_ALREADY_INITIALIZED = -8,
+    /*! @brief error initialization already performed */
+    SCL_ALREADY_INITIALIZED = -9,
+    /*! @brief error during stack initialization (deprecated) */
+    SCL_STACK_INIT_ERROR = -10,
+    /*! @brief error during stack free (deprecated) */
+    SCL_STACK_FREE_ERROR = -11,
+    /*! @brief generic error on stack (deprecated) */
+    SCL_STACK_ERROR = -12,
+    /*! @brief error on Random Number Generation */
+    SCL_RNG_ERROR = -13,
+    /*! @brief error new seed requested */
+    SCL_RESEED_REQUIRED = -14,
+    /*! @brief error ignored */
+    SCL_IGNORED = -15,
+    /*! @brief error functionnality not present */
+    SCL_NOT_PRESENT = -30,
+    /*! @brief error functionnality not yet supported */
+    SCL_NOT_YET_SUPPORTED = -31,
+} scl_errors_t;
+
+/** @}*/
 
 #endif // _SCL_RETDEFS_H
