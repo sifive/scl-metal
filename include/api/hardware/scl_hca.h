@@ -35,17 +35,10 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <api/scl_api.h>
-#include <crypto_cfg.h>
-
+#include <metal/io.h>
 #include <metal/machine/platform.h>
 
-#define HCA_VERSION(a, b, c) (((a) << 16) + ((b) << 8) + (c))
-
-#if (METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0))
-#include <api/hardware/v0.5/hash/hca_sha.h>
-#include <api/hardware/v0.5/sifive_hca-0.5.x.h>
-#endif
+#include <api/hardware/hca_macro.h>
 
 typedef enum
 {
@@ -53,34 +46,13 @@ typedef enum
     SCL_HCA_SHA_MODE = 1
 } scl_hca_mode_t;
 
-/**
- * @brief load AES key into Hardware Crypto Accelerator
- *
- * @param[in] scl       Structure than contain HCA information
- * @param[in] type      Type of key (AES128 key, AES192 key, ...)
- * @param[in] key       key to load
- * @return int  0 in case of success
- * @return int  !=0 otherwise (see scl_retdefs.h to have more detailed)
- */
-int scl_hca_aes_setkey(metal_scl_t *scl, scl_aes_key_type_t type,
-                       uint64_t *key) CRYPTO_FUNCTION;
+#define HCA_VERSION(a, b, c) (((a) << 16) + ((b) << 8) + (c))
 
-int scl_hca_aes_setiv(metal_scl_t *scl, uint64_t *initvec) CRYPTO_FUNCTION;
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
+#include <api/hardware/v0.5/sifive_hca-0.5.x.h>
+#include <api/hardware/v0.5/blockcipher/aes/hca_aes.h>
+#include <api/hardware/v0.5/hash/hca_sha.h>
+#include <api/hardware/v0.5/random/hca_trng.h>
+#endif /* METAL_SIFIVE_HCA_VERSION */
 
-int scl_hca_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
-                       scl_process_t aes_process,
-                       scl_endianness_t data_endianness, uint32_t NbBlocks128,
-                       uint8_t *data_in, uint8_t *data_out) CRYPTO_FUNCTION;
-
-int scl_hca_aes_auth(metal_scl_t *scl, scl_aes_mode_t aes_mode,
-                     scl_process_t aes_process,
-                     scl_endianness_t data_endianness, uint32_t auth_option,
-                     uint64_t aad_len, uint8_t *aad, uint64_t data_len,
-                     uint8_t *data_in, uint8_t *data_out,
-                     uint64_t *tag) CRYPTO_FUNCTION;
-
-int scl_hca_trng_init(metal_scl_t *scl) CRYPTO_FUNCTION;
-
-int scl_hca_trng_getdata(metal_scl_t *scl, uint32_t *data_out) CRYPTO_FUNCTION;
-
-#endif
+#endif /*_SCL_HCA_H */

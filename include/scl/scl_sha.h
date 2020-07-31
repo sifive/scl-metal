@@ -36,7 +36,7 @@
 #ifdef __cplusplus
 extern "C"
 {
-#endif // _ cplusplus
+#endif /* __cplusplus */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -51,22 +51,26 @@ extern "C"
 
     typedef sha_ctx_t scl_sha_ctx_t;
 
-    SCL_FUNCTION int32_t scl_sha(scl_hash_mode_t algo,
+    SCL_FUNCTION int32_t scl_sha(const metal_scl_t *const scl_ctx, 
+                                 scl_hash_mode_t algo,
                                  const uint8_t *const data,
                                  size_t data_byte_len, uint8_t *const hash,
                                  size_t *const hash_len);
-    SCL_FUNCTION int32_t scl_sha_init(scl_sha_ctx_t *const ctx,
+    SCL_FUNCTION int32_t scl_sha_init(const metal_scl_t *const scl_ctx, 
+                                      scl_sha_ctx_t *const ctx,
                                       scl_hash_mode_t algo);
-    SCL_FUNCTION int32_t scl_sha_core(scl_sha_ctx_t *const ctx,
+    SCL_FUNCTION int32_t scl_sha_core(const metal_scl_t *const scl_ctx, 
+                                      scl_sha_ctx_t *const ctx,
                                       const uint8_t *const data,
                                       size_t data_len);
-    SCL_FUNCTION int32_t scl_sha_finish(scl_sha_ctx_t *const ctx,
+    SCL_FUNCTION int32_t scl_sha_finish(const metal_scl_t *const scl_ctx, 
+                                        scl_sha_ctx_t *const ctx,
                                         uint8_t *const hash,
                                         size_t *const hash_len);
     SCL_FUNCTION int32_t scl_valid_hash_digest_length(size_t inputlength);
 
 #ifdef __cplusplus
 }
-#endif // _ cplusplus
+#endif /* __cplusplus */
 
-#endif //_SCL_SHA_H
+#endif /* _SCL_SHA_H */

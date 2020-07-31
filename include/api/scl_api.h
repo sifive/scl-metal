@@ -40,19 +40,19 @@
 
 #include <api/hash/sha.h>
 
-struct __metal_scl;
+struct _metal_scl_struct;
 
-typedef struct __metal_scl metal_scl_t;
+typedef struct _metal_scl_struct metal_scl_t;
 
 struct __aes_func
 {
-    int (*setkey)(struct __metal_scl *scl, scl_aes_key_type_t type,
+    int32_t (*setkey)(const metal_scl_t *const scl, scl_aes_key_type_t type,
                   uint64_t *key);
-    int (*setiv)(struct __metal_scl *scl, uint64_t *initvec);
-    int (*cipher)(struct __metal_scl *scl, scl_aes_mode_t aes_mode,
+    int32_t (*setiv)(const metal_scl_t *const scl, uint64_t *initvec);
+    int32_t (*cipher)(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                   scl_process_t aes_process, scl_endianness_t data_endianness,
-                  uint32_t NbBlocks128, uint8_t *data_in, uint8_t *data_out);
-    int (*auth)(struct __metal_scl *scl, scl_aes_mode_t aes_mode,
+                  uint64_t data_len, uint8_t *data_in, uint8_t *data_out);
+    int32_t (*auth)(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                 scl_process_t aes_process, scl_endianness_t data_endianness,
                 uint32_t auth_option, uint64_t aad_len, uint8_t *aad,
                 uint64_t data_len, uint8_t *data_in, uint8_t *data_out,
@@ -72,11 +72,11 @@ struct __hash_func
 
 struct __trng_func
 {
-    int (*init)(struct __metal_scl *scl);
-    int (*get_data)(struct __metal_scl *scl, uint32_t *data_out);
+    int (*init)(struct _metal_scl_struct *scl);
+    int (*get_data)(struct _metal_scl_struct *scl, uint32_t *data_out);
 };
 
-struct __metal_scl
+struct _metal_scl_struct
 {
 #if __riscv_xlen == 64
     const uint64_t hca_base;
