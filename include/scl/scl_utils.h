@@ -42,8 +42,10 @@
 #include <api/scl_api.h>
 #include <scl_cfg.h>
 
-SCL_FUNCTION int32_t scl_format_key(const uint8_t *const key,
-                                    const size_t key_byte_len,
-                                    uint64_t *key_formated);
+SCL_FUNCTION int32_t scl_format_key(const uint8_t *const key, const size_t key_byte_len,
+                       uint64_t *key_formated);
+
+SCL_FUNCTION void scl_format_iv(const uint8_t *const iv, const size_t iv_byte_len,
+                       uint64_t *iv_formated);
 
 #endif /* _SCL_UTILS_H */

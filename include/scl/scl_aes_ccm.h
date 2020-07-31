@@ -23,16 +23,16 @@
  ******************************************************************************/
 
 /**
- * @file scl_aes_cbc.h
- * @brief defines the AES for the CBC mode.
+ * @file scl_aes_ccm.h
+ * @brief defines the AES for the CCM mode.
  * AES is NIST FIPS-197
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_AES_CBC_H
-#define _SCL_AES_CBC_H
+#ifndef _SCL_AES_CCM_H
+#define _SCL_AES_CCM_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -52,60 +52,84 @@
  */
 
 /**
- * @brief compute AES-CBC operation (according mode parameter) on the data in parameter and return result
+ * @brief compute AES-CCM operation (according mode parameter) on the data in parameter and return result
  *
  * @param[in] scl_ctx           scl context
- * @param[out] dst              output buffer - result of AES-CBC operation
+ * @param[out] tag              output tag buffer - result of AES-CCM operation
+ * @param[in] tag_byte_len      length in bytes of tag
+ * @param[out] dst              output buffer - result of AES-CCM operation
  * @param[in] src               data to process
  * @param[in] src_byte_len      length in bytes of data
- * @param[in] key               Key to use for the AES-CBC operation
+ * @param[in] key               Key to use for the AES-CCM operation
  * @param[in] key_byte_len      length in bytes of key
- * @param[in] iv                Initial Vector (iv) use for the AES-CBC operation
+ * @param[in] iv                Initial Vector (iv) use for the AES-CCM operation
  * @param[in] iv_byte_len       length in bytes of iv
+ * @param[in] aad               Additional Authenticated Data (aad) use for the AES-CCM operation
+ * @param[in] aad_byte_len      length in bytes of aad
  * @param[in] mode              type of operation @ref scl_process_t
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @ref scl_errors_t
  */
-SCL_FUNCTION int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx,
+SCL_FUNCTION int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
+                                 uint8_t *const tag, size_t tag_byte_len, 
                                  uint8_t *const dst, const uint8_t *const src,
                                  size_t src_byte_len, const uint8_t *const key,
                                  size_t key_byte_len, const uint8_t *const iv,
-                                 size_t iv_byte_len, scl_process_t mode);
+                                 size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len, scl_process_t mode);
 
 /**
- * @brief Initialize AES-CBC context (according mode parameter)
+ * @brief Initialize AES-CCM context (according mode parameter)
  *
  * @param[in] scl_ctx           scl context
- * @param[in] key               Key to use for the AES-CBC operation
+ * @param[in,out] ctx           AES authenticate context
+ * @param[in] key               Key to use for the AES-CCM operation
  * @param[in] key_byte_len      length in bytes of key
- * @param[in] iv                Initial Vector (iv) use for the AES-CBC operation
+ * @param[in] iv                Initial Vector (iv) use for the AES-CCM operation
  * @param[in] iv_byte_len       length in bytes of iv
+ * @param[in] aad               Additional Authenticated Data (aad) use for the AES-CCM operation
+ * @param[in] aad_byte_len      length in bytes of aad
+ * @param[in] data_byte_len     length in bytes of data
+ * @param[in] tag_byte_len      length in bytes of tag returned
  * @param[in] mode              type of operation @ref scl_process_t
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @ref scl_errors_t
  */
-SCL_FUNCTION int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
+SCL_FUNCTION int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
                                       const uint8_t *const key,
-                                      size_t key_byte_len,
-                                      const uint8_t *const iv,
-                                      size_t iv_byte_len, scl_process_t mode);
+                                      size_t key_byte_len, const uint8_t *const iv,
+                                      size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len,
+                                      size_t pld_byte_len, size_t tag_byte_len, scl_process_t mode);
 
 /**
- * @brief compute AES-CBC operation (according mode parameter) with current AES-CBC context
+ * @brief Perform intermediate AES-CCM comptation of data chunk
  *
  * @param[in] scl_ctx           scl context
- * @param[out] dst              output buffer - result of AES-CBC operation
+ * @param[in,out] ctx           AES authenticate context
+ * @param[out] dst              output buffer - result of AES-CCM operation
  * @param[in] src               data to process
  * @param[in] src_byte_len      length in bytes of data
- * @param[in] mode              type of operation @ref scl_process_t
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @ref scl_errors_t
  */
-SCL_FUNCTION int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx,
+SCL_FUNCTION int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
                                       uint8_t *const dst,
-                                      const uint8_t *const src,
-                                      size_t src_byte_len, scl_process_t mode);
+                                      const uint8_t *const src, size_t src_byte_len);
+
+/**
+ * @brief Finalize AES-CCM computation and returning Authenticate tag
+ *
+ * @param[in] scl_ctx           scl context
+ * @param[in,out] ctx           AES authenticate context
+ * @param[out] tag              output tag buffer - result of AES-CCM operation
+ * @param[in] tag_byte_len      length in bytes of tag
+ * @param[out] dst              output buffer - result of AES-CCM operation
+ * @param[in] src               data to process
+ * @param[in] src_byte_len      length in bytes of data
+ */
+SCL_FUNCTION int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
+                                 uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst,
+                                 const uint8_t *const src, size_t src_byte_len);
 
 /** @}*/
-
-#endif /* _SCL_AES_CBC_H */
+ 
+#endif /* _SCL_AES_CCM_H */

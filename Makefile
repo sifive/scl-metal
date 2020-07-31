@@ -19,7 +19,8 @@ ifeq ($(HCA_VERSION),0.5)
 override SOURCE_DIRS += \
 		$(SOURCE_DIR)/api/hardware/v0.5 \
 		$(SOURCE_DIR)/api/hardware/v0.5/blockcipher/aes \
-		$(SOURCE_DIR)/api/hardware/v0.5/hash 
+		$(SOURCE_DIR)/api/hardware/v0.5/hash \
+		$(SOURCE_DIR)/api/hardware/v0.5/random
 endif
 
 # SCL
@@ -28,7 +29,8 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/blockcipher/aes \
 		$(SOURCE_DIR)/hash \
 		$(SOURCE_DIR)/hash/sha \
-		$(SOURCE_DIR)/bignumbers
+		$(SOURCE_DIR)/bignumbers \
+		$(SOURCE_DIR)/random
 
 SCL_DIR = $(CURRENT_DIR)
 include $(CURRENT_DIR)/scripts/scl.mk
@@ -44,8 +46,8 @@ override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/api/hardware \
 	$(CURRENT_DIR)/include/api/hardware/v0.5 \
 	$(CURRENT_DIR)/include/api/hardware/v0.5/blockcipher/aes \
-	$(CURRENT_DIR)/include/api/hardware/v0.5/hash
-	
+	$(CURRENT_DIR)/include/api/hardware/v0.5/hash \
+	$(CURRENT_DIR)/include/api/hardware/v0.5/random
  # SCL
 override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/scl

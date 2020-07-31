@@ -38,6 +38,11 @@
 #include <stdio.h>
 
 #include <scl_cfg.h>
+#include <scl/scl_defs.h>
+#include <scl/scl_retdefs.h>
+
+#include <api/scl_api.h>
+#include <api/blockcipher/aes/aes.h>
 
 /**
  * \addtogroup SCL
@@ -46,17 +51,54 @@
  *  @{
  */
 
-SCL_FUNCTION int32_t scl_aes_ecb_init(const metal_scl_t *const scl_ctx,
-                                      const uint8_t *const key,
-                                      size_t key_byte_len, scl_process_t mode);
-SCL_FUNCTION int32_t scl_aes_ecb_core(const metal_scl_t *const scl_ctx,
-                                      uint8_t *const dst,
-                                      const uint8_t *const src,
-                                      size_t src_byte_len, scl_process_t mode);
+/**
+ * @brief compute AES-ECB operation (according mode parameter) on the data in parameter and return result
+ *
+ * @param[in] scl_ctx           scl context
+ * @param[out] dst              output buffer - result of AES-ECB operation
+ * @param[in] src               data to process
+ * @param[in] src_byte_len      length in bytes of data
+ * @param[in] key               Key to use for the AES-ECB operation
+ * @param[in] key_byte_len      length in bytes of key
+ * @param[in] mode              type of operation @ref scl_process_t
+ * @return 0    in case of SUCCESS
+ * @return != 0 in case of errors @ref scl_errors_t
+ */
 SCL_FUNCTION int32_t scl_aes_ecb(const metal_scl_t *const scl_ctx,
                                  uint8_t *const dst, const uint8_t *const src,
                                  size_t src_byte_len, const uint8_t *const key,
                                  size_t key_byte_len, scl_process_t mode);
+
+/**
+ * @brief Initialize AES-ECB context (according mode parameter)
+ *
+ * @param[in] scl_ctx           scl context
+ * @param[in] key               Key to use for the AES-ECB operation
+ * @param[in] key_byte_len      length in bytes of key
+ * @param[in] mode              type of operation @ref scl_process_t
+ * @return 0    in case of SUCCESS
+ * @return != 0 in case of errors @ref scl_errors_t
+ */
+SCL_FUNCTION int32_t scl_aes_ecb_init(const metal_scl_t *const scl_ctx,
+                                      const uint8_t *const key,
+                                      size_t key_byte_len, scl_process_t mode);
+
+
+/**
+ * @brief compute AES-ECB operation (according mode parameter) with current AES-ECB context
+ *
+ * @param[in] scl_ctx           scl context
+ * @param[out] dst              output buffer - result of AES-ECB operation
+ * @param[in] src               data to process
+ * @param[in] src_byte_len      length in bytes of data
+ * @param[in] mode              type of operation @ref scl_process_t
+ * @return 0    in case of SUCCESS
+ * @return != 0 in case of errors @ref scl_errors_t
+ */
+SCL_FUNCTION int32_t scl_aes_ecb_core(const metal_scl_t *const scl_ctx,
+                                      uint8_t *const dst,
+                                      const uint8_t *const src,
+                                      size_t src_byte_len, scl_process_t mode);
 
 /** @}*/
 

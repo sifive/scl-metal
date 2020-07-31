@@ -76,6 +76,8 @@ typedef enum
     SCL_RESEED_REQUIRED = -14,
     /*! @brief error ignored */
     SCL_IGNORED = -15,
+    /*! @brief error busy */
+    SCL_BUSY = -16,
     /*! @brief error functionnality not present */
     SCL_NOT_PRESENT = -30,
     /*! @brief error functionnality not yet supported */
