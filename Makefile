@@ -11,7 +11,8 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/api \
 		$(SOURCE_DIR)/api/software \
 		$(SOURCE_DIR)/api/software/hash \
-		$(SOURCE_DIR)/api/software/bignumbers 
+		$(SOURCE_DIR)/api/software/bignumbers \
+		$(SOURCE_DIR)/api/software/asymmetric/ecc
 		
 # the version management will be improved, this is just a draft to test
 # compilation of the version specific files
@@ -31,7 +32,8 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/hash \
 		$(SOURCE_DIR)/hash/sha \
 		$(SOURCE_DIR)/bignumbers \
-		$(SOURCE_DIR)/random
+		$(SOURCE_DIR)/random \
+		$(SOURCE_DIR)/asymmetric/ecc
 
 SCL_DIR = $(CURRENT_DIR)
 include $(CURRENT_DIR)/scripts/scl.mk
@@ -41,9 +43,11 @@ override INCLUDE_DIRS := $(SCL_INCLUDES)
  # API
 override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/api \
+	$(CURRENT_DIR)/include/api/asymmetric/ecc \
 	$(CURRENT_DIR)/include/api/software \
 	$(CURRENT_DIR)/include/api/software/hash \
 	$(CURRENT_DIR)/include/api/software/bignumbers \
+	$(CURRENT_DIR)/include/api/software/asymmetric/ecc \
 	$(CURRENT_DIR)/include/api/hardware \
 	$(CURRENT_DIR)/include/api/hardware/v0.5 \
 	$(CURRENT_DIR)/include/api/hardware/v0.5/blockcipher/aes \
