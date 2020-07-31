@@ -104,13 +104,14 @@ SCL_FUNCTION int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx, aes_auth
  * @param[in] scl_ctx           scl context
  * @param[in,out] ctx           AES authenticate context
  * @param[out] dst              output buffer - result of AES-GCM operation
+ * @param[out] dst_byte_len     length of data (in bytes) write into output buffer
  * @param[in] src               data to process
  * @param[in] src_byte_len      length in bytes of data
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @ref scl_errors_t
  */
 SCL_FUNCTION int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      uint8_t *const dst,
+                                      uint8_t *const dst, size_t *const dst_byte_len,
                                       const uint8_t *const src, size_t src_byte_len);
 
 /**
