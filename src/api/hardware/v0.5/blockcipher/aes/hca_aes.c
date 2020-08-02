@@ -416,7 +416,7 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl,
             {
                 for (j = 0 ; j < i; j++)
                 {
-                    tmp[1] += ((uint64_t)(*((uint8_t *)(aad + (k * BLOCK128_NB_BYTE) + j)))) << (j * __CHAR_BIT__);
+                    tmp[1] += ((uint64_t)(*((const uint8_t *)(aad + (k * BLOCK128_NB_BYTE) + j)))) << (j * __CHAR_BIT__);
                 }
             }
             else
@@ -427,7 +427,7 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl,
                 {
                     for (j = 0 ; j < (i - sizeof(uint64_t)); j++)
                     {
-                        tmp[0] += ((uint64_t)(*((uint8_t *)(aad + (k * BLOCK128_NB_BYTE) + sizeof(uint64_t) + j)))) << (j * __CHAR_BIT__);
+                        tmp[0] += ((uint64_t)(*((const uint8_t *)(aad + (k * BLOCK128_NB_BYTE) + sizeof(uint64_t) + j)))) << (j * __CHAR_BIT__);
                     }
                 }
             }
@@ -550,7 +550,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
         {
             for (i=0 ; i < (sizeof(uint64_t) - ctx->buf_len); i++)
             {
-                ctx->buf[1] += ((uint64_t)(*((uint8_t *)(data_in + i)))) << ((ctx->buf_len + i) * __CHAR_BIT__);
+                ctx->buf[1] += ((uint64_t)(*((const uint8_t *)(data_in + i)))) << ((ctx->buf_len + i) * __CHAR_BIT__);
             }
             ctx->buf_len += i;
             in_offset = i;
@@ -558,7 +558,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 
         for (i=0 ; i < ((2*sizeof(uint64_t)) - ctx->buf_len); i++)
         {
-            ctx->buf[0] += ((uint64_t)(*((uint8_t *)(data_in + i)))) << ((ctx->buf_len - sizeof(uint64_t) + i) * __CHAR_BIT__);
+            ctx->buf[0] += ((uint64_t)(*((const uint8_t *)(data_in + i)))) << ((ctx->buf_len - sizeof(uint64_t) + i) * __CHAR_BIT__);
         }
         in_offset += i;
 
@@ -591,7 +591,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[0];
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[1];
         }
-        in32 = (uint32_t *)(data_in + in_offset);
+        in32 = (const uint32_t *)(data_in + in_offset);
 #endif /* __riscv_xlen */
 
         // Wait for OFIFOEMPTY is cleared
@@ -794,7 +794,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
         {
             for (i = 0; i < ctx->buf_len; i++)
             {
-                ctx->buf[1] +=  ((uint64_t)(*((uint8_t *)(data_in + in_offset + i)))) << (i * __CHAR_BIT__);
+                ctx->buf[1] +=  ((uint64_t)(*((const uint8_t *)(data_in + in_offset + i)))) << (i * __CHAR_BIT__);
             }
             in_offset += i;
         }
@@ -807,7 +807,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
             {
                 for (i=0 ; i < (ctx->buf_len - sizeof(uint64_t)); i++)
                 {
-                    ctx->buf[0] += ((uint64_t)(*((uint8_t *)(data_in + in_offset + i)))) << (i * __CHAR_BIT__);
+                    ctx->buf[0] += ((uint64_t)(*((const uint8_t *)(data_in + in_offset + i)))) << (i * __CHAR_BIT__);
                 }
             }
         }

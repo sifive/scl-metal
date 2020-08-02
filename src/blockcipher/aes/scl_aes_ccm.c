@@ -58,7 +58,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     int32_t ret;
     uint64_t formated[4] = {0};
     uint64_t tmp_iv[2] = {0};
-    uint8_t ccmt_tab[BLOCK128_NB_BYTE + 1] = {
+    int8_t ccmt_tab[BLOCK128_NB_BYTE + 1] = {
         -1, -1, -1, -1, 1, -1, 2, -1, 3, -1, 4, -1, 5, -1, 6, -1, 7};
     uint8_t ccmt, ccmq;
 
@@ -68,7 +68,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     }
 
     // get ccmt value
-    ccmt = ccmt_tab[tag_byte_len];
+    ccmt = (uint8_t)ccmt_tab[tag_byte_len];
     if ((uint8_t)-1 == ccmt)
     {
         return (SCL_INVALID_INPUT);
