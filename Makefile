@@ -119,6 +119,10 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c err
 check-format:
 	clang-format -i $(SOURCES) $(INCLUDES)
 
+.PHONY : dos2unix
+dos2unix:
+	dos2unix $(SOURCES) $(INCLUDES)
+
 .PHONY : splint
 splint: $(SPLINT_RESULTS)
 	$(HIDE) splint -preproc -forcehints -standard -I $(INCLUDE_DIR) $(SOURCES) > $(BUILD_DIR)/splint/all_warnings.splint ; true
