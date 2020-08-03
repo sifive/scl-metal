@@ -31,15 +31,18 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
+#include <stdbool.h>
+#include <string.h>
+
+#include <api/macro.h>
+#include <api/utils.h>
+
+#include <scl/scl_retdefs.h>
+
 #include <api/asymmetric/ecc/ecc.h>
 #include <api/software/asymmetric/ecc/soft_ecc.h>
 
-// curves parameters (see secg or NIST)
-
-uint32_t zero[ECC_SECP521R1_32B_WORDS_SIZE] __attribute__((aligned(8))) = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-// SECP256R1
+/* SECP256R1 */
 static const uint32_t ecc_xg_p256r1[ECC_SECP256R1_32B_WORDS_SIZE]
     __attribute__((aligned(8))) = {0xd898c296, 0xf4a13945, 0x2deb33a0,
                                    0x77037d81, 0x63a440f2, 0xf8bce6e5,
@@ -97,7 +100,7 @@ const ecc_curve_t ecc_secp256r1 = {ecc_a_p256r1,
                                    ECC_SECP256R1_BYTESIZE,
                                    ECC_SECP256R1};
 
-// SECP384R1
+/* SECP384R1 */
 static const uint32_t ecc_xg_p384r1[ECC_SECP384R1_32B_WORDS_SIZE]
     __attribute__((aligned(8))) = {
         0x72760ab7, 0x3a545e38, 0xbf55296c, 0x5502f25d, 0x82542a38, 0x59f741e0,
@@ -148,8 +151,8 @@ const ecc_curve_t ecc_secp384r1 = {ecc_a_p384r1,
                                    ECC_SECP384R1_32B_WORDS_SIZE,
                                    ECC_SECP384R1_BYTESIZE,
                                    ECC_SECP384R1};
-//--------------------------------------------------------------------------------
-// SECP521R1
+
+/* SECP521R1 */
 static const uint32_t ecc_xg_p521r1[ECC_SECP521R1_32B_WORDS_SIZE]
     __attribute__((aligned(8))) = {
         0xc2e5bd66, 0xf97e7e31, 0x856a429b, 0x3348b3c1, 0xa2ffa8de, 0xfe1dc127,
@@ -219,7 +222,7 @@ void soft_ecc_affine_copy(const ecc_bignum_affine_point_t *const src,
 }
 
 void soft_ecc_affine_zeroize(ecc_bignum_affine_point_t *const point,
-                              size_t curve_nb_32b_words)
+                             size_t curve_nb_32b_words)
 {
     memset((volatile uint32_t *)point->x, 0,
            curve_nb_32b_words * sizeof(uint32_t));
@@ -237,7 +240,7 @@ void soft_ecc_jacobian_copy(const ecc_bignum_jacobian_point_t *const src,
 }
 
 void soft_ecc_affine_zeroize(ecc_bignum_jacobian_point_t *const point,
-                              size_t curve_nb_32b_words)
+                             size_t curve_nb_32b_words)
 {
     memset((volatile uint32_t *)point->x, 0,
            curve_nb_32b_words * sizeof(uint32_t));
@@ -247,3 +250,128 @@ void soft_ecc_affine_zeroize(ecc_bignum_jacobian_point_t *const point,
            curve_nb_32b_words * sizeof(uint32_t));
 }
 
+int32_t soft_ecc_convert_affine_to_jacobian(
+    const metal_scl_t *const scl, const ecc_bignum_affine_point_t *const in,
+    ecc_bignum_jacobian_point_t *const out, size_t nb_32b_words,
+    const ecc_curve_t *const curve_params)
+{
+    if ((NULL == scl) || (NULL == in) || (NULL == out) ||
+        (NULL == curve_params))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == in->x) || (NULL == in->y) || (NULL == out->x) ||
+        (NULL == out->y) || (NULL == out->z))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    /* check length consistency */
+    if (nb_32b_words != curve_params->curve_wsize)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    /* conversion from x:y to x*z^2:y*z^3:z, with z=1, so x,y,1 */
+    memcpy(out->x, in->x, nb_32b_words * sizeof(uint32_t));
+    memcpy(out->y, in->y, nb_32b_words * sizeof(uint32_t));
+    memset(out->z, 0, nb_32b_words * sizeof(uint32_t));
+    out->z[0] = 1;
+    *((uint32_t *)&out->z[0]) = 1;
+
+    return (SCL_OK);
+}
+
+int32_t soft_ecc_convert_jacobian_to_affine(
+    const metal_scl_t *const scl, const ecc_bignum_jacobian_point_t *const in,
+    ecc_bignum_affine_point_t *const out, size_t nb_32b_words,
+    const ecc_curve_t *const curve_params)
+{
+    int32_t result;
+    bignum_ctx_t bignum_ctx;
+
+    if ((NULL == scl) || (NULL == in) || (NULL == out) ||
+        (NULL == curve_params))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == in->x) || (NULL == in->y) || (NULL == in->z) ||
+        (NULL == out->x) || (NULL == out->y))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    /* check length consistency */
+    if (nb_32b_words != curve_params->curve_wsize)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    if ((NULL == scl->bignum_func.set_modulus) ||
+        (NULL == scl->bignum_func.mod_square) ||
+        (NULL == scl->bignum_func.mod_inv) ||
+        (NULL == scl->bignum_func.mod_mult))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    {
+        uint32_t tmp[nb_32b_words] __attribute__((aligned(8)));
+        uint32_t tmp1[nb_32b_words] __attribute__((aligned(8)));
+
+        result = scl->bignum_func.set_modulus(scl, &bignum_ctx, curve_params->p,
+                                              nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /**
+         * x:y:z corresponds to x/z^2:y/z^3
+         * z^2
+         */
+        result = scl->bignum_func.mod_square(scl, &bignum_ctx, in->z, tmp,
+                                             nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* z^-2 (modular inversion) */
+        result =
+            scl->bignum_func.mod_inv(scl, &bignum_ctx, tmp, tmp1, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result = scl->bignum_func.mod_mult(scl, &bignum_ctx, in->x, tmp1,
+                                           out->x, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* z^3 */
+        result = scl->bignum_func.mod_mult(scl, &bignum_ctx, in->z, tmp, tmp,
+                                           nb_32b_words);
+
+        // z^-3 (modular inversion)
+        result =
+            scl->bignum_func.mod_inv(scl, &bignum_ctx, tmp, tmp1, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result = scl->bignum_func.mod_mult(scl, &bignum_ctx, in->y, tmp1,
+                                           out->y, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+    }
+    return (SCL_OK);
+}

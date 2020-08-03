@@ -437,7 +437,8 @@ int32_t soft_bignum_square(const metal_scl_t *const scl,
     for (i = 0; i < nb_32b_words; i++)
     {
         /* 2.1*/
-        product = (uint64_t)in32[i] * (uint64_t)in32[i] + (uint64_t)out32[i + i];
+        product =
+            (uint64_t)in32[i] * (uint64_t)in32[i] + (uint64_t)out32[i + i];
         out32[i + i] = (uint32_t)product;
         u = product >> (sizeof(uint32_t) * __CHAR_BIT__);
         /* 2.2 */
@@ -1182,7 +1183,7 @@ int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
         return (SCL_INVALID_INPUT);
     }
 
-    if (NULL == scl->bignum_func.mult)
+    if ((NULL == scl->bignum_func.mult) || (NULL == scl->bignum_func.mod))
     {
         return (SCL_ERROR_API_ENTRY_POINT);
     }
@@ -1483,7 +1484,7 @@ int32_t soft_bignum_mod_square(const metal_scl_t *const scl,
         return (SCL_INVALID_INPUT);
     }
 
-    if (NULL == scl->bignum_func.square)
+    if ((NULL == scl->bignum_func.square) || (NULL == scl->bignum_func.mod))
     {
         return (SCL_ERROR_API_ENTRY_POINT);
     }
