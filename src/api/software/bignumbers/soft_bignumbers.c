@@ -403,6 +403,72 @@ int32_t soft_bignum_mult(const metal_scl_t *const scl,
     return (SCL_OK);
 }
 
+int32_t soft_bignum_square(const metal_scl_t *const scl,
+                           const uint64_t *const input, uint64_t *const out,
+                           size_t nb_32b_words)
+{
+    size_t i, j;
+    uint64_t product, tmp, u;
+    uint32_t carry;
+
+    const uint32_t *in32 = (const uint32_t *)input;
+
+    uint32_t *out32 = (uint32_t *)out;
+    /*@-noeffect@*/
+    (void)scl;
+    /*@+noeffect@*/
+
+    if ((NULL == input) || (NULL == out))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if (0 == nb_32b_words)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    /**
+     * carefull here, nb_32b_words is 2 * the number of 64 bits words of inputs
+     */
+    memset(out, 0, nb_32b_words * 2 * sizeof(uint32_t));
+
+    /* 1. */
+    for (i = 0; i < nb_32b_words; i++)
+    {
+        /* 2.1*/
+        product = (uint64_t)in32[i] * (uint64_t)in32[i] + (uint64_t)out32[i + i];
+        out32[i + i] = (uint32_t)product;
+        u = product >> (sizeof(uint32_t) * __CHAR_BIT__);
+        /* 2.2 */
+        for (j = i + 1; j < nb_32b_words; j++)
+        {
+            product = (uint64_t)in32[i] * (uint64_t)in32[j];
+            tmp = (uint64_t)out32[i + j] + u;
+            carry = tmp < u;
+            /* manage overflow */
+            tmp += product;
+            carry += (uint32_t)(tmp < product);
+            tmp += product;
+            carry += (uint32_t)(tmp < product);
+            out32[i + j] = (uint32_t)tmp;
+            /* carry is on double word */
+            u = ((uint64_t)carry << (sizeof(uint32_t) * __CHAR_BIT__)) +
+                (tmp >> (sizeof(uint32_t) * __CHAR_BIT__));
+        }
+        /* extra carry management */
+        j = nb_32b_words;
+        while (u > 0)
+        {
+            tmp = (uint64_t)out32[i + j] + u;
+            out32[i + j] = (uint32_t)tmp;
+            u = tmp >> (sizeof(uint32_t) * __CHAR_BIT__);
+            j++;
+        }
+    }
+    return (SCL_OK);
+}
+
 int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
                               const uint64_t *const in, uint64_t *const out,
                               size_t shift, size_t nb_32b_words)
@@ -1399,6 +1465,50 @@ int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
         }
 
         memcpy(out, c, nb_32b_words * sizeof(uint32_t));
+    }
+
+    return (SCL_OK);
+}
+
+int32_t soft_bignum_mod_square(const metal_scl_t *const scl,
+                               const bignum_ctx_t *const ctx,
+                               const uint64_t *const in, uint64_t *const out,
+                               size_t nb_32b_words)
+{
+    int32_t result;
+    uint32_t square_result[nb_32b_words * 2] __attribute__((aligned(8)));
+
+    if ((NULL == scl) || (NULL == ctx) || (NULL == ctx->modulus))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if (NULL == scl->bignum_func.square)
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    /* output should be modulus size */
+    if (nb_32b_words != ctx->modulus_nb_32b_words)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    result = scl->bignum_func.square(scl, in, (uint64_t *)square_result,
+                                     nb_32b_words);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    /*@-compdef@*/
+    result =
+        scl->bignum_func.mod(scl, (uint64_t *)square_result, nb_32b_words * 2,
+                             ctx->modulus, ctx->modulus_nb_32b_words, out);
+    /*@+compdef@*/
+    if (SCL_OK > result)
+    {
+        return (result);
     }
 
     return (SCL_OK);

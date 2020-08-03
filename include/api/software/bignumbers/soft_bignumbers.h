@@ -190,6 +190,24 @@ CRYPTO_FUNCTION int32_t soft_bignum_mult(const metal_scl_t *const scl,
                                          size_t nb_32b_words);
 
 /**
+ * @brief Big integer square
+ *
+ * @param[in] scl           metal scl context
+ * @param[in] input          Input array
+ * @param[out] out          Output array, should be twice the size of input
+ * array
+ * @param[in] nb_32b_words  Number of words, of inputs arrays
+ * @return 0 success
+ * @return != 0 otherwise @ref scl_errors_t
+ * @warning Output should be 2 time the size of Inputs arrays
+ * @note implementation based on Handbook of applied Cryptography $14.16
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_square(const metal_scl_t *const scl,
+                                           const uint64_t *const input,
+                                           uint64_t *const out,
+                                           size_t nb_32b_words);
+
+/**
  * @brief bignumber left shift
  *
  * @param[in] scl           metal scl context
@@ -449,6 +467,26 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
                                             const uint64_t *const in,
                                             uint64_t *const out,
                                             size_t nb_32b_words);
+
+/**
+ * @brief Big integer modular square
+ *
+ * @param[in] scl           metal scl context
+ * @param[in] ctx           bignumber context (contain modulus info)
+ * @param[in] in            Input array
+ * @param[out] out          Output array
+ * @param[in] nb_32b_words  Number of words, of inputs arrays and output array
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @warning the modulus used should be of nb_32b_words size
+ * @warning This function allocates internally 1 buffer on stack that can reach
+ * 2 * nb_32b_words and the ones from @ref soft_bignum_mod
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_mod_square(const metal_scl_t *const scl,
+                                               const bignum_ctx_t *const ctx,
+                                               const uint64_t *const in,
+                                               uint64_t *const out,
+                                               size_t nb_32b_words);
 
 /*@+exportlocal@*/
 
