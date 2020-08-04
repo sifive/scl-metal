@@ -33,7 +33,7 @@
 #ifndef SCL_BACKEND_ECC_H
 #define SCL_BACKEND_ECC_H
 
-#include <stdef.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #define ECDSA_BLOCK_SIZE 32

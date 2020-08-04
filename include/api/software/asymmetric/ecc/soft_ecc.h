@@ -48,9 +48,10 @@
  * @param[out] dst                  destination affine point
  * @param[in] curve_nb_32b_words    number of 32 bits words per coordinate
  */
-CRYPTO_FUNCTION void soft_ecc_affine_copy(const ecc_bignum_affine_point_t *const src,
-                          ecc_bignum_affine_point_t *const dst,
-                          size_t curve_nb_32b_words);
+CRYPTO_FUNCTION void
+soft_ecc_affine_copy(const ecc_bignum_affine_point_t *const src,
+                     ecc_bignum_affine_point_t *const dst,
+                     size_t curve_nb_32b_words);
 
 /**
  * @brief zeroize copy ecc affine point
@@ -58,8 +59,9 @@ CRYPTO_FUNCTION void soft_ecc_affine_copy(const ecc_bignum_affine_point_t *const
  * @param[in,out] point             jacobian point to zeroize
  * @param[in] curve_nb_32b_words    number of 32 bits words per coordinate
  */
-CRYPTO_FUNCTION void soft_ecc_affine_zeroize(ecc_bignum_affine_point_t *const point,
-                             size_t curve_nb_32b_words);
+CRYPTO_FUNCTION void
+soft_ecc_affine_zeroize(ecc_bignum_affine_point_t *const point,
+                        size_t curve_nb_32b_words);
 
 /**
  * @brief copy ecc jacobian point
@@ -68,9 +70,10 @@ CRYPTO_FUNCTION void soft_ecc_affine_zeroize(ecc_bignum_affine_point_t *const po
  * @param[out] dst                  destination jacobian point
  * @param[in] curve_nb_32b_words    number of 32 bits words per coordinate
  */
-CRYPTO_FUNCTION void soft_ecc_jacobian_copy(const ecc_bignum_jacobian_point_t *const src,
-                            ecc_bignum_jacobian_point_t *const dst,
-                            size_t curve_nb_32b_words);
+CRYPTO_FUNCTION void
+soft_ecc_jacobian_copy(const ecc_bignum_jacobian_point_t *const src,
+                       ecc_bignum_jacobian_point_t *const dst,
+                       size_t curve_nb_32b_words);
 
 /**
  * @brief zeroize ecc jacobian point
@@ -78,39 +81,40 @@ CRYPTO_FUNCTION void soft_ecc_jacobian_copy(const ecc_bignum_jacobian_point_t *c
  * @param[in,out] point             jacobian point to zeroize
  * @param[in] curve_nb_32b_words    number of 32 bits words per coordinate
  */
-CRYPTO_FUNCTION void soft_ecc_affine_zeroize(ecc_bignum_jacobian_point_t *const point,
-                             size_t curve_nb_32b_words);
+CRYPTO_FUNCTION void
+soft_ecc_affine_zeroize(ecc_bignum_jacobian_point_t *const point,
+                        size_t curve_nb_32b_words);
 
 /**
  * @brief  convert affine coordinate into jacobian coordinates
- * 
+ *
  * @param[in] scl               metal scl context
+ * @param[in] curve_params      elliptic curve parameters
  * @param[in] in                Input affine coordinates
  * @param[out] out              Output jacobian coordinates
- * @param[in] nb_32b_words      number of 32 bits words per coordinate 
- * @param[in] curve_params      elliptic curve parameters
+ * @param[in] nb_32b_words      number of 32 bits words per coordinate
  * @return >= 0 carry from the operation
  * @return < 0 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_ecc_convert_affine_to_jacobian(
-    const metal_scl_t *const scl, const ecc_bignum_affine_point_t *const in,
-    ecc_bignum_jacobian_point_t *const out, size_t nb_32b_words,
-    const ecc_curve_t *const curve_params);
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_affine_point_t *const in,
+    ecc_bignum_jacobian_point_t *const out, size_t nb_32b_words);
 
 /**
  * @brief convert jacobian coordinate into affine coordinates
- * 
+ *
  * @param[in] scl               metal scl context
+ * @param[in] curve_params      elliptic curve parameters
  * @param[in] in                Input jacobian coordinates
  * @param[out] out              Output affine coordinates
- * @param[in] nb_32b_words      number of 32 bits words per coordinate 
- * @param[in] curve_params      elliptic curve parameters
+ * @param[in] nb_32b_words      number of 32 bits words per coordinate
  * @return >= 0 carry from the operation
- * @return < 0 otherwise @ref scl_errors_t 
+ * @return < 0 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_ecc_convert_jacobian_to_affine(
-    const metal_scl_t *const scl, const ecc_bignum_jacobian_point_t *const in,
-    ecc_bignum_affine_point_t *const out, size_t nb_32b_words,
-    const ecc_curve_t *const curve_params);
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_jacobian_point_t *const in,
+    ecc_bignum_affine_point_t *const out, size_t nb_32b_words);
 
 #endif /* SCL_BACKEND_SOFT_ECC_H */

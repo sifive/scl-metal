@@ -251,9 +251,9 @@ void soft_ecc_affine_zeroize(ecc_bignum_jacobian_point_t *const point,
 }
 
 int32_t soft_ecc_convert_affine_to_jacobian(
-    const metal_scl_t *const scl, const ecc_bignum_affine_point_t *const in,
-    ecc_bignum_jacobian_point_t *const out, size_t nb_32b_words,
-    const ecc_curve_t *const curve_params)
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_affine_point_t *const in,
+    ecc_bignum_jacobian_point_t *const out, size_t nb_32b_words, )
 {
     if ((NULL == scl) || (NULL == in) || (NULL == out) ||
         (NULL == curve_params))
@@ -284,9 +284,9 @@ int32_t soft_ecc_convert_affine_to_jacobian(
 }
 
 int32_t soft_ecc_convert_jacobian_to_affine(
-    const metal_scl_t *const scl, const ecc_bignum_jacobian_point_t *const in,
-    ecc_bignum_affine_point_t *const out, size_t nb_32b_words,
-    const ecc_curve_t *const curve_params)
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_jacobian_point_t *const in,
+    ecc_bignum_affine_point_t *const out, size_t nb_32b_words)
 {
     int32_t result;
     bignum_ctx_t bignum_ctx;
