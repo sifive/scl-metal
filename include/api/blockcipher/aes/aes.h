@@ -50,7 +50,7 @@
 /*! @brief AES context for AES auth modes */
 typedef struct { 
     /*! Total Hash lenght */
-    size_t pld_len;
+    uint64_t pld_len;
     /*! lenght of data stored into buffer */
     size_t buf_len;
     /*! buffer storage for incomplet data */

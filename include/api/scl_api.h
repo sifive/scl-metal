@@ -113,21 +113,21 @@ struct __aes_func
     int32_t (*auth_init)(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
                     scl_process_t aes_process, scl_endianness_t data_endianness,
                     uint32_t auth_option, const uint8_t *const aad,
-                    size_t aad_len, size_t payload_len);
+                    size_t aad_len, uint64_t payload_len);
     /**
      * @brief perform AES cipher with authentication operation
      *
      * @param[in] scl               metal scl context
      * @param[in,out] ctx           aes authenticate context
-     * @param[in] data_in           data payload to process
-     * @param[in] data_len          length of the current data payload to process (in bytes)
+     * @param[in] payload           data payload to process
+     * @param[in] payload_len       length of the current data payload to process (in bytes)
      * @param[out] data_out         data output buffer
      * @param[out] len_out          length of data (in bytes) write into output buffer
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
     int32_t (*auth_core)(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
-                    const uint8_t *const data_in, size_t data_len, uint8_t *const data_out, size_t *const len_out);
+                    const uint8_t *const payload, uint64_t payload_len, uint8_t *const data_out, size_t *const len_out);
     /**
      * @brief finish AES cipher with authentication operation
      *
@@ -253,7 +253,7 @@ static __inline__ int32_t
 default_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
                     scl_process_t aes_process, scl_endianness_t data_endianness,
                     uint32_t auth_option, const uint8_t *const aad,
-                    size_t aad_len, size_t payload_len)
+                    size_t aad_len, uint64_t payload_len)
 {
     (void)scl;
     (void)ctx;
@@ -269,12 +269,12 @@ default_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, s
 
 static __inline__ int32_t 
 default_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
-                    const uint8_t *const data_in, size_t data_len, uint8_t *const data_out)
+                    const uint8_t *const payload, uint64_t payload_len, uint8_t *const data_out)
 {
     (void)scl;
     (void)ctx;
-    (void)data_in;
-    (void)data_len;
+    (void)payload;
+    (void)payload_len;
     (void)data_out;
     return SCL_ERROR;
 }
