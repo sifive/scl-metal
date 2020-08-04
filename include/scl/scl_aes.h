@@ -31,8 +31,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_AES_H
-#define _SCL_AES_H
+#ifndef SCL_AES_H
+#define SCL_AES_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -46,9 +46,9 @@
 #include <api/scl_api.h>
 
 /**
- * \addtogroup SCL
- * \addtogroup SCL_AES
- * \ingroup SCL
+ * @addtogroup SCL
+ * @addtogroup SCL_AES
+ * @ingroup SCL
  *  @{
  */
 
@@ -58,4 +58,4 @@ SCL_FUNCTION int32_t scl_aes(const metal_scl_t *const scl_ctx, uint8_t *dst,
 
 /** @}*/
 
-#endif /* _SCL_AES_H */
+#endif /* SCL_AES_H */

@@ -138,8 +138,7 @@ int32_t hca_sha224_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     return (SCL_OK);
 }
 
-int32_t hca_sha224_read(const metal_scl_t *const scl,
-                        uint8_t *const data_out)
+int32_t hca_sha224_read(const metal_scl_t *const scl, uint8_t *const data_out)
 {
     // uint64_t *out64 = (uint64_t *)data_out;
     uint32_t *out32 = (uint32_t *)data_out;

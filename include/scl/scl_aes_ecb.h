@@ -31,28 +31,29 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_AES_ECB_H
-#define _SCL_AES_ECB_H
+#ifndef SCL_AES_ECB_H
+#define SCL_AES_ECB_H
 
 #include <stdint.h>
 #include <stdio.h>
 
-#include <scl_cfg.h>
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
+#include <scl_cfg.h>
 
-#include <api/scl_api.h>
 #include <api/blockcipher/aes/aes.h>
+#include <api/scl_api.h>
 
 /**
- * \addtogroup SCL
- * \addtogroup SCL_AES
- * \ingroup SCL
+ * @addtogroup SCL
+ * @addtogroup SCL_AES
+ * @ingroup SCL
  *  @{
  */
 
 /**
- * @brief compute AES-ECB operation (according mode parameter) on the data in parameter and return result
+ * @brief compute AES-ECB operation (according mode parameter) on the data in
+ * parameter and return result
  *
  * @param[in] scl_ctx           scl context
  * @param[out] dst              output buffer - result of AES-ECB operation
@@ -83,9 +84,9 @@ SCL_FUNCTION int32_t scl_aes_ecb_init(const metal_scl_t *const scl_ctx,
                                       const uint8_t *const key,
                                       size_t key_byte_len, scl_process_t mode);
 
-
 /**
- * @brief compute AES-ECB operation (according mode parameter) with current AES-ECB context
+ * @brief compute AES-ECB operation (according mode parameter) with current
+ * AES-ECB context
  *
  * @param[in] scl_ctx           scl context
  * @param[out] dst              output buffer - result of AES-ECB operation
@@ -102,4 +103,4 @@ SCL_FUNCTION int32_t scl_aes_ecb_core(const metal_scl_t *const scl_ctx,
 
 /** @}*/
 
-#endif /* _SCL_AES_ECB_H */
+#endif /* SCL_AES_ECB_H */

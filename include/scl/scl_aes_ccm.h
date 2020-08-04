@@ -31,8 +31,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_AES_CCM_H
-#define _SCL_AES_CCM_H
+#ifndef SCL_AES_CCM_H
+#define SCL_AES_CCM_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -133,4 +133,4 @@ SCL_FUNCTION int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_au
 
 /** @}*/
  
-#endif /* _SCL_AES_CCM_H */
+#endif /* SCL_AES_CCM_H */

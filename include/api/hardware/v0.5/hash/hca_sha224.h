@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _HCA_SHA224_H
-#define _HCA_SHA224_H
+#ifndef SCL_BACKEND_HCA_SHA224_H
+#define SCL_BACKEND_HCA_SHA224_H
 
 #include <stdint.h>
 
@@ -41,9 +41,9 @@
 #include <api/hash/sha224.h>
 
 /**
- * \addtogroup HCA
- * \addtogroup HCA_SHA
- * \ingroup HCA
+ * @addtogroup HCA
+ * @addtogroup HCA_SHA
+ * @ingroup HCA
  *  @{
  */
 
@@ -78,4 +78,4 @@ CRYPTO_FUNCTION int32_t hca_sha224_read(const metal_scl_t *const scl,
 
 /** @}*/
 
-#endif /* _HCA_SHA224_H */
+#endif /* SCL_BACKEND_HCA_SHA224_H */

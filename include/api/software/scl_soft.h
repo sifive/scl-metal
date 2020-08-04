@@ -30,12 +30,13 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_SOFT_H
-#define _SCL_SOFT_H
+#ifndef SCL_BACKEND_SCL_SOFT_H
+#define SCL_BACKEND_SCL_SOFT_H
 
 #include <stdint.h>
 #include <stdio.h>
 
+#include <api/software/bignumbers/soft_bignumbers.h>
 #include <api/software/hash/soft_sha.h>
 
-#endif /*_SCL_SOFT_H */
+#endif /* SCL_BACKEND_SCL_SOFT_H */

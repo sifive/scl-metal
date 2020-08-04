@@ -30,15 +30,15 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _AES_H
-#define _AES_H
+#ifndef SCL_BACKEND_AES_H
+#define SCL_BACKEND_AES_H
 
 #include <scl/scl_defs.h>
 
 /** 
- * \addtogroup COMMON
- * \addtogroup AES
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup AES
+ * @ingroup COMMON
  *  @{
  */
 
@@ -61,4 +61,4 @@ typedef struct {
 
 /** @}*/
 
-#endif /* _AES_H */
+#endif /* SCL_BACKEND_AES_H */

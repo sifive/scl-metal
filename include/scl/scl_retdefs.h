@@ -35,9 +35,9 @@
 #define SCL_RETDEFS_H
 
 /**
- * \addtogroup SCL
- * \addtogroup SCL_DEFS
- * \ingroup SCL
+ * @addtogroup SCL
+ * @addtogroup SCL_DEFS
+ * @ingroup SCL
  *  @{
  */
 
@@ -78,6 +78,18 @@ typedef enum
     SCL_IGNORED = -15,
     /*! @brief error busy */
     SCL_BUSY = -16,
+    /*! @brief error zero division */
+    SCL_ZERO_DIVISION = -17,
+    /**
+     * @brief One of the entry point, use by this function or in the call tree
+     * use an API pointer undeclared or misplaced
+     */
+    SCL_ERROR_API_ENTRY_POINT = -18,
+    /*! @brief error not modular inversion possible */
+    SCL_NOT_INVERSIBLE = -19,
+    /*! @brief error on parity */
+    SCL_ERR_PARITY = -20,
+
     /*! @brief error functionnality not present */
     SCL_NOT_PRESENT = -30,
     /*! @brief error functionnality not yet supported */
@@ -86,4 +98,4 @@ typedef enum
 
 /** @}*/
 
-#endif // _SCL_RETDEFS_H
+#endif /* SCL_RETDEFS_H */

@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_HCA_H
-#define _SCL_HCA_H
+#ifndef SCL_BACKEND_SCL_HCA_H
+#define SCL_BACKEND_SCL_HCA_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -42,7 +42,7 @@
 #include <api/hardware/hca_macro.h>
 
 /**
- * \addtogroup HCA
+ * @addtogroup HCA
  *  @{
  */
 
@@ -63,4 +63,4 @@ typedef enum
 
 /** @}*/
 
-#endif /*_SCL_HCA_H */
+#endif /* SCL_BACKEND_SCL_HCA_H */
