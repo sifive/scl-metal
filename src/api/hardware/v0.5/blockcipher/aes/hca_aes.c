@@ -75,7 +75,7 @@ int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type, co
     return SCL_OK;
 }
 
-int32_t hca_aes_setiv(const metal_scl_t *const scl, const uint64_t *const initvec)
+int32_t hca_aes_setiv(const metal_scl_t *const scl, const uint64_t *const iv)
 {
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
     {
@@ -84,9 +84,9 @@ int32_t hca_aes_setiv(const metal_scl_t *const scl, const uint64_t *const initve
     }
 
     // Set Init Vec
-    METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_INITV) = initvec[0];
+    METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_INITV) = iv[0];
     METAL_REG64(scl->hca_base,
-                (METAL_SIFIVE_HCA_AES_INITV + sizeof(uint64_t))) = initvec[1];
+                (METAL_SIFIVE_HCA_AES_INITV + sizeof(uint64_t))) = iv[1];
 
     __asm__ __volatile__("fence.i"); // FENCE    
 
@@ -272,7 +272,7 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
 int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
                      scl_process_t aes_process,
                      scl_endianness_t data_endianness, uint32_t auth_option,
-                     const uint8_t *const aad, size_t aad_byte_len, size_t payload_len)
+                     const uint8_t *const aad, size_t aad_byte_len, uint64_t payload_len)
 {
 #if __riscv_xlen == 64
     uint64_t *aad64 = (uint64_t *)aad;
@@ -282,6 +282,7 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
     uint32_t i,j,k;
     uint64_t NbBlocks128;
     uint64_t tmp[BLOCK128_NB_UINT64]                __attribute__ ((aligned (8)));
+    uint8_t ccmt, ccmq;
 
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_REV))
     {
@@ -298,6 +299,45 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
     ctx->buf[1] = 0;
     ctx->buf_len = 0;
     ctx->data_endianness = data_endianness;
+
+    if (aes_mode == SCL_AES_CCM)
+    {
+        ccmt = (uint8_t)(auth_option & 0xF);
+        ccmq = (uint8_t)((auth_option >> 4) & 0xF);
+        // check CCMT value
+        if ((ccmt < 1) || (ccmt > 8))
+        {
+            return SCL_INVALID_INPUT;
+        }
+
+        // check CCMQ value
+        if ((ccmq < 2) || (ccmq > 8))
+        {
+            return SCL_INVALID_INPUT;
+        }
+
+        switch (ccmq)
+        {
+            case 2:
+                if ( payload_len >= (((uint64_t)1 << (ccmq * 8))) )
+                    return SCL_INVALID_INPUT;
+                break;
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                if ( ( payload_len < (((uint64_t)1 << ((ccmq - 1) * 8))) ) || ( payload_len >= (((uint64_t)1 << (ccmq * 8))) ) )
+                    return SCL_INVALID_INPUT;
+                break;
+            case 8:
+                if ( payload_len < (((uint64_t)1 << ((ccmq - 1) * 8))) )
+                    return SCL_INVALID_INPUT;
+                break;
+            default:
+                return SCL_INVALID_INPUT;
+        }
+    }
 
     // Set MODE
     hca_setfield32(scl, METAL_SIFIVE_HCA_CR, SCL_HCA_AES_MODE,
@@ -328,11 +368,11 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
     if (aes_mode == SCL_AES_CCM)
     {
         // Set CCMT
-        hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, auth_option,
+        hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, (uint32_t)ccmt,
                            HCA_REGISTER_AES_CR_CCMT_OFFSET,
                            HCA_REGISTER_AES_CR_CCMT_MASK);
         // Set CCMQ
-        hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, (auth_option >> 4),
+        hca_setfield32(scl, METAL_SIFIVE_HCA_AES_CR, (uint32_t)(ccmq - 1),
                            HCA_REGISTER_AES_CR_CCMQ_OFFSET,
                            HCA_REGISTER_AES_CR_CCMQ_MASK);
     }
@@ -463,7 +503,7 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 }
 
 int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
-                     const uint8_t *const data_in, size_t data_len, uint8_t *const data_out, size_t *const len_out)
+                     const uint8_t *const data_in, uint64_t payload_len, uint8_t *const data_out, size_t *const len_out)
 {
 #if __riscv_xlen == 64
     uint64_t *in64 = (uint64_t *)data_in;
@@ -494,7 +534,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
         return SCL_INVALID_INPUT;
     }
 
-    if (data_len)
+    if (payload_len)
     {
         if (NULL == data_in)
         {
@@ -507,7 +547,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
         }
     }
 
-    if (data_len > ctx->pld_len)
+    if (payload_len > ctx->pld_len)
     {
         return SCL_INVALID_INPUT;
     }
@@ -519,7 +559,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 
     *len_out = 0;
 
-    ctx->pld_len -= data_len;
+    ctx->pld_len -= payload_len;
 
     // PLD
     // Set DTYPE
@@ -650,7 +690,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
     }
 
     // No reming data
-    NbBlocks128 = ((data_len - in_offset) / BLOCK128_NB_BYTE);
+    NbBlocks128 = ((payload_len - in_offset) / BLOCK128_NB_BYTE);
 
     for (k = 0; k < NbBlocks128; k++)
     {
@@ -760,17 +800,17 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
     in_offset += (k * BLOCK128_NB_BYTE);
 
     // sanity check
-    if (in_offset > data_len)
+    if (in_offset > payload_len)
     {
         return SCL_ERROR;
     }
 
     ctx->buf[0] = 0;
     ctx->buf[1] = 0;
-    ctx->buf_len = data_len - in_offset;
+    ctx->buf_len = payload_len - in_offset;
 
     // check rest
-    if (in_offset < data_len)
+    if (in_offset < payload_len)
     {
         if (ctx->buf_len < sizeof(uint64_t)) 
         {

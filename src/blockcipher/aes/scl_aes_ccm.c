@@ -52,7 +52,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
                                       const uint8_t *const key,
                                       size_t key_byte_len, const uint8_t *const iv,
                                       size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len,
-                                      size_t pld_byte_len, size_t tag_byte_len, scl_process_t mode)
+                                      uint64_t pld_byte_len, size_t tag_byte_len, scl_process_t mode)
 {
     int32_t ret;
     uint64_t formated[4] = {0};
@@ -67,6 +67,10 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
     }
 
     // get ccmt value
+    if (tag_byte_len > BLOCK128_NB_BYTE)
+    {
+        return (SCL_INVALID_INPUT);
+    }
     ccmt = ccmt_tab[tag_byte_len];
     if ((uint8_t)-1 == ccmt) 
     {
@@ -74,29 +78,53 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
     }
 
     // determine ccmq value
-    // 2⁸
-    if (pld_byte_len < 0x100) 
+    // 2^16
+    if ( pld_byte_len < (((uint64_t)1 << (2*8))) ) 
     {
-        ccmq = 1;
+        ccmq = 2;
     } 
     else
     {
-        // 2¹⁶
-        if (pld_byte_len < 0x10000) 
+        // 2^24
+        if ( pld_byte_len < (((uint64_t)1 << (3*8))) )
         {
-            ccmq = 2;
+            ccmq = 3;
         } 
         else
+        // 2^32
         {
-            // 2²⁴
-            if (pld_byte_len < 0x1000000) 
-            {
-                ccmq = 3;
-            } 
-            else
-            // 2³²
+            if ( pld_byte_len < (((uint64_t)1 << (4*8))) )
             {
                 ccmq = 4;
+            } 
+            else
+            // 2^40
+            {
+                if ( pld_byte_len < (((uint64_t)1 << (5*8))) )
+                {
+                    ccmq = 5;
+                } 
+                else
+                // 2^48
+                {
+                    if ( pld_byte_len < (((uint64_t)1 << (6*8))) )
+                    {
+                        ccmq = 6;
+                    } 
+                    else
+                    // 2^56
+                    {
+                        if ( pld_byte_len < (((uint64_t)1 << (7*8))) )
+                        {
+                            ccmq = 7;
+                        } 
+                        else
+                        // 2^64
+                        {
+                            ccmq = 8;
+                        }
+                    }
+                }
             }
         }
     }
@@ -145,18 +173,18 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
 
 int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
                                       uint8_t *const dst, size_t *const dst_byte_len,
-                                      const uint8_t *const src, size_t src_byte_len)
+                                      const uint8_t *const pld, uint64_t pld_byte_len)
 {
     if (NULL == scl_ctx)
     {
         return (SCL_INVALID_INPUT);
     }
 
-    return scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst, dst_byte_len);
+    return scl_ctx->aes_func.auth_core(scl_ctx, ctx, pld, pld_byte_len, dst, dst_byte_len);
 }
 
 int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                 uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst, const uint8_t *const src, size_t src_byte_len)
+                                 uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst, const uint8_t *const pld, uint64_t pld_byte_len)
 {
     int32_t ret;
     uint8_t tmp_tag[BLOCK128_NB_BYTE] __attribute__((aligned(8))) = {0};
@@ -173,14 +201,14 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
         return (SCL_INVALID_INPUT);
     }
 
-    if ((NULL == dst) && src_byte_len)
+    if ((NULL == dst) && pld_byte_len)
     {
         return (SCL_INVALID_INPUT);
     }
 
-    if ((NULL != src) && src_byte_len)
+    if ((NULL != pld) && pld_byte_len)
     {
-        ret = scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst, &dst_byte_len);
+        ret = scl_ctx->aes_func.auth_core(scl_ctx, ctx, pld, pld_byte_len, dst, &dst_byte_len);
         if (SCL_OK != ret)
         {
             return (ret);
@@ -214,8 +242,8 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
 
 int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
                                  uint8_t *const tag, size_t tag_byte_len, 
-                                 uint8_t *const dst, const uint8_t *const src,
-                                 size_t src_byte_len, const uint8_t *const key,
+                                 uint8_t *const dst, const uint8_t *const pld,
+                                 uint64_t pld_byte_len, const uint8_t *const key,
                                  size_t key_byte_len, const uint8_t *const iv,
                                  size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len, scl_process_t mode)
 {
@@ -228,13 +256,13 @@ int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
         return (SCL_INVALID_INPUT);
     }
 
-    ret = scl_aes_ccm_init(scl_ctx, &ctx_aes_auth, key, key_byte_len, iv, iv_byte_len, aad, aad_byte_len, src_byte_len, tag_byte_len, mode);
+    ret = scl_aes_ccm_init(scl_ctx, &ctx_aes_auth, key, key_byte_len, iv, iv_byte_len, aad, aad_byte_len, pld_byte_len, tag_byte_len, mode);
     if (SCL_OK != ret)
     {
         return (ret);
     }
 
-    ret = scl_aes_ccm_core(scl_ctx, &ctx_aes_auth, dst, &dst_byte_len, src, src_byte_len);
+    ret = scl_aes_ccm_core(scl_ctx, &ctx_aes_auth, dst, &dst_byte_len, pld, pld_byte_len);
     if (SCL_OK != ret)
     {
         return (ret);

@@ -74,13 +74,14 @@ CRYPTO_FUNCTION int32_t hca_aes_setkey(const metal_scl_t *const scl,
  * @return != 0                 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t hca_aes_setiv(const metal_scl_t *const scl,
-                                      const uint64_t *const initvec);
+                                      const uint64_t *const iv);
 
 /**
  * @brief perform AES cipher operation
  *
  * @param[in] scl               metal scl context @ref metal_scl_t
- * @param[in] aes_mode          AES mode
+ * @param[in] aes_mode          AES mode @ref scl_aes_mode_t
+ * @param[in] aes_process       AES process (encrypt or decrypt)
  * @param[in] data_endianness   endianess of the input data
  * @param[in] data_in           data to process
  * @param[in] data_len          length of the data to process (in byte)
@@ -98,47 +99,55 @@ CRYPTO_FUNCTION int32_t hca_aes_cipher(
  *
  * @param[in] scl               metal scl context @ref metal_scl_t
  * @param[in,out] ctx           aes authenticate context
- * @param[in] aes_mode          AES mode
- * @param[in] aes_process       aes process (encrypt or decrypt)
+ * @param[in] aes_mode          AES mode @ref scl_aes_mode_t
+ * @param[in] aes_process       AES process (encrypt or decrypt)
  * @param[in] data_endianness   endianess of the input data
  * @param[in] auth_option       option for the ccm mode
  * @param[in] aad               add data
- * @param[in] add_len           length of the add data (in bytes)
+ * @param[in] aad_byte_len      length of the add data (in bytes)
  * @param[in] payload_len       length of the payload data (in bytes) 
  * @return 0                    SUCCESS
  * @return != 0                 otherwise @ref scl_errors_t
  */
-CRYPTO_FUNCTION int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
-                     scl_process_t aes_process,
-                     scl_endianness_t data_endianness, uint32_t auth_option,
-                     const uint8_t *const aad, size_t aad_byte_len, size_t payload_len);
+CRYPTO_FUNCTION int32_t hca_aes_auth_init(
+    const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, 
+    scl_aes_mode_t aes_mode, scl_process_t aes_process,
+    scl_endianness_t data_endianness, uint32_t auth_option,
+    const uint8_t *const aad, size_t aad_byte_len, uint64_t payload_len);
 
 /**
  * @brief perform AES cipher with authentication operation
  *
  * @param[in] scl               metal scl context @ref metal_scl_t
  * @param[in,out] ctx           aes authenticate context
- * @param[in] data_in           data payload to process
- * @param[in] data_len          length of the current data payload to process (in bytes)
+ * @param[in] payload           data payload to process
+ * @param[in] payload_len       length of the current data payload to process (in bytes)
  * @param[out] data_out         data output buffer
- * @param[out] len_out          length of data (in bytes) write into output buffer
+ * @param[out] out_len          length of data (in bytes) write into output buffer
  * @return 0                    SUCCESS
  * @return != 0                 otherwise @ref scl_errors_t
  */
-CRYPTO_FUNCTION int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
-                                          const uint8_t *const data_in, size_t data_len, uint8_t *const data_out, size_t *const out_len);
+CRYPTO_FUNCTION int32_t hca_aes_auth_core(const metal_scl_t *const scl, 
+                                          aes_auth_ctx_t *const ctx,
+                                          const uint8_t *const payload, 
+                                          uint64_t payload_len, 
+                                          uint8_t *const data_out, 
+                                          size_t *const out_len);
 
-    /**
-     * @brief finish AES cipher with authentication operation
-     *
-     * @param[in] scl               metal scl context @ref metal_scl_t
-     * @param[in,out] ctx           aes authenticate context
-     * @param[out] data_out         data output buffer to complete operation
-     * @param[out] tag              tag output buffer (128 bits)
-     * @return 0                    SUCCESS
-     * @return != 0                 otherwise @ref scl_errors_t
-     */
-CRYPTO_FUNCTION int32_t hca_aes_auth_finish(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, uint8_t *const data_out, uint64_t *const tag);
+/**
+ * @brief finish AES cipher with authentication operation
+ *
+ * @param[in] scl               metal scl context @ref metal_scl_t
+ * @param[in,out] ctx           aes authenticate context
+ * @param[out] data_out         data output buffer to complete operation
+ * @param[out] tag              tag output buffer (128 bits)
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @ref scl_errors_t
+ */
+CRYPTO_FUNCTION int32_t hca_aes_auth_finish(const metal_scl_t *const scl, 
+                                            aes_auth_ctx_t *const ctx, 
+                                            uint8_t *const data_out, 
+                                            uint64_t *const tag);
 
 /** @}*/
 

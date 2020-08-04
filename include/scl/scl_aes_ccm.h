@@ -58,8 +58,8 @@
  * @param[out] tag              output tag buffer - result of AES-CCM operation
  * @param[in] tag_byte_len      length in bytes of tag
  * @param[out] dst              output buffer - result of AES-CCM operation
- * @param[in] src               data to process
- * @param[in] src_byte_len      length in bytes of data
+ * @param[in] pld               data to process
+ * @param[in] pld_byte_len      length in bytes of data
  * @param[in] key               Key to use for the AES-CCM operation
  * @param[in] key_byte_len      length in bytes of key
  * @param[in] iv                Initial Vector (iv) use for the AES-CCM operation
@@ -72,8 +72,8 @@
  */
 SCL_FUNCTION int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
                                  uint8_t *const tag, size_t tag_byte_len, 
-                                 uint8_t *const dst, const uint8_t *const src,
-                                 size_t src_byte_len, const uint8_t *const key,
+                                 uint8_t *const dst, const uint8_t *const pld,
+                                 uint64_t pld_byte_len, const uint8_t *const key,
                                  size_t key_byte_len, const uint8_t *const iv,
                                  size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len, scl_process_t mode);
 
@@ -98,7 +98,7 @@ SCL_FUNCTION int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth
                                       const uint8_t *const key,
                                       size_t key_byte_len, const uint8_t *const iv,
                                       size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len,
-                                      size_t pld_byte_len, size_t tag_byte_len, scl_process_t mode);
+                                      uint64_t pld_byte_len, size_t tag_byte_len, scl_process_t mode);
 
 /**
  * @brief Perform intermediate AES-CCM comptation of data chunk
@@ -114,7 +114,7 @@ SCL_FUNCTION int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth
  */
 SCL_FUNCTION int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
                                       uint8_t *const dst, size_t *const dst_byte_len,
-                                      const uint8_t *const pld, size_t pld_byte_len);
+                                      const uint8_t *const pld, uint64_t pld_byte_len);
 
 /**
  * @brief Finalize AES-CCM computation and returning Authenticate tag
@@ -129,7 +129,7 @@ SCL_FUNCTION int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx, aes_auth
  */
 SCL_FUNCTION int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
                                  uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst,
-                                 const uint8_t *const pld, size_t pld_byte_len);
+                                 const uint8_t *const pld, uint64_t pld_byte_len);
 
 /** @}*/
  
