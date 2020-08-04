@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SHA384_H
-#define _SHA384_H
+#ifndef SCL_BACKEND_SHA384_H
+#define SCL_BACKEND_SHA384_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -39,9 +39,9 @@
 #include <api/hash/sha512.h>
 
 /** 
- * \addtogroup COMMON
- * \addtogroup SHA
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup SHA
+ * @ingroup COMMON
  *  @{
  */
 
@@ -56,4 +56,4 @@ typedef sha512_ctx_t sha384_ctx_t;
 
 /** @}*/
 
-#endif /* _SHA384_H */
+#endif /* SCL_BACKEND_SHA384_H */

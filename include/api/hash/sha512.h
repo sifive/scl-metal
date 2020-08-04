@@ -30,16 +30,16 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SHA512_H
-#define _SHA512_H
+#ifndef SCL_BACKEND_SHA512_H
+#define SCL_BACKEND_SHA512_H
 
 #include <stddef.h>
 #include <stdint.h>
 
 /** 
- * \addtogroup COMMON
- * \addtogroup SHA
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup SHA
+ * @ingroup COMMON
  *  @{
  */
 
@@ -69,4 +69,4 @@ typedef struct
 
 /** @}*/
 
-#endif
+#endif /* SCL_BACKEND_SHA512_H */

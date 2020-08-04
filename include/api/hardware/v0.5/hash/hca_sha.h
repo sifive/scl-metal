@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _HCA_SHA_H
-#define _HCA_SHA_H
+#ifndef SCL_BACKEND_HCA_SHA_H
+#define SCL_BACKEND_HCA_SHA_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -45,9 +45,9 @@
 #include <scl/scl_retdefs.h>
 
 /**
- * \addtogroup HCA
- * \addtogroup HCA_API_SHA
- * \ingroup HCA
+ * @addtogroup HCA
+ * @addtogroup HCA_API_SHA
+ * @ingroup HCA
  *  @{
  */
 
@@ -99,4 +99,4 @@ CRYPTO_FUNCTION int32_t hca_sha_finish(const metal_scl_t *const scl,
 
 /** @}*/
 
-#endif /* _HCA_SHA_H */
+#endif /* SCL_BACKEND_HCA_SHA_H */

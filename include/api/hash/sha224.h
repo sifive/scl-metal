@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SHA224_H
-#define _SHA224_H
+#ifndef SCL_BACKEND_SHA224_H
+#define SCL_BACKEND_SHA224_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -39,9 +39,9 @@
 #include <api/hash/sha256.h>
 
 /** 
- * \addtogroup COMMON
- * \addtogroup SHA
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup SHA
+ * @ingroup COMMON
  *  @{
  */
 
@@ -57,4 +57,4 @@ typedef sha256_ctx_t sha224_ctx_t;
 
 /** @}*/
 
-#endif /* _SHA224_H */
+#endif /* SCL_BACKEND_SHA224_H */

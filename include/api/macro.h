@@ -30,15 +30,15 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _MACRO_H
-#define _MACRO_H
+#ifndef SCL_BACKEND_MACRO_H
+#define SCL_BACKEND_MACRO_H
 
 #include <machine/endian.h>
 
 /**
- * \addtogroup COMMON
- * \addtogroup MACRO
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup MACRO
+ * @ingroup COMMON
  *  @{
  */
 
@@ -57,6 +57,48 @@
 #define bswap64(x) __bswap64(x)
 #endif
 
+#ifndef MAX
+/**
+ * @brief simple max macro
+ * @warning Not safe in case of function call as inputs, double entry issue.
+ */
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef MIN
+/**
+ * @brief simple min macro
+ * @warning Not safe in case of function call as inputs, double entry issue.
+ */
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#endif
+
+#ifndef SAFE_MAX
+/**
+ * @brief safe max macro
+ * @note Safe in case of function call as inputs, but more ressource consuming
+ */
+#define SAFE_MAX(a, b)                                                         \
+    ({                                                                         \
+        __typeof__(a) _a = (a);                                                \
+        __typeof__(b) _b = (b);                                                \
+        _a > _b ? _a : _b;                                                     \
+    })
+#endif
+
+#ifndef SAFE_MIN
+/**
+ * @brief simple min macro
+ * @note Safe in case of function call as inputs, but more ressource consuming
+ */
+#define SAFE_MIN(a, b)                                                         \
+    ({                                                                         \
+        __typeof__(a) _a = (a);                                                \
+        __typeof__(b) _b = (b);                                                \
+        _a < _b ? _a : _b;                                                     \
+    })
+#endif
+
 /** @}*/
 
-#endif /* _MACRO_H */
+#endif /* SCL_BACKEND_MACRO_H */

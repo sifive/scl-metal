@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SOFT_SHA384_H
-#define _SOFT_SHA384_H
+#ifndef SCL_BACKEND_SOFT_SHA384_H
+#define SCL_BACKEND_SOFT_SHA384_H
 
 #include <stdint.h>
 
@@ -41,9 +41,9 @@
 #include <api/hash/sha384.h>
 
 /**
- * \addtogroup SOFTWARE
- * \addtogroup SOFT_SHA
- * \ingroup SOFTWARE
+ * @addtogroup SOFTWARE
+ * @addtogroup SOFT_SHA
+ * @ingroup SOFTWARE
  *  @{
  */
 
@@ -88,4 +88,4 @@ CRYPTO_FUNCTION int32_t soft_sha384_finish(sha384_ctx_t *const ctx,
 
 /** @}*/
 
-#endif /* _SOFT_SHA384_H */
+#endif /* SCL_BACKEND_SOFT_SHA384_H */

@@ -34,8 +34,8 @@
  *
  */
 
-#ifndef _SCL_INIT_H
-#define _SCL_INIT_H
+#ifndef SCL_INIT_H
+#define SCL_INIT_H
 
 #include <stdint.h>
 
@@ -43,9 +43,9 @@
 #include <scl_cfg.h>
 
 /**
- * \addtogroup SCL
- * \addtogroup SCL_INIT
- * \ingroup SCL
+ * @addtogroup SCL
+ * @addtogroup SCL_INIT
+ * @ingroup SCL
  *  @{
  */
 
@@ -53,4 +53,4 @@ SCL_FUNCTION int32_t scl_init(const metal_scl_t *const scl);
 
 /** @}*/
 
-#endif /* _SCL_INIT_H */
+#endif /* SCL_INIT_H */

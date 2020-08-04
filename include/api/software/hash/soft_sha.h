@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SOFT_SHA_H
-#define _SOFT_SHA_H
+#ifndef SCL_BACKEND_SOFT_SHA_H
+#define SCL_BACKEND_SOFT_SHA_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -44,9 +44,9 @@
 #include <scl/scl_retdefs.h>
 
 /**
- * \addtogroup SOFTWARE
- * \addtogroup SOFT_API_SHA
- * \ingroup SOFTWARE
+ * @addtogroup SOFTWARE
+ * @addtogroup SOFT_API_SHA
+ * @ingroup SOFTWARE
  *  @{
  */
 
@@ -99,4 +99,4 @@ CRYPTO_FUNCTION int32_t soft_sha_finish(const metal_scl_t *const scl,
 
 /** @}*/
 
-#endif /* _SOFT_SHA_H */
+#endif /* SCL_BACKEND_SOFT_SHA_H */

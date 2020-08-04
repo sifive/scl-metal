@@ -23,38 +23,21 @@
  ******************************************************************************/
 
 /**
- * @file defs.h
- * @brief Low level API common definitions
+ * @file hca_aes.c
+ * @brief
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef SCL_BACKEND_DEFS_H
-#define SCL_BACKEND_DEFS_H
+#include <api/hardware/hca_macro.h>
 
-/**
- * @addtogroup COMMON
- * @addtogroup DEFS
- * @ingroup COMMON
- *  @{
- */
-
-/**
- * @brief endianess supported by the scl library
- * @note On classic cryptographic data representation, data are big endian words
- * for exemple a 128 bits AES key is a usually considered as a big number big
- * endian 128 bits word.
- * @warning The only mode supported by the software implementation is Big Endian
- */
-typedef enum
+void hca_setfield32(const metal_scl_t *const scl, uint32_t reg, uint32_t value,
+                    size_t offset, uint32_t mask)
 {
-    /*! @brief little endian words */
-    SCL_LITTLE_ENDIAN_MODE = 0,
-    /*! @brief big endian words */
-    SCL_BIG_ENDIAN_MODE = 1
-} endianness_t;
-
-/** @}*/
-
-#endif /* SCL_BACKEND_DEFS_H */
+    uint32_t reg32;
+    reg32 = METAL_REG32(scl->hca_base, reg);
+    reg32 &= ~(mask << offset);
+    reg32 |= ((value & mask) << offset);
+    METAL_REG32(scl->hca_base, reg) = reg32;
+}

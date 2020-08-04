@@ -210,8 +210,7 @@ void hca_sha512_append_bit_len(uint8_t *const buffer, uint64_t *const length)
     }
 }
 
-int32_t hca_sha512_read(const metal_scl_t *const scl,
-                        uint8_t *const data_out)
+int32_t hca_sha512_read(const metal_scl_t *const scl, uint8_t *const data_out)
 {
     uint64_t *out64 = (uint64_t *)data_out;
     register uint64_t val;
@@ -318,8 +317,7 @@ int32_t hca_sha512_read(const metal_scl_t *const scl,
             scl->hca_base, (METAL_SIFIVE_HCA_HASH + 2 * sizeof(uint64_t))));
         *out64++ = bswap64(METAL_REG64(
             scl->hca_base, (METAL_SIFIVE_HCA_HASH + sizeof(uint64_t))));
-        *out64++ = bswap64(METAL_REG64(
-            scl->hca_base, (METAL_SIFIVE_HCA_HASH)));
+        *out64++ = bswap64(METAL_REG64(scl->hca_base, (METAL_SIFIVE_HCA_HASH)));
     }
     return (SCL_OK);
 }

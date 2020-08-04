@@ -30,42 +30,40 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _HCA_MACRO_H
-#define _HCA_MACRO_H
+#ifndef SCL_BACKEND_HCA_MACRO_H
+#define SCL_BACKEND_HCA_MACRO_H
 
 #include <metal/io.h>
 
 #include <api/scl_api.h>
 
+#include <api/hardware/hca_utils.h>
+
 /**
- * \addtogroup HCA
- * \addtogroup HCA_MACRO
- * \ingroup HCA
+ * @addtogroup HCA
+ * @addtogroup HCA_MACRO
+ * @ingroup HCA
  *  @{
  */
 
+/*! @brief Macro to access a 64 bits register */
 #define METAL_REG64(base, offset)                                              \
     (__METAL_ACCESS_ONCE((uint64_t *)((base) + (offset))))
+/*! @brief Macro to access a 32 bits register */
 #define METAL_REG32(base, offset)                                              \
     (__METAL_ACCESS_ONCE((uint32_t *)((base) + (offset))))
 
-static __inline__ void hca_setfield32(const metal_scl_t *const scl,
-                                      uint32_t reg, uint32_t value, char offset,
-                                      uint32_t mask)
-{
-    METAL_REG32(scl->hca_base, reg) &= ~(mask << offset);
-    METAL_REG32(scl->hca_base, reg) |= ((value & mask) << offset);
-}
-
+/*! @brief Macro to copy 32 (no alignement constraint) to 32 (aligned) */
 #define GET_32BITS(data, k)                                                    \
-    (((uint32_t)*((uint8_t *)data + k + 3) << 24) +                          \
-     ((uint32_t)*((uint8_t *)data + k + 2) << 16) +                          \
-     ((uint32_t)*((uint8_t *)data + k + 1) << 8) +                           \
-     ((uint32_t)*((uint8_t *)data + k)))
+    ((((uint32_t) * ((const uint8_t *)(data) + (k) + 3)) << 24) +              \
+     (((uint32_t) * ((const uint8_t *)(data) + (k) + 2)) << 16) +              \
+     (((uint32_t) * ((const uint8_t *)(data) + (k) + 1)) << 8) +               \
+     ((uint32_t) * ((const uint8_t *)(data) + (k))))
+/*! @brief Macro to copy 64 (no alignement constraint) to 64 (aligned) */
 #define GET_64BITS(data, k)                                                    \
-    ((((uint64_t)GET_32BITS((uint8_t *)data, (k + 4))) << 32) +                \
-     (uint64_t)GET_32BITS((uint8_t *)data, k))
+    ((((uint64_t)GET_32BITS((const uint8_t *)data, (k + 4))) << 32) +          \
+     (uint64_t)GET_32BITS((const uint8_t *)data, k))
 
 /** @}*/
 
-#endif
+#endif /* SCL_BACKEND_HCA_MACRO_H */

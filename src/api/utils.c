@@ -145,3 +145,23 @@ int32_t copy_u64_2_u8_be(uint8_t *const dest, const uint64_t *const src,
 
     return (SCL_OK);
 }
+
+void memset_u64(uint64_t *const array, uint64_t value, size_t word_size)
+{
+    size_t i;
+    for (i = 0; i < word_size; i++)
+    {
+        array[i] = value;
+    }
+}
+
+void memcpy_u64(uint64_t *const dest, const uint64_t *const source,
+                size_t word_size)
+{
+    size_t i;
+
+    for (i = 0; i < word_size; i++)
+    {
+        dest[i] = source[i];
+    }
+}

@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SHA_H
-#define _SHA_H
+#ifndef SCL_BACKEND_SHA_H
+#define SCL_BACKEND_SHA_H
 
 #include <api/hash/sha224.h>
 #include <api/hash/sha256.h>
@@ -39,9 +39,9 @@
 #include <api/hash/sha512.h>
 
 /** 
- * \addtogroup COMMON
- * \addtogroup SHA
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup SHA
+ * @ingroup COMMON
  *  @{
  */
 
@@ -73,4 +73,4 @@ typedef struct {
 
 /** @}*/
 
-#endif
+#endif /* SCL_BACKEND_SHA_H */

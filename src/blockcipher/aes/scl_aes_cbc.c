@@ -106,8 +106,8 @@ int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx, uint8_t *const dst,
     if (src_byte_len & 0xF)
         return (SCL_INVALID_INPUT);
 
-    ret = scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_CBC, mode, SCL_BIG_ENDIAN_MODE,
-                             src, src_byte_len, dst);
+    ret = scl_ctx->aes_func.cipher(scl_ctx, SCL_AES_CBC, mode,
+                                   SCL_BIG_ENDIAN_MODE, src, src_byte_len, dst);
 
     return (ret);
 }
@@ -152,6 +152,6 @@ int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx, uint8_t *const dst,
     {
         return (ret);
     }
-    
+
     return (SCL_OK);
 }

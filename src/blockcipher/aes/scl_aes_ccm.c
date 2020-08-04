@@ -57,7 +57,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
     int32_t ret;
     uint64_t formated[4] = {0};
     uint64_t tmp_iv[2] = {0};
-    uint8_t ccmt_tab[BLOCK128_NB_BYTE + 1] = {
+    int8_t ccmt_tab[BLOCK128_NB_BYTE + 1] = {
         -1, -1, -1, -1, 1, -1, 2, -1, 3, -1, 4, -1, 5, -1, 6, -1, 7};
     uint8_t ccmt, ccmq;
 
@@ -145,13 +145,15 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
 
     /* @FIXME: */
     /* key_formated should be secure erased */
-    
+
     if (SCL_OK != ret)
     {
         return (ret);
     }
 
-    ret = scl_ctx->aes_func.auth_init(scl_ctx, ctx, SCL_AES_CCM, mode, SCL_BIG_ENDIAN_MODE, CCM_TQ(ccmt, ccmq), aad, aad_byte_len, pld_byte_len);
+    ret = scl_ctx->aes_func.auth_init(scl_ctx, ctx, SCL_AES_CCM, mode,
+                                      SCL_BIG_ENDIAN_MODE, CCM_TQ(ccmt, ccmq),
+                                      aad, aad_byte_len, pld_byte_len);
 
     return (ret);
 }
@@ -213,7 +215,7 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *con
         return (ret);
     }
 
-    for (i = 0; i < tag_byte_len; i++ )
+    for (i = 0; i < tag_byte_len; i++)
     {
         tag[i]=tmp_tag[sizeof(tmp_tag) - 1 - i];
     }

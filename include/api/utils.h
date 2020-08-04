@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _UTILS_H
-#define _UTILS_H
+#ifndef SCL_BACKEND_UTILS_H
+#define SCL_BACKEND_UTILS_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -39,9 +39,9 @@
 #include <crypto_cfg.h>
 
 /**
- * \addtogroup COMMON
- * \addtogroup UTILS
- * \ingroup COMMON
+ * @addtogroup COMMON
+ * @addtogroup UTILS
+ * @ingroup COMMON
  *  @{
  */
 
@@ -97,6 +97,27 @@ CRYPTO_FUNCTION int32_t copy_u32_2_u8_be(uint8_t *const dest,
 CRYPTO_FUNCTION int32_t copy_u64_2_u8_be(uint8_t *const dest,
                                          const uint64_t *const src, size_t len);
 
+/**
+ * @brief memset for 64 bits word to target to speed up big numbers computation
+ *
+ * @param[out] array        array to memset
+ * @param[in] value         value to set in the array
+ * @param[in] word_size     number of 64 bits words to set
+ * @warning No check on pointer value
+ */
+void memset_u64(uint64_t *const array, uint64_t value, size_t word_size);
+
+/**
+ * @brief memcopy for 64 bits word to target to speed up big numbers computation
+ *
+ * @param[out] dest          destination 64 bits words array
+ * @param[in] source        source 64 bits words array
+ * @param[in] word_size     number of 64 bits words to copy
+ * @warning No check on pointer value
+ */
+void memcpy_u64(uint64_t *const dest, const uint64_t *const source,
+                size_t word_size);
+
 /** @}*/
 
-#endif /* _UTILS_H */
+#endif /* SCL_BACKEND_UTILS_H */

@@ -30,8 +30,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _HCA_AES_H
-#define _HCA_AES_H
+#ifndef SCL_BACKEND_HCA_AES_H
+#define SCL_BACKEND_HCA_AES_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -44,9 +44,9 @@
 #include <scl/scl_retdefs.h>
 
 /**
- * \addtogroup HCA
- * \addtogroup HCA_API_AES
- * \ingroup HCA
+ * @addtogroup HCA
+ * @addtogroup HCA_API_AES
+ * @ingroup HCA
  *  @{
  */
 
@@ -151,4 +151,4 @@ CRYPTO_FUNCTION int32_t hca_aes_auth_finish(const metal_scl_t *const scl,
 
 /** @}*/
 
-#endif /* _HCA_AES_H */
+#endif /* SCL_BACKEND_HCA_AES_H */

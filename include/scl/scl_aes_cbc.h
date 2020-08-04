@@ -31,28 +31,29 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef _SCL_AES_CBC_H
-#define _SCL_AES_CBC_H
+#ifndef SCL_AES_CBC_H
+#define SCL_AES_CBC_H
 
 #include <stdint.h>
 #include <stdio.h>
 
-#include <scl_cfg.h>
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
+#include <scl_cfg.h>
 
-#include <api/scl_api.h>
 #include <api/blockcipher/aes/aes.h>
+#include <api/scl_api.h>
 
 /**
- * \addtogroup SCL
- * \addtogroup SCL_AES
- * \ingroup SCL
+ * @addtogroup SCL
+ * @addtogroup SCL_AES
+ * @ingroup SCL
  *  @{
  */
 
 /**
- * @brief compute AES-CBC operation (according mode parameter) on the data in parameter and return result
+ * @brief compute AES-CBC operation (according mode parameter) on the data in
+ * parameter and return result
  *
  * @param[in] scl_ctx           scl context
  * @param[out] dst              output buffer - result of AES-CBC operation
@@ -60,7 +61,8 @@
  * @param[in] src_byte_len      length in bytes of data
  * @param[in] key               Key to use for the AES-CBC operation
  * @param[in] key_byte_len      length in bytes of key
- * @param[in] iv                Initial Vector (iv) use for the AES-CBC operation
+ * @param[in] iv                Initial Vector (iv) use for the AES-CBC
+ * operation
  * @param[in] iv_byte_len       length in bytes of iv
  * @param[in] mode              type of operation @ref scl_process_t
  * @return 0    in case of SUCCESS
@@ -78,7 +80,8 @@ SCL_FUNCTION int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx,
  * @param[in] scl_ctx           scl context
  * @param[in] key               Key to use for the AES-CBC operation
  * @param[in] key_byte_len      length in bytes of key
- * @param[in] iv                Initial Vector (iv) use for the AES-CBC operation
+ * @param[in] iv                Initial Vector (iv) use for the AES-CBC
+ * operation
  * @param[in] iv_byte_len       length in bytes of iv
  * @param[in] mode              type of operation @ref scl_process_t
  * @return 0    in case of SUCCESS
@@ -91,7 +94,8 @@ SCL_FUNCTION int32_t scl_aes_cbc_init(const metal_scl_t *const scl_ctx,
                                       size_t iv_byte_len, scl_process_t mode);
 
 /**
- * @brief compute AES-CBC operation (according mode parameter) with current AES-CBC context
+ * @brief compute AES-CBC operation (according mode parameter) with current
+ * AES-CBC context
  *
  * @param[in] scl_ctx           scl context
  * @param[out] dst              output buffer - result of AES-CBC operation
@@ -108,4 +112,4 @@ SCL_FUNCTION int32_t scl_aes_cbc_core(const metal_scl_t *const scl_ctx,
 
 /** @}*/
 
-#endif /* _SCL_AES_CBC_H */
+#endif /* SCL_AES_CBC_H */
