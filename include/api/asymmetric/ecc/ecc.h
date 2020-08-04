@@ -90,6 +90,23 @@
 /*! @brief number of 32bits word for curve BP512R1 parameters */
 #define ECC_BP512R1_32B_WORDS_SIZE 16
 
+/*! @brief number of 64bits word for curve SECP224R1 parameters */
+#define ECC_SECP224R1_64B_WORDS_SIZE 4
+/*! @brief number of 64bits word for curve SECP256R1 parameters */
+#define ECC_SECP256R1_64B_WORDS_SIZE 4
+/*! @brief number of 64bits word for curve SECP256K1 parameters */
+#define ECC_SECP256K1_64B_WORDS_SIZE 4
+/*! @brief number of 64bits word for curve BP256R1 parameters */
+#define ECC_BP256R1_64B_WORDS_SIZE 4
+/*! @brief number of 64bits word for curve SECP384R1 parameters */
+#define ECC_SECP384R1_64B_WORDS_SIZE 6
+/*! @brief number of 64bits word for curve SECP521R1 parameters */
+#define ECC_SECP521R1_64B_WORDS_SIZE 9
+/*! @brief number of 64bits word for curve BP384R1 parameters */
+#define ECC_BP384R1_64B_WORDS_SIZE 6
+/*! @brief number of 64bits word for curve BP512R1 parameters */
+#define ECC_BP512R1_64B_WORDS_SIZE 8
+
 // #define SCL_ECC_INVERSE_2_OPTIMIZATION 1
 // #define SCL_ECDSA_SIGNATURE_COMPUTATION 0xFF
 // #define SCL_ECDSA_SIGNATURE_VERIFICATION 0x00
@@ -114,16 +131,16 @@ enum ecc_std_curves_e
 
 typedef struct ecc_curve_s
 {
-    const uint32_t *a;
-    const uint32_t *b;
-    const uint32_t *p;
-    const uint32_t *n;
-    const uint32_t *xg;
-    const uint32_t *yg;
-    const uint32_t *inverse_2;
-    const uint32_t *square_p;
-    const uint32_t *precomputed_1_x;
-    const uint32_t *precomputed_1_y;
+    const uint64_t *a;
+    const uint64_t *b;
+    const uint64_t *p;
+    const uint64_t *n;
+    const uint64_t *xg;
+    const uint64_t *yg;
+    const uint64_t *inverse_2;
+    const uint64_t *square_p;
+    const uint64_t *precomputed_1_x;
+    const uint64_t *precomputed_1_y;
     size_t curve_wsize;
     size_t curve_bsize;
     enum ecc_std_curves_e curve;
@@ -131,9 +148,9 @@ typedef struct ecc_curve_s
 
 typedef struct ecc_bignum_jacobian_point_s
 {
-    uint32_t *x;
-    uint32_t *y;
-    uint32_t *z;
+    uint64_t *x;
+    uint64_t *y;
+    uint64_t *z;
 } ecc_bignum_jacobian_point_t;
 
 typedef struct ecc_affine_point_s
@@ -144,8 +161,8 @@ typedef struct ecc_affine_point_s
 
 typedef struct ecc_bignum_affine_point_s
 {
-    uint32_t *x;
-    uint8_t *y;
+    uint64_t *x;
+    uint64_t *y;
 } ecc_bignum_affine_point_t;
 
 #endif /* SCL_BACKEND_ECC_H */
