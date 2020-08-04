@@ -83,50 +83,35 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const
     {
         ccmq = 2;
     } 
-    else
+    // 2^24
+    else if ( pld_byte_len < (((uint64_t)1 << (3*8))) )
     {
-        // 2^24
-        if ( pld_byte_len < (((uint64_t)1 << (3*8))) )
-        {
-            ccmq = 3;
-        } 
-        else
-        // 2^32
-        {
-            if ( pld_byte_len < (((uint64_t)1 << (4*8))) )
-            {
-                ccmq = 4;
-            } 
-            else
-            // 2^40
-            {
-                if ( pld_byte_len < (((uint64_t)1 << (5*8))) )
-                {
-                    ccmq = 5;
-                } 
-                else
-                // 2^48
-                {
-                    if ( pld_byte_len < (((uint64_t)1 << (6*8))) )
-                    {
-                        ccmq = 6;
-                    } 
-                    else
-                    // 2^56
-                    {
-                        if ( pld_byte_len < (((uint64_t)1 << (7*8))) )
-                        {
-                            ccmq = 7;
-                        } 
-                        else
-                        // 2^64
-                        {
-                            ccmq = 8;
-                        }
-                    }
-                }
-            }
-        }
+           ccmq = 3;
+    } 
+    // 2^32
+    else if ( pld_byte_len < (((uint64_t)1 << (4*8))) )
+    {
+        ccmq = 4;
+    } 
+    // 2^40
+    else if ( pld_byte_len < (((uint64_t)1 << (5*8))) )
+    {
+        ccmq = 5;
+    } 
+    // 2^48
+    else if ( pld_byte_len < (((uint64_t)1 << (6*8))) )
+    {
+        ccmq = 6;
+    } 
+    // 2^56
+    else if ( pld_byte_len < (((uint64_t)1 << (7*8))) )
+    {
+        ccmq = 7;
+    } 
+    else
+    // 2^64
+    {
+        ccmq = 8;
     }
 
     ret = scl_format_key(key, key_byte_len, formated);
