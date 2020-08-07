@@ -169,4 +169,13 @@ CRYPTO_FUNCTION int32_t soft_ecc_double_jacobian(
     const ecc_bignum_jacobian_point_t *const in,
     ecc_bignum_jacobian_point_t *const out, size_t nb_32b_words);
 
+/**
+ * @brief extract a bit in a bgnum array
+ *
+ * @param[in] array         bignum array
+ * @param[in] bit_idx       bit index to extract
+ * @return 1 or 0 depending if the bit is set or not
+ */
+size_t soft_ecc_bit_extract(uint32_t *array, size_t bit_idx);
+
 #endif /* SCL_BACKEND_SOFT_ECC_H */

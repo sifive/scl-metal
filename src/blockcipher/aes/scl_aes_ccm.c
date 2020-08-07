@@ -72,7 +72,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     {
         return (SCL_INVALID_INPUT);
     }
-    ccmt = ccmt_tab[tag_byte_len];
+    ccmt = (uint8_t)ccmt_tab[tag_byte_len];
     if ((uint8_t)-1 == ccmt)
     {
         return (SCL_INVALID_INPUT);

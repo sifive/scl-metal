@@ -165,3 +165,14 @@ void memcpy_u64(uint64_t *const dest, const uint64_t *const source,
         dest[i] = source[i];
     }
 }
+
+void copy_swap_array(uint8_t *const dest, const uint8_t *const source,
+                     size_t length)
+{
+    size_t i;
+
+    for (i = 0; i < length; i++)
+    {
+        dest[i] = source[length - 1 - i];
+    }
+}

@@ -403,6 +403,14 @@ int32_t soft_bignum_mult(const metal_scl_t *const scl,
     return (SCL_OK);
 }
 
+
+int32_t soft_bignum_square_with_mult(const metal_scl_t *const scl,
+                           const uint64_t *const input, uint64_t *const out,
+                           size_t nb_32b_words)
+{
+    return(soft_bignum_mult(scl, input, input, out, nb_32b_words));
+}
+
 int32_t soft_bignum_square(const metal_scl_t *const scl,
                            const uint64_t *const input, uint64_t *const out,
                            size_t nb_32b_words)

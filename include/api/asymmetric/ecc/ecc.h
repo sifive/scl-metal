@@ -36,9 +36,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define ECDSA_BLOCK_SIZE 32
-#define ECDSA_MAX_WORDSIZE 17
-
 /*! @brief size of curve SECP224R1 parameters in byte */
 #define ECC_SECP224R1_BYTESIZE 28
 /*! @brief size of curve SECP256R1 parameters in byte */
@@ -107,6 +104,12 @@
 /*! @brief number of 64bits word for curve BP512R1 parameters */
 #define ECC_BP512R1_64B_WORDS_SIZE 8
 
+#define ECDSA_BLOCK_SIZE 32
+/*! @brief maximum accepted 32 bits word size */
+#define ECDSA_MAX_32B_WORDSIZE ECC_SECP521R1_32B_WORDS_SIZE
+
+#define ECDSA_MIN_32B_WORDSIZE ECC_SECP224R1_32B_WORDS_SIZE
+
 // #define SCL_ECC_INVERSE_2_OPTIMIZATION 1
 // #define SCL_ECDSA_SIGNATURE_COMPUTATION 0xFF
 // #define SCL_ECDSA_SIGNATURE_VERIFICATION 0x00
@@ -129,23 +132,6 @@ enum ecc_std_curves_e
     ECC_CURVE_MAX_NB
 };
 
-typedef struct ecc_curve_s
-{
-    const uint64_t *a;
-    const uint64_t *b;
-    const uint64_t *p;
-    const uint64_t *n;
-    const uint64_t *xg;
-    const uint64_t *yg;
-    const uint64_t *inverse_2;
-    const uint64_t *square_p;
-    const uint64_t *precomputed_1_x;
-    const uint64_t *precomputed_1_y;
-    size_t curve_wsize;
-    size_t curve_bsize;
-    enum ecc_std_curves_e curve;
-} ecc_curve_t;
-
 typedef struct ecc_bignum_jacobian_point_s
 {
     uint64_t *x;
@@ -164,5 +150,30 @@ typedef struct ecc_bignum_affine_point_s
     uint64_t *x;
     uint64_t *y;
 } ecc_bignum_affine_point_t;
+
+typedef struct ecc_curve_s
+{
+    const uint64_t *a;
+    const uint64_t *b;
+    const uint64_t *p;
+    const uint64_t *n;
+    const ecc_bignum_affine_point_t *g;
+    const uint64_t *inverse_2;
+    const uint64_t *square_p;
+    const uint64_t *precomputed_1_x;
+    const uint64_t *precomputed_1_y;
+    size_t curve_wsize;
+    size_t curve_bsize;
+    enum ecc_std_curves_e curve;
+} ecc_curve_t;
+
+/*! @brief SECP256R1 curve */
+extern const ecc_curve_t ecc_secp256r1;
+
+/*! @brief  SECP384R1 curve */
+extern const ecc_curve_t ecc_secp384r1;
+
+/*! @brief SECP521R1 curve */
+extern const ecc_curve_t ecc_secp521r1;
 
 #endif /* SCL_BACKEND_ECC_H */

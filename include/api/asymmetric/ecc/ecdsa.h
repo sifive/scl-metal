@@ -23,22 +23,22 @@
  ******************************************************************************/
 
 /**
- * @file scl_soft.h
- * @brief
+ * @file ecdsa.h
+ * @brief Elliptic curve cryptography implementation/wrapper
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef SCL_BACKEND_SCL_SOFT_H
-#define SCL_BACKEND_SCL_SOFT_H
+#ifndef SCL_BACKEND_ECDSA_H
+#define SCL_BACKEND_ECDSA_H
 
 #include <stdint.h>
-#include <stdio.h>
 
-#include <api/software/asymmetric/ecc/soft_ecc.h>
-#include <api/software/asymmetric/ecc/soft_ecdsa.h>
-#include <api/software/bignumbers/soft_bignumbers.h>
-#include <api/software/hash/soft_sha.h>
+typedef struct ecdsa_signature_s
+{
+    uint8_t *r;
+    uint8_t *s;
+} ecdsa_signature_t;
 
-#endif /* SCL_BACKEND_SCL_SOFT_H */
+#endif /* SCL_BACKEND_ECDSA_H */

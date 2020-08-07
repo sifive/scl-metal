@@ -23,22 +23,29 @@
  ******************************************************************************/
 
 /**
- * @file scl_soft.h
- * @brief
+ * @file soft_ecdsa.h
+ * @brief software elliptic curve digital signature algorithm implementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef SCL_BACKEND_SCL_SOFT_H
-#define SCL_BACKEND_SCL_SOFT_H
+#ifndef SCL_BACKEND_SOFT_ECDSA_H
+#define SCL_BACKEND_SOFT_ECDSA_H
 
+#include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 
-#include <api/software/asymmetric/ecc/soft_ecc.h>
-#include <api/software/asymmetric/ecc/soft_ecdsa.h>
-#include <api/software/bignumbers/soft_bignumbers.h>
-#include <api/software/hash/soft_sha.h>
+#include <crypto_cfg.h>
 
-#endif /* SCL_BACKEND_SCL_SOFT_H */
+#include <api/asymmetric/ecc/ecc.h>
+#include <api/asymmetric/ecc/ecdsa.h>
+#include <api/scl_api.h>
+
+int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
+                                const ecc_affine_point_t *const pub_key,
+                                const ecc_affine_point_t *const signature,
+                                const uint8_t *const hash, size_t hash_len,
+                                const ecc_curve_t *const curve_params);
+
+#endif /* SCL_BACKEND_SOFT_ECDSA_H */

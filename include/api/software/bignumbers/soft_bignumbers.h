@@ -207,6 +207,11 @@ CRYPTO_FUNCTION int32_t soft_bignum_square(const metal_scl_t *const scl,
                                            uint64_t *const out,
                                            size_t nb_32b_words);
 
+CRYPTO_FUNCTION int32_t soft_bignum_square_with_mult(const metal_scl_t *const scl,
+                                           const uint64_t *const input,
+                                           uint64_t *const out,
+                                           size_t nb_32b_words);
+
 /**
  * @brief bignumber left shift
  *
@@ -487,7 +492,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_square(const metal_scl_t *const scl,
                                                const uint64_t *const in,
                                                uint64_t *const out,
                                                size_t nb_32b_words);
-
+                                               
 /*@+exportlocal@*/
 
 /** @}*/
