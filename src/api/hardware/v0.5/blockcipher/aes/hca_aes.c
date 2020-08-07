@@ -35,16 +35,17 @@
 
 #include <scl/scl_retdefs.h>
 
-#include <api/blockcipher/aes/aes.h>
-#include <api/hardware/hca_macro.h>
-#include <api/hardware/scl_hca.h>
-#include <api/hardware/v0.5/blockcipher/aes/hca_aes.h>
-
 #include <metal/io.h>
 #include <metal/machine/platform.h>
 
+#include <api/hardware/hca_macro.h>
+#include <api/hardware/scl_hca.h>
+
+#include <api/blockcipher/aes/aes.h>
+
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 #include <api/hardware/v0.5/sifive_hca-0.5.x.h>
+#include <api/hardware/v0.5/blockcipher/aes/hca_aes.h>
 
 int32_t hca_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type,
                        const uint64_t *const key, scl_process_t aes_process)

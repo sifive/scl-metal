@@ -80,7 +80,7 @@ struct __aes_func
      * @return != 0                 otherwise @ref scl_errors_t
      */
     int32_t (*setiv)(const metal_scl_t *const scl,
-                     const uint64_t *const initvec);
+                     const uint64_t *const iv);
     /**
      * @brief perform AES cipher operation
      *
@@ -628,8 +628,8 @@ default_aes_cipher(metal_scl_t *scl, scl_aes_mode_t aes_mode,
     (void)aes_mode;
     (void)aes_process;
     (void)data_endianness;
-    (void)NbBlocks128;
     (void)data_in;
+    (void)data_len;
     (void)data_out;
     /*@+noeffect@*/
     return SCL_ERROR;
