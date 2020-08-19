@@ -34,7 +34,7 @@
 #include <stdio.h>
 
 #include <metal/io.h>
-#include <metal/machine/platform.h>
+#include <metal/platform.h>
 
 #include <scl/scl_retdefs.h>
 
