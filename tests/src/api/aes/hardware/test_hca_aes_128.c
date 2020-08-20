@@ -14,9 +14,9 @@
 
 #include <string.h>
 
-#include <api/blockcipher/aes/aes.h>
-#include <api/hardware/scl_hca.h>
-#include <api/scl_api.h>
+#include <backend/api/blockcipher/aes/aes.h>
+#include <backend/hardware/scl_hca.h>
+#include <backend/api/scl_backend_api.h>
 
 #include <metal/machine/platform.h>
 

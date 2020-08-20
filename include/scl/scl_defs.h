@@ -33,8 +33,8 @@
 #ifndef SCL_DEFS_H
 #define SCL_DEFS_H
 
-#include <api/defs.h>
-#include <api/hash/sha.h>
+#include <backend/api/defs.h>
+#include <backend/api/hash/sha/sha.h>
 
 /**
  * @addtogroup SCL

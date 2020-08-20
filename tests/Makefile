@@ -82,7 +82,7 @@ override LDLIBS := $(filter-out $(FILTER_PATTERN),$(LDLIBS)) -Wl,--end-group
 # ----------------------------------------------------------------------
 # Common def
 # ----------------------------------------------------------------------
-override INCLUDE_DIRS := 	$(CURRENT_DIR)/include
+override INCLUDE_DIRS := 	$(CURRENT_DIR)
 
 override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
 override CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual \

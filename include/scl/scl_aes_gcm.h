@@ -41,8 +41,8 @@
 #include <scl/scl_retdefs.h>
 #include <scl_cfg.h>
 
-#include <api/blockcipher/aes/aes.h>
-#include <api/scl_api.h>
+#include <backend/api/blockcipher/aes/aes.h>
+#include <backend/api/scl_backend_api.h>
 
 /**
  * \addtogroup SCL

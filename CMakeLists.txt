@@ -25,24 +25,24 @@ ADD_LIBRARY (scl
   src/blockcipher/aes/scl_aes_ofb.c
   src/hash/sha/scl_sha.c
   src/asymmetric/ecc/scl_ecdsa.c
-  src/api/hardware/hca_utils.c
-  src/api/hardware/v0.5/blockcipher/aes/hca_aes.c
-  src/api/hardware/v0.5/hash/hca_sha.c
-  src/api/hardware/v0.5/hash/hca_sha224.c
-  src/api/hardware/v0.5/hash/hca_sha256.c
-  src/api/hardware/v0.5/hash/hca_sha384.c
-  src/api/hardware/v0.5/hash/hca_sha512.c
-  src/api/hardware/v0.5/hash/hca_sha_miscellaneous.c
-  src/api/hardware/v0.5/random/hca_trng.c
-  src/api/software/asymmetric/ecc/soft_ecc.c
-  src/api/software/asymmetric/ecc/soft_ecdsa.c
-  src/api/software/bignumbers/soft_bignumbers.c
-  src/api/software/hash/soft_sha.c
-  src/api/software/hash/soft_sha224.c
-  src/api/software/hash/soft_sha256.c
-  src/api/software/hash/soft_sha384.c
-  src/api/software/hash/soft_sha512.c
-  src/api/utils.c
+  src/backend/hardware/v0.5/blockcipher/aes/hca_aes.c
+  src/backend/hardware/v0.5/hash/sha/hca_sha_miscellaneous.c
+  src/backend/hardware/v0.5/hash/sha/hca_sha512.c
+  src/backend/hardware/v0.5/hash/sha/hca_sha384.c
+  src/backend/hardware/v0.5/hash/sha/hca_sha256.c
+  src/backend/hardware/v0.5/hash/sha/hca_sha224.c
+  src/backend/hardware/v0.5/hash/sha/hca_sha.c
+  src/backend/hardware/v0.5/random/hca_trng.c
+  src/backend/hardware/hca_utils.c
+  src/backend/software/asymmetric/ecc/soft_ecdsa.c
+  src/backend/software/asymmetric/ecc/soft_ecc.c
+  src/backend/software/bignumbers/soft_bignumbers.c
+  src/backend/software/hash/sha/soft_sha.c
+  src/backend/software/hash/sha/soft_sha224.c
+  src/backend/software/hash/sha/soft_sha256.c
+  src/backend/software/hash/sha/soft_sha384.c
+  src/backend/software/hash/sha/soft_sha512.c
+  src/backend/utils.c
   src/scl_init.c
   src/scl_utils.c
 )

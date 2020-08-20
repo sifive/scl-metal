@@ -36,18 +36,18 @@
 
 #include <scl_cfg.h>
 
-#include <api/scl_api.h>
-#include <api/utils.h>
+#include <backend/api/scl_backend_api.h>
+#include <backend/api/utils.h>
 
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
 #include <scl/scl_utils.h>
 
-#include <api/blockcipher/aes/aes.h>
+#include <backend/api/blockcipher/aes/aes.h>
 
 #include <scl/scl_aes_ccm.h>
 
-#include <api/macro.h>
+#include <backend/api/macro.h>
 
 #define CCM_TQ(t, q) ((uint8_t)((uint8_t)t + ((uint8_t)q << 4)))
 

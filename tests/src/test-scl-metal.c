@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include <api/hardware/scl_hca.h>
+#include <backend/hardware/scl_hca.h>
 #include <metal/machine/platform.h>
 
 #if UINT32_MAX == UINTPTR_MAX

@@ -15,8 +15,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <api/hash/sha.h>
-#include <api/software/scl_soft.h>
+#include <backend/api/hash/sha/sha.h>
+#include <backend/software/scl_soft.h>
 
 static int32_t get_data_for_test(const metal_scl_t *const scl,
                                  uint32_t *data_out);

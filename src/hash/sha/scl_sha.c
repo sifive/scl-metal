@@ -34,7 +34,7 @@
 #include <scl/scl_retdefs.h>
 #include <scl/scl_sha.h>
 
-#include <api/scl_api.h>
+#include <backend/api/scl_backend_api.h>
 
 int32_t scl_sha(const metal_scl_t *const scl_ctx, scl_hash_mode_t algo,
                 const uint8_t *const data, size_t data_len, uint8_t *const hash,

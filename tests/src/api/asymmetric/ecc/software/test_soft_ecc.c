@@ -13,7 +13,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <api/software/scl_soft.h>
+#include <backend/software/scl_soft.h>
 
 /**
  * We use CRYPTO_CONST_DATA qualifier to allow relocation in RAM to speed up

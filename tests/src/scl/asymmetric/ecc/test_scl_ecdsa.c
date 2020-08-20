@@ -15,8 +15,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <api/hash/sha.h>
-#include <api/software/scl_soft.h>
+#include <backend/api/hash/sha/sha.h>
+#include <backend/software/scl_soft.h>
 
 #include <scl/scl_ecdsa.h>
 

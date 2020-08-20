@@ -12,8 +12,8 @@
 
 #include <string.h>
 
-#include <api/scl_api.h>
-#include <api/software/hash/soft_sha.h>
+#include <backend/api/scl_backend_api.h>
+#include <backend/software/hash/sha/soft_sha.h>
 
 TEST_GROUP(soft_sha_256);
 

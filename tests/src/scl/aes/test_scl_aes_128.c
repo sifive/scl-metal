@@ -14,7 +14,7 @@
 
 #include <string.h>
 
-#include <api/scl_api.h>
+#include <backend/api/scl_backend_api.h>
 #include <scl/scl_aes_cbc.h>
 #include <scl/scl_aes_ccm.h>
 #include <scl/scl_aes_cfb.h>
@@ -23,8 +23,7 @@
 #include <scl/scl_aes_gcm.h>
 #include <scl/scl_aes_ofb.h>
 
-#include <api/hardware/scl_hca.h>
-#include <api/scl_api.h>
+#include <backend/hardware/scl_hca.h>
 
 #include <metal/machine/platform.h>
 

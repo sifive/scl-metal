@@ -10,7 +10,7 @@
 #include "unity.h"
 #include "unity_fixture.h"
 
-#include <api/hardware/scl_hca.h>
+#include <backend/hardware/scl_hca.h>
 #include <metal/machine/platform.h>
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)

@@ -12,14 +12,13 @@
 
 #include <string.h>
 
-#include <api/scl_api.h>
+#include <backend/api/scl_backend_api.h>
 #include <scl/scl_sha.h>
 
 #include <scl/scl_init.h>
 
-#include <api/hash/sha.h>
-#include <api/scl_api.h>
-#include <api/software/scl_soft.h>
+#include <backend/api/hash/sha/sha.h>
+#include <backend/software/scl_soft.h>
 
 static const metal_scl_t scl = {.hca_base = 0,
                                 .hash_func = {

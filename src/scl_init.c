@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <api/scl_api.h>
+#include <backend/api/scl_backend_api.h>
 #include <scl_cfg.h>
 
 #include <scl/scl_init.h>
