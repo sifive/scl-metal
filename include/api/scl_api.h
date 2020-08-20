@@ -58,7 +58,7 @@ struct _metal_scl_struct;
 /*! @see _metal_scl_struct */
 typedef struct _metal_scl_struct metal_scl_t;
 
-/*! @brief AESlow level API entry points */
+/*! @brief AES low level API entry points */
 struct __aes_func
 {
     /**
@@ -100,7 +100,7 @@ struct __aes_func
                       const uint8_t *const data_in, size_t data_len,
                       uint8_t *const data_out);
     /**
-     * @brief initiliaze AES cipher with authentication operation
+     * @brief initialize AES cipher with authentication operation
      *
      * @param[in] scl               metal scl context
      * @param[in,out] ctx           aes authenticate context

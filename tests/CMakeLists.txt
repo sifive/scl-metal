@@ -9,6 +9,16 @@ ADD_DEFINITIONS (-Wno-extra-semi-stmt)
 #  this enables running the static analyzer on all the test files, w/o to try
 #  to produce an executable
 ADD_LIBRARY (scl-tests
+  src/test_runners/test_utils_runner.c
+  src/test_runners/test_hca_aes_runner.c
+  src/test_runners/test_hca_sha_runner.c
+  src/test_runners/test_scl_aes_runner.c
+  src/test_runners/test_scl_ecdsa_runner.c
+  src/test_runners/test_scl_sha_runner.c
+  src/test_runners/test_soft_bignumbers_runner.c
+  src/test_runners/test_soft_ecc_runner.c
+  src/test_runners/test_soft_ecdsa_runner.c
+  src/test_runners/test_soft_sha_runner.c
   src/api/aes/hardware/test_hca_aes_128.c
   src/api/aes/hardware/test_hca_aes_192.c
   src/api/aes/hardware/test_hca_aes_256.c
@@ -32,16 +42,6 @@ ADD_LIBRARY (scl-tests
   src/scl/sha/test_scl_sha_256.c
   src/scl/sha/test_scl_sha_384.c
   src/scl/sha/test_scl_sha_512.c
-  src/test_runners/test_hca_aes_runner.c
-  src/test_runners/test_hca_sha_runner.c
-  src/test_runners/test_scl_aes_runner.c
-  src/test_runners/test_scl_ecdsa_runner.c
-  src/test_runners/test_scl_sha_runner.c
-  src/test_runners/test_soft_bignumbers_runner.c
-  src/test_runners/test_soft_ecc_runner.c
-  src/test_runners/test_soft_ecdsa_runner.c
-  src/test_runners/test_soft_sha_runner.c
-  src/test_runners/test_utils_runner.c
 )
 
 IF (NOT DEFINED STATIC_ANALYSIS)

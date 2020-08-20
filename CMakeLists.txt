@@ -16,6 +16,15 @@ enable_warnings_except (
 enable_static_analysis ()
 
 ADD_LIBRARY (scl
+  src/blockcipher/aes/scl_aes_cbc.c
+  src/blockcipher/aes/scl_aes_ccm.c
+  src/blockcipher/aes/scl_aes_cfb.c
+  src/blockcipher/aes/scl_aes_ctr.c
+  src/blockcipher/aes/scl_aes_ecb.c
+  src/blockcipher/aes/scl_aes_gcm.c
+  src/blockcipher/aes/scl_aes_ofb.c
+  src/hash/sha/scl_sha.c
+  src/asymmetric/ecc/scl_ecdsa.c
   src/api/hardware/hca_utils.c
   src/api/hardware/v0.5/blockcipher/aes/hca_aes.c
   src/api/hardware/v0.5/hash/hca_sha.c
@@ -34,15 +43,6 @@ ADD_LIBRARY (scl
   src/api/software/hash/soft_sha384.c
   src/api/software/hash/soft_sha512.c
   src/api/utils.c
-  src/asymmetric/ecc/scl_ecdsa.c
-  src/blockcipher/aes/scl_aes_cbc.c
-  src/blockcipher/aes/scl_aes_ccm.c
-  src/blockcipher/aes/scl_aes_cfb.c
-  src/blockcipher/aes/scl_aes_ctr.c
-  src/blockcipher/aes/scl_aes_ecb.c
-  src/blockcipher/aes/scl_aes_gcm.c
-  src/blockcipher/aes/scl_aes_ofb.c
-  src/hash/sha/scl_sha.c
   src/scl_init.c
   src/scl_utils.c
 )
