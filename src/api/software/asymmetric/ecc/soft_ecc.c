@@ -364,7 +364,7 @@ soft_ecc_infinite_jacobian(const metal_scl_t *const scl,
         return (SCL_INVALID_INPUT);
     }
 
-    if ((point->x[0] != 1) || (point->y[0] != 1))
+    if (((uint32_t)point->x[0] != 1) || ((uint32_t)point->y[0] != 1))
     {
         result = (int32_t) false;
         goto cleanup;
@@ -382,7 +382,8 @@ soft_ecc_infinite_jacobian(const metal_scl_t *const scl,
 
     for (i = 1; i < nb_32b_words; i++)
     {
-        if ((point->x[i] != 0) || (point->y[i] != 0))
+        if ((((uint32_t *)point->y)[i] != 0) ||
+            (((uint32_t *)point->y)[i] != 0))
         {
             result = false;
             goto cleanup;
@@ -625,7 +626,7 @@ int32_t soft_ecc_add_jacobian_jacobian(
 
         /* X3 = X3 - t3 = D^2 -C^3 - 2*AC^2 */
         result = scl->bignum_func.mod_sub(scl, &bignum_ctx, out->x,
-                                          (uint64_t *)t1, out->x, nb_32b_words);
+                                          (uint64_t *)t3, out->x, nb_32b_words);
         if (SCL_OK > result)
         {
             return (result);
@@ -712,7 +713,12 @@ int32_t soft_ecc_double_jacobian(const metal_scl_t *const scl,
     }
     else if (false != result)
     {
-        soft_ecc_jacobian_copy(in, out, nb_32b_words);
+        // return(x2:y2:0)
+        memcpy(out->x, in->x, nb_32b_words * sizeof(uint32_t));
+        memcpy(out->y, in->y, nb_32b_words * sizeof(uint32_t));
+        memset(out->z, 0, nb_32b_words * sizeof(uint32_t));
+
+        // soft_ecc_jacobian_copy(in, out, nb_32b_words);
         return (SCL_OK);
     }
 
@@ -834,6 +840,22 @@ int32_t soft_ecc_double_jacobian(const metal_scl_t *const scl,
             return (result);
         }
 
+        /* Z3 = Y1 * Z1 */
+        result = scl->bignum_func.mod_mult(scl, &bignum_ctx, in->y, in->z,
+                                           out->z, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* Z3 = 2 * Z3 = 2 * Y1 * Z1 */
+        result = scl->bignum_func.mod_add(scl, &bignum_ctx, out->z, out->z,
+                                          out->z, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
         /* X3 = 2 * B */
         result = scl->bignum_func.mod_add(scl, &bignum_ctx, (uint64_t *)b,
                                           (uint64_t *)b, out->x, nb_32b_words);
@@ -891,22 +913,6 @@ int32_t soft_ecc_double_jacobian(const metal_scl_t *const scl,
         {
             return (result);
         }
-
-        /* Z3 = 2 * Y1 */
-        result = scl->bignum_func.mod_add(scl, &bignum_ctx, in->y, in->y,
-                                          out->z, nb_32b_words);
-        if (SCL_OK > result)
-        {
-            return (result);
-        }
-
-        /* Z3 = Z3 * Z1 = 2 * Y1 * Z1 */
-        result = scl->bignum_func.mod_add(scl, &bignum_ctx, out->z, in->z,
-                                          out->z, nb_32b_words);
-        if (SCL_OK > result)
-        {
-            return (result);
-        }
     }
 
     return (SCL_OK);
@@ -914,9 +920,10 @@ int32_t soft_ecc_double_jacobian(const metal_scl_t *const scl,
 
 size_t soft_ecc_bit_extract(uint32_t *array, size_t bit_idx)
 {
-    if (array[bit_idx / sizeof(uint32_t) * __CHAR_BIT__] &
-        ((uint32_t)1 << ((uint32_t)(bit_idx % sizeof(uint32_t) *
-                                    __CHAR_BIT__))))
+
+    if (array[bit_idx / (sizeof(uint32_t) * __CHAR_BIT__)] &
+        ((uint32_t)1 << ((uint32_t)(bit_idx %
+                                    (sizeof(uint32_t) * __CHAR_BIT__)))))
     {
         return (1);
     }

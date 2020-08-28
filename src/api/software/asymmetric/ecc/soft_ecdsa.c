@@ -203,10 +203,6 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
         memset(yq, 0, curve_params->curve_wsize * sizeof(uint32_t));
         copy_swap_array((uint8_t *)yq, pub_key->y, curve_params->curve_bsize);
 
-        /* point contains the curve base point */
-        // point_aff.x = curve_params->xg;
-        // point_aff.y = curve_params->yg;
-
         /* ip_jq structure adapted to the functions APIs */
         for (i = 0; i < SCL_ECDSA_ARRAY_SIZE; i++)
         {

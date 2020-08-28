@@ -33,6 +33,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include <stdio.h>
+
 #include <api/macro.h>
 #include <api/utils.h>
 
@@ -257,6 +259,7 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
     size_t i = 0;
     uint64_t carry = 0;
     uint64_t previous = 0;
+    uint64_t current = 0;
     /*@-noeffect@*/
     (void)scl;
     /*@+noeffect@*/
@@ -274,18 +277,24 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
     for (i = 0; i < nb_32b_words / 2; i++)
     {
         previous = in_a[i];
-        out[i] = in_a[i] + in_b[i];
-        out[i] += carry;
-        carry = out[i] < previous ? (uint64_t)1 : (uint64_t)0;
+        current = in_a[i] + carry;
+        carry = current < previous ? (uint64_t)1 : (uint64_t)0;
+
+        previous = current;
+        out[i] = current + in_b[i];
+        carry |= out[i] < previous ? (uint64_t)1 : (uint64_t)0;
     }
 
     if (0 != nb_32b_words % 2)
     {
         previous = *((const uint32_t *)&in_a[i]);
+        current = *((const uint32_t *)&in_a[i]) + carry;
+        carry = current < previous ? (uint64_t)1 : (uint64_t)0;
+
+        previous = current;
         *((uint32_t *)&out[i]) =
-            *((const uint32_t *)&in_a[i]) + *((const uint32_t *)&in_b[i]);
-        *((uint32_t *)&out[i]) += (uint32_t)carry;
-        carry = *((uint32_t *)&out[i]) < previous ? (uint64_t)1 : (uint64_t)0;
+            (uint32_t)previous + *((const uint32_t *)&in_b[i]);
+        carry |= *((uint32_t *)&out[i]) < previous ? (uint64_t)1 : (uint64_t)0;
     }
 
     /* carry is equal to 0 or 1 */
@@ -403,12 +412,11 @@ int32_t soft_bignum_mult(const metal_scl_t *const scl,
     return (SCL_OK);
 }
 
-
 int32_t soft_bignum_square_with_mult(const metal_scl_t *const scl,
-                           const uint64_t *const input, uint64_t *const out,
-                           size_t nb_32b_words)
+                                     const uint64_t *const input,
+                                     uint64_t *const out, size_t nb_32b_words)
 {
-    return(soft_bignum_mult(scl, input, input, out, nb_32b_words));
+    return (soft_bignum_mult(scl, input, input, out, nb_32b_words));
 }
 
 int32_t soft_bignum_square(const metal_scl_t *const scl,
@@ -511,7 +519,7 @@ int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
         *((uint32_t *)&out[i]) =
             (uint32_t)(in[i - bit_shift_div64] << bit_shift_mod64);
 
-        if (i >= bit_shift_div64 + 1)
+        if ((i >= bit_shift_div64 + 1) && (bit_shift_mod64 != 0))
         {
             *((uint32_t *)&out[i]) |=
                 (uint32_t)(in[i - bit_shift_div64 - 1] >> revshift);
@@ -522,7 +530,10 @@ int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
     {
         i--;
         out[i] = in[i - bit_shift_div64] << bit_shift_mod64;
-        out[i] |= in[i - bit_shift_div64 - 1] >> revshift;
+        if (bit_shift_mod64 != 0)
+        {
+            out[i] |= in[i - bit_shift_div64 - 1] >> revshift;
+        }
     }
 
     if (i > bit_shift_div64)
@@ -932,6 +943,7 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
             {
                 return (result);
             }
+
             memset(remainder, 0, divisor_nb_32b_words * sizeof(uint32_t));
             memcpy(remainder, aux,
                    MIN(divisor_nb_32b_words, p_len) * sizeof(uint32_t));
