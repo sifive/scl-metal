@@ -42,9 +42,15 @@
 #include <api/asymmetric/ecc/ecdsa.h>
 #include <api/scl_api.h>
 
+int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
+                             const ecc_curve_t *const curve_params,
+                             const uint8_t *const priv_key,
+                             ecc_signature_t *const signature,
+                             const uint8_t *const hash, size_t hash_len);
+
 int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
                                 const ecc_affine_point_t *const pub_key,
-                                const ecc_affine_point_t *const signature,
+                                const ecc_signature_t *const signature,
                                 const uint8_t *const hash, size_t hash_len,
                                 const ecc_curve_t *const curve_params);
 

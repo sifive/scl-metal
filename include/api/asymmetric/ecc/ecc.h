@@ -145,6 +145,12 @@ typedef struct ecc_affine_point_s
     uint8_t *y;
 } ecc_affine_point_t;
 
+typedef struct ecc_signature_s
+{
+    uint8_t *r;
+    uint8_t *s;
+} ecc_signature_t;
+
 typedef struct ecc_bignum_affine_point_s
 {
     uint64_t *x;
@@ -164,6 +170,7 @@ typedef struct ecc_curve_s
     const uint64_t *precomputed_1_y;
     size_t curve_wsize;
     size_t curve_bsize;
+    size_t curve_bitsize;
     enum ecc_std_curves_e curve;
 } ecc_curve_t;
 

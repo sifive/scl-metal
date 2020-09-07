@@ -133,6 +133,13 @@ CRYPTO_FUNCTION int32_t soft_ecc_infinite_jacobian(
     const metal_scl_t *const scl,
     const ecc_bignum_jacobian_point_t *const point, size_t nb_32b_words);
 
+int32_t soft_ecc_add_affine_affine(const metal_scl_t *const scl,
+                                   const ecc_curve_t *const curve_params,
+                                   const ecc_bignum_affine_point_t *const in1,
+                                   const ecc_bignum_affine_point_t *const in2,
+                                   ecc_bignum_affine_point_t *const out,
+                                   size_t nb_32b_words);
+
 /**
  * @brief Add 2 jacobian points
  *
@@ -170,12 +177,113 @@ CRYPTO_FUNCTION int32_t soft_ecc_double_jacobian(
     ecc_bignum_jacobian_point_t *const out, size_t nb_32b_words);
 
 /**
- * @brief extract a bit in a bgnum array
+ * @brief extract a bit in a bignum array
  *
  * @param[in] array         bignum array
  * @param[in] bit_idx       bit index to extract
  * @return 1 or 0 depending if the bit is set or not
  */
-size_t soft_ecc_bit_extract(uint32_t *array, size_t bit_idx);
+size_t soft_ecc_bit_extract(const uint32_t *const array, size_t bit_idx);
+
+/**
+ * @brief setting the msbit corresponding to the curve p msb position
+ */
+void soft_ecc_set_msbit_curve(uint32_t *const array, size_t *const array_size,
+                              size_t np, size_t words_tmp,
+                              const ecc_curve_t *const curve_params);
+
+void soft_ecc_msbit_and_size(size_t *const msb, size_t *const msw,
+                             const ecc_curve_t *const curve_params);
+
+/**
+ * @brief (X,Y)-only co-Zaddition with update - XYCZ-ADD
+ * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
+ * Curves (Rivain) algo 18
+ *
+ * @param scl
+ * @param curve_params
+ * @param in1
+ * @param in2
+ * @param out1
+ * @param out2
+ * @return int32_t
+ */
+int32_t soft_ecc_xycz_add(const metal_scl_t *const scl,
+                          const ecc_curve_t *const curve_params,
+                          const ecc_bignum_affine_point_t *const in1,
+                          const ecc_bignum_affine_point_t *const in2,
+                          ecc_bignum_affine_point_t *const out1,
+                          ecc_bignum_affine_point_t *const out2);
+
+/**
+ * @brief (X,Y)-only co-Zconjugate addition - XYCZ-ADDC
+ * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
+ * Curves (Rivain) algo 19
+ *
+ * @param scl
+ * @param curve_params
+ * @param in1
+ * @param in2
+ * @param out1
+ * @param out2
+ * @return int32_t
+ */
+int32_t soft_ecc_xycz_addc(const metal_scl_t *const scl,
+                           const ecc_curve_t *const curve_params,
+                           const ecc_bignum_affine_point_t *const in1,
+                           const ecc_bignum_affine_point_t *const in2,
+                           ecc_bignum_affine_point_t *const out1,
+                           ecc_bignum_affine_point_t *const out2);
+
+/**
+ * @brief (X,Y)-only initial doubling with Co-Z Update - XYCZ-IDBL
+ * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
+ * Curves (Rivain) algo 23
+ *
+ * @param scl
+ * @param curve_params
+ * @param in
+ * @param out1
+ * @param out2
+ * @return int32_t
+ */
+int32_t soft_ecc_xycz_idbl(const metal_scl_t *const scl,
+                           const ecc_curve_t *const curve_params,
+                           const ecc_bignum_affine_point_t *const in,
+                           ecc_bignum_affine_point_t *const out1,
+                           ecc_bignum_affine_point_t *const out2);
+
+/**
+ * @brief Montgomery ladder with(X,Y)-only co-Zaddition
+ * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
+ * Curves (Rivain) algo 9
+ *
+ * @param[in] scl
+ * @param curve_params
+ * @param q
+ * @param k
+ * @param size
+ * @param point
+ * @return int32_t
+ */
+
+/**
+ * @brief Montgomery ladder with(X,Y)-only co-Zaddition  q = k * point
+ * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
+ * Curves (Rivain) algo 9
+ *
+ * @param[in] scl
+ * @param[in] curve_params
+ * @param[in] point
+ * @param[in] k
+ * @param[in] k_nb_32bits_words
+ * @param[out] q
+ * @return int32_t
+ */
+int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
+                          const ecc_curve_t *const curve_params,
+                          const ecc_bignum_affine_point_t *const point,
+                          const uint64_t *const k, size_t k_nb_32bits_words,
+                          ecc_bignum_affine_point_t *const q);
 
 #endif /* SCL_BACKEND_SOFT_ECC_H */

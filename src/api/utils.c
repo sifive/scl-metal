@@ -176,3 +176,31 @@ void copy_swap_array(uint8_t *const dest, const uint8_t *const source,
         dest[i] = source[length - 1 - i];
     }
 }
+
+void truncate_array(uint8_t *const array, size_t array_size,
+                    size_t max_bit_count)
+{
+    size_t i;
+
+    if (array_size * __CHAR_BIT__ <= max_bit_count)
+    {
+        return;
+    }
+
+    i = max_bit_count / __CHAR_BIT__;
+
+    if (0 != max_bit_count % __CHAR_BIT__)
+    {
+        array[i] &=
+            (uint8_t)(0xFF >> (__CHAR_BIT__ - (max_bit_count % __CHAR_BIT__)));
+    }
+
+    i++;
+
+    for (; i < array_size; i++)
+    {
+        array[i] = 0;
+    }
+
+    return;
+}

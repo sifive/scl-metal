@@ -91,6 +91,7 @@ const ecc_curve_t ecc_secp256r1 = {ecc_a_p256r1,
                                    ecc_precomputed_1_y_p256r1,
                                    ECC_SECP256R1_32B_WORDS_SIZE,
                                    ECC_SECP256R1_BYTESIZE,
+                                   ECC_SECP256R1_BITSIZE,
                                    ECC_SECP256R1};
 
 /* SECP384R1 */
@@ -137,6 +138,7 @@ const ecc_curve_t ecc_secp384r1 = {ecc_a_p384r1,
                                    ecc_precomputed_1_y_p384r1,
                                    ECC_SECP384R1_32B_WORDS_SIZE,
                                    ECC_SECP384R1_BYTESIZE,
+                                   ECC_SECP384R1_BITSIZE,
                                    ECC_SECP384R1};
 
 /* SECP521R1 */
@@ -192,6 +194,7 @@ const ecc_curve_t ecc_secp521r1 = {ecc_a_p521r1,
                                    ecc_precomputed_1_y_p521r1,
                                    ECC_SECP521R1_32B_WORDS_SIZE,
                                    ECC_SECP521R1_BYTESIZE,
+                                   ECC_SECP521R1_BITSIZE,
                                    ECC_SECP521R1};
 
 void soft_ecc_affine_copy(const ecc_bignum_affine_point_t *const src,
@@ -392,6 +395,131 @@ soft_ecc_infinite_jacobian(const metal_scl_t *const scl,
     result = true;
 cleanup:
     return (result);
+}
+
+int32_t soft_ecc_add_affine_affine(const metal_scl_t *const scl,
+                                   const ecc_curve_t *const curve_params,
+                                   const ecc_bignum_affine_point_t *const in1,
+                                   const ecc_bignum_affine_point_t *const in2,
+                                   ecc_bignum_affine_point_t *const out,
+                                   size_t nb_32b_words)
+{
+    int32_t result;
+    bignum_ctx_t bignum_ctx;
+
+    if ((NULL == scl) || (NULL == curve_params) || (NULL == in1) ||
+        (NULL == in2) || (NULL == out))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl->bignum_func.set_modulus) ||
+        (NULL == scl->bignum_func.mod_square) ||
+        (NULL == scl->bignum_func.mod_add) ||
+        (NULL == scl->bignum_func.mod_sub) ||
+        (NULL == scl->bignum_func.mod_mult))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    /* check length consistency */
+    if (nb_32b_words != curve_params->curve_wsize)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    {
+        uint32_t lambda[nb_32b_words] __attribute__((aligned(8)));
+        uint32_t tmp1[nb_32b_words] __attribute__((aligned(8)));
+        uint32_t tmp2[nb_32b_words] __attribute__((aligned(8)));
+
+        result = scl->bignum_func.set_modulus(scl, &bignum_ctx, curve_params->p,
+                                              nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result = scl->bignum_func.mod_sub(scl, &bignum_ctx, in2->x, in1->x,
+                                          (uint64_t *)tmp1, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result = scl->bignum_func.mod_inv(scl, &bignum_ctx, (uint64_t *)tmp1,
+                                          (uint64_t *)tmp2, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result = scl->bignum_func.mod_sub(scl, &bignum_ctx, in2->y, in1->y,
+                                          (uint64_t *)tmp1, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)tmp1,
+                                           (uint64_t *)tmp2, (uint64_t *)lambda,
+                                           nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        // x3=lambda^2-x1-x2
+        result =
+            scl->bignum_func.mod_square(scl, &bignum_ctx, (uint64_t *)lambda,
+                                        (uint64_t *)tmp1, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result =
+            scl->bignum_func.mod_sub(scl, &bignum_ctx, (uint64_t *)tmp1, in1->x,
+                                     (uint64_t *)tmp2, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        // x3  =lambda^2 mod p-x1-x2
+        result = scl->bignum_func.mod_sub(scl, &bignum_ctx, (uint64_t *)tmp2,
+                                          in2->x, out->x, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        // y3=lambda*(x1-x3)-y1
+        result = scl->bignum_func.mod_sub(scl, &bignum_ctx, in1->x, out->x,
+                                          (uint64_t *)tmp2, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)lambda,
+                                           (uint64_t *)tmp2, (uint64_t *)tmp1,
+                                           nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        // y3=lambda * (x1-x3)-y1
+        result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)tmp1,
+                                           in1->y, out->y, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+    }
+
+    return (SCL_OK);
 }
 
 int32_t soft_ecc_add_jacobian_jacobian(
@@ -918,7 +1046,7 @@ int32_t soft_ecc_double_jacobian(const metal_scl_t *const scl,
     return (SCL_OK);
 }
 
-size_t soft_ecc_bit_extract(uint32_t *array, size_t bit_idx)
+size_t soft_ecc_bit_extract(const uint32_t *const array, size_t bit_idx)
 {
 
     if (array[bit_idx / (sizeof(uint32_t) * __CHAR_BIT__)] &
@@ -931,4 +1059,812 @@ size_t soft_ecc_bit_extract(uint32_t *array, size_t bit_idx)
     {
         return (0);
     }
+}
+
+void soft_ecc_set_msbit_curve(uint32_t *const array, size_t *const array_size,
+                              size_t np, size_t words_tmp,
+                              const ecc_curve_t *const curve_params)
+{
+    /**
+     * if the P msb position is not at the word type msb position
+     * we can use the same word for setting the msb
+     */
+    if ((curve_params->p[words_tmp - 1] >>
+         (sizeof(uint32_t) * __CHAR_BIT__ - 1)) == 0)
+    {
+        array[curve_params->curve_wsize - 1] +=
+            (uint32_t)(1 << (np % (sizeof(uint32_t) * __CHAR_BIT__)));
+        *array_size = (uint32_t)curve_params->curve_wsize;
+    }
+    else
+    /**
+     * but if the curve P msb position is max in the word type, we need to add
+     * the extra 1 bit in a new word
+     */
+    {
+        array[curve_params->curve_wsize] = 1;
+        *array_size = (uint32_t)curve_params->curve_wsize + 1;
+    }
+}
+
+void soft_ecc_msbit_and_size(size_t *const msb, size_t *const msw,
+                             const ecc_curve_t *const curve_params)
+{
+    /* theoretical position of the msb */
+    *msb = curve_params->curve_wsize * sizeof(uint32_t) * __CHAR_BIT__;
+    /* theoretical position of the msw */
+    *msw = curve_params->curve_wsize;
+    /* 1-search the highest non null word in curve n */
+    while (curve_params->n[*msw - 1] == 0)
+    {
+        (*msw)--;
+        (*msb) -= sizeof(uint32_t) * __CHAR_BIT__;
+    }
+    /* 2-in this msw, look for the msb */
+    while ((*msb > 0) &&
+           (soft_ecc_bit_extract((const uint32_t *)curve_params->n,
+                                 (*msb) - 1) == 0))
+    {
+        (*msb)--;
+    }
+}
+
+int32_t soft_ecc_xycz_add(const metal_scl_t *const scl,
+                          const ecc_curve_t *const curve_params,
+                          const ecc_bignum_affine_point_t *const in1,
+                          const ecc_bignum_affine_point_t *const in2,
+                          ecc_bignum_affine_point_t *const out1,
+                          ecc_bignum_affine_point_t *const out2)
+{
+    int32_t result;
+    bignum_ctx_t bignum_ctx;
+
+    if ((NULL == scl) || (NULL == curve_params) || (NULL == in1) ||
+        (NULL == in2) || (NULL == out1) || (NULL == out2))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == in1->x) || (NULL == in1->y) || (NULL == in2->x) ||
+        (NULL == in2->y) || (NULL == out1->x) || (NULL == out1->y) ||
+        (NULL == out2->x) || (NULL == out2->y))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    {
+        uint32_t t1[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t2[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t3[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t4[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t5[curve_params->curve_wsize] __attribute__((aligned(8)));
+
+        memcpy(t1, in1->x, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(t2, in1->y, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(t3, in2->x, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(t4, in2->y, curve_params->curve_wsize * sizeof(uint32_t));
+
+        result = scl->bignum_func.set_modulus(scl, &bignum_ctx, curve_params->p,
+                                              curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 1. t5 = t3 - t1 = X2 - X1 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t1,
+            (uint64_t *)t5, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 2. t5 = t5^2 = (X2 - X1)^2 = A */
+        result = scl->bignum_func.mod_square(
+            scl, &bignum_ctx, (const uint64_t *)t5, (uint64_t *)t5,
+            curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 3. t1 = t1 * t5 = X1 * A = B */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t1, (const uint64_t *)t5,
+            (uint64_t *)t1, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 4. t3 = t3 * t5 = X2*A = C */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t5,
+            (uint64_t *)t3, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 5. t4 =  t4 - t2 = Y2 - Y1 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t4, (const uint64_t *)t2,
+            (uint64_t *)t4, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 6. t5 = t4^2 = (Y2 - Y1)^2 = D */
+        result = scl->bignum_func.mod_square(
+            scl, &bignum_ctx, (const uint64_t *)t4, (uint64_t *)t5,
+            curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 7. t5 = t5 - t1 = D - B */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t5, (const uint64_t *)t1,
+            (uint64_t *)t5, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 8. t5 = t5 - t3 = X3 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t5, (const uint64_t *)t3,
+            (uint64_t *)t5, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 9. t3 = t3 - t1 = C - B */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t1,
+            (uint64_t *)t3, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 10. t2 = t2 * t3 = Y1 * (C - B) */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t2, (const uint64_t *)t3,
+            (uint64_t *)t2, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 11. t3 = t1 - t5 = B - X3 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t1, (const uint64_t *)t5,
+            (uint64_t *)t3, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 12. t4 = t4 * t3 = (Y2 - Y1) * (B - X3) */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t4, (const uint64_t *)t3,
+            (uint64_t *)t4, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 13. t4 = t4 - t2 = Y3 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t4, (const uint64_t *)t2,
+            (uint64_t *)t4, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        memcpy(out1->x, t5, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(out1->y, t4, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(out2->x, t1, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(out2->y, t2, curve_params->curve_wsize * sizeof(uint32_t));
+    }
+
+    return (SCL_OK);
+}
+
+int32_t soft_ecc_xycz_addc(const metal_scl_t *const scl,
+                           const ecc_curve_t *const curve_params,
+                           const ecc_bignum_affine_point_t *const in1,
+                           const ecc_bignum_affine_point_t *const in2,
+                           ecc_bignum_affine_point_t *const out1,
+                           ecc_bignum_affine_point_t *const out2)
+{
+    int32_t result;
+    bignum_ctx_t bignum_ctx;
+
+    if ((NULL == scl) || (NULL == curve_params) || (NULL == in1) ||
+        (NULL == in2) || (NULL == out1) || (NULL == out2))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == in1->x) || (NULL == in1->y) || (NULL == in2->x) ||
+        (NULL == in2->y) || (NULL == out1->x) || (NULL == out1->y) ||
+        (NULL == out2->x) || (NULL == out2->y))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    {
+        uint32_t t1[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t2[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t3[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t4[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t5[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t6[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t7[curve_params->curve_wsize] __attribute__((aligned(8)));
+
+        memcpy(t1, in1->x, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(t2, in1->y, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(t3, in2->x, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(t4, in2->y, curve_params->curve_wsize * sizeof(uint32_t));
+
+        result = scl->bignum_func.set_modulus(scl, &bignum_ctx, curve_params->p,
+                                              curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 1. t5 = t3 - t1 = X2 - X1 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t1,
+            (uint64_t *)t5, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 2. t5 = t5^2 = (X2 - X1)^2 = A */
+        result = scl->bignum_func.mod_square(
+            scl, &bignum_ctx, (const uint64_t *)t5, (uint64_t *)t5,
+            curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 3. t1 = t1 * t5 = X1 * A = B */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t1, (const uint64_t *)t5,
+            (uint64_t *)t1, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 4. t3 = t3 * t5 = X2 * A = C */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t5,
+            (uint64_t *)t3, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 5. t5 = t4 + t2 = Y1 + Y2 */
+        result = scl->bignum_func.mod_add(
+            scl, &bignum_ctx, (const uint64_t *)t4, (const uint64_t *)t2,
+            (uint64_t *)t5, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 6. t4 = t4 - t2 = Y1 - Y2 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t4, (const uint64_t *)t2,
+            (uint64_t *)t4, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 7. t6 = t3 - t1 = C - B */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t1,
+            (uint64_t *)t6, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 8. t2 = t2 * t6 = Y1 * (C - B) */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t2, (const uint64_t *)t6,
+            (uint64_t *)t2, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 9. t6 = t3 + t1 = B + C */
+        result = scl->bignum_func.mod_add(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t1,
+            (uint64_t *)t6, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 10. t3 = t4^2 = (Y2 - Y1)^2 */
+        result = scl->bignum_func.mod_square(
+            scl, &bignum_ctx, (const uint64_t *)t4, (uint64_t *)t3,
+            curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 11. t3 = t3 - t6 = X3 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t6,
+            (uint64_t *)t3, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 12. t7 = t1 - t3 = B - X3 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t1, (const uint64_t *)t3,
+            (uint64_t *)t7, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 13. t4 = t4 * t7 = (Y1 - Y2)(B - X3) */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t4, (const uint64_t *)t7,
+            (uint64_t *)t4, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 14. t4 = t4 - t2 = Y3 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t4, (const uint64_t *)t2,
+            (uint64_t *)t4, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 15. t7 = t5^2 = (Y2 + Y1)^2 = F */
+        result = scl->bignum_func.mod_square(
+            scl, &bignum_ctx, (const uint64_t *)t5, (uint64_t *)t7,
+            curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 16. t7 = t7 - t6 = X3' */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t7, (const uint64_t *)t6,
+            (uint64_t *)t7, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 17. t6 = t7 - t1 = X3' - B */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t7, (const uint64_t *)t1,
+            (uint64_t *)t6, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 18. t6 = t6 * t5 = (Y1 + Y2)(X3' - B) */
+        result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)t6,
+                                           (uint64_t *)t5, (uint64_t *)t6,
+                                           curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 19. t6 = t6 - t2 = Y3' */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t6, (const uint64_t *)t2,
+            (uint64_t *)t6, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        memcpy(out1->x, t3, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(out1->y, t4, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(out2->x, t7, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(out2->y, t6, curve_params->curve_wsize * sizeof(uint32_t));
+    }
+
+    return (SCL_OK);
+}
+
+int32_t soft_ecc_xycz_idbl(const metal_scl_t *const scl,
+                           const ecc_curve_t *const curve_params,
+                           const ecc_bignum_affine_point_t *const in,
+                           ecc_bignum_affine_point_t *const out1,
+                           ecc_bignum_affine_point_t *const out2)
+{
+    int32_t result;
+    bignum_ctx_t bignum_ctx;
+
+    if ((NULL == scl) || (NULL == curve_params) || (NULL == in) ||
+        (NULL == out1) || (NULL == out2))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == in->x) || (NULL == in->y) || (NULL == out1->x) ||
+        (NULL == out1->y) || (NULL == out2->x) || (NULL == out2->y))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    {
+        uint32_t t1[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t2[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t3[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t4[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t5[curve_params->curve_wsize] __attribute__((aligned(8)));
+        uint32_t t6[curve_params->curve_wsize] __attribute__((aligned(8)));
+
+        memcpy(t1, in->x, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(t2, in->y, curve_params->curve_wsize * sizeof(uint32_t));
+
+        result = scl->bignum_func.set_modulus(scl, &bignum_ctx, curve_params->p,
+                                              curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 1. t3 = t1^2 = x1^2 */
+        result = scl->bignum_func.mod_square(
+            scl, &bignum_ctx, (const uint64_t *)t1, (uint64_t *)t3,
+            curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 2. t4 = 2 * t3 = 2 * x1^2 */
+        result = scl->bignum_func.mod_add(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t3,
+            (uint64_t *)t4, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 3. t3 = t3 + t4 = 3 * x1^2 */
+        result = scl->bignum_func.mod_add(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t4,
+            (uint64_t *)t3, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 4. t3 = t3 + a(curve_param) = 3 * x1^2 + a(curve_param) = B */
+        result = scl->bignum_func.mod_add(
+            scl, &bignum_ctx, (const uint64_t *)t3, curve_params->a,
+            (uint64_t *)t3, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 5. t4 = t2^2 = y1^2 */
+        result = scl->bignum_func.mod_square(
+            scl, &bignum_ctx, (const uint64_t *)t2, (uint64_t *)t4,
+            curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 6. t4 = 2 * t4 = 2 * y1^2 */
+        result = scl->bignum_func.mod_add(
+            scl, &bignum_ctx, (const uint64_t *)t4, (const uint64_t *)t4,
+            (uint64_t *)t4, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 7. t5 = 2 * t4 = 4 * y1^2 */
+        result = scl->bignum_func.mod_add(
+            scl, &bignum_ctx, (const uint64_t *)t4, (const uint64_t *)t4,
+            (uint64_t *)t5, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 8. t5 = t5 * t1 = 4 * x1 * y1^2 = X1' = A */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t1, (const uint64_t *)t5,
+            (uint64_t *)t5, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 9. t6 = t3^2 = B^2 */
+        result = scl->bignum_func.mod_square(
+            scl, &bignum_ctx, (const uint64_t *)t3, (uint64_t *)t6,
+            curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 10. t6 = t6 - t5 = B^2 - A */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t6, (const uint64_t *)t5,
+            (uint64_t *)t6, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 11. t6 = t6 - t5 = X2 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t6, (const uint64_t *)t5,
+            (uint64_t *)t6, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 12. t1 = t5 - t6 = A - X2 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t5, (const uint64_t *)t6,
+            (uint64_t *)t1, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 13. t1 = t1 * t3 = B * (A - X2) */
+        result = scl->bignum_func.mod_mult(
+            scl, &bignum_ctx, (const uint64_t *)t1, (const uint64_t *)t3,
+            (uint64_t *)t1, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 14. t3 = t4^2 = 4*y1^4 */
+        result = scl->bignum_func.mod_square(
+            scl, &bignum_ctx, (const uint64_t *)t4, (uint64_t *)t3,
+            curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 15. t3 = 2 * t3 = 8 * y1^4 = Y1' */
+        result = scl->bignum_func.mod_add(
+            scl, &bignum_ctx, (const uint64_t *)t3, (const uint64_t *)t3,
+            (uint64_t *)t3, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 16. t1 = t1 - t3 = Y2 */
+        result = scl->bignum_func.mod_sub(
+            scl, &bignum_ctx, (const uint64_t *)t1, (const uint64_t *)t3,
+            (uint64_t *)t1, curve_params->curve_wsize);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        memcpy(out1->x, t6, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(out1->y, t1, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(out2->x, t5, curve_params->curve_wsize * sizeof(uint32_t));
+        memcpy(out2->y, t3, curve_params->curve_wsize * sizeof(uint32_t));
+    }
+    return (SCL_OK);
+}
+
+int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
+                          const ecc_curve_t *const curve_params,
+                          const ecc_bignum_affine_point_t *const point,
+                          const uint64_t *const k, size_t k_nb_32bits_words,
+                          ecc_bignum_affine_point_t *const q)
+{
+    int32_t result;
+    size_t i, n, b;
+    bignum_ctx_t bignum_ctx;
+    ecc_bignum_affine_point_t p[2];
+
+    if ((NULL == scl) || (NULL == curve_params) || (NULL == q) || (NULL == k) ||
+        (NULL == point))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    uint32_t xr_0[curve_params->curve_wsize] __attribute__((aligned(8)));
+    uint32_t yr_0[curve_params->curve_wsize] __attribute__((aligned(8)));
+    uint32_t xr_1[curve_params->curve_wsize] __attribute__((aligned(8)));
+    uint32_t yr_1[curve_params->curve_wsize] __attribute__((aligned(8)));
+    uint32_t lambda[curve_params->curve_wsize] __attribute__((aligned(8)));
+    uint32_t lambda2[curve_params->curve_wsize] __attribute__((aligned(8)));
+
+    /* 1. xycz-idbl */
+    p[0].x = (uint64_t *)xr_0;
+    p[0].y = (uint64_t *)yr_0;
+    p[1].x = (uint64_t *)xr_1;
+    p[1].y = (uint64_t *)yr_1;
+
+    result = soft_ecc_xycz_idbl(scl, curve_params, point, &p[1], &p[0]);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    /* 2.for i=n-2 downto 1 do */
+    n = k_nb_32bits_words * sizeof(uint32_t) * 8;
+
+    while ((n > 0) && (soft_ecc_bit_extract((const uint32_t *)k, n - 1) == 0))
+    {
+        n--;
+    }
+
+    for (i = n - 2; i >= 1; i--)
+    {
+        /* 3. b=k_i */
+        b = soft_ecc_bit_extract((const uint32_t *)k, i);
+
+        /* 4.(r1-b,rb)=xycz-addc(rb,r1-b) */
+        result = soft_ecc_xycz_addc(scl, curve_params, &p[b], &p[1 - b],
+                                    &p[1 - b], &p[b]);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+
+        /* 5.(rb,r1-b)=xycz-add(r1-b,rb) */
+        result = soft_ecc_xycz_add(scl, curve_params, &p[1 - b], &p[b], &p[b],
+                                   &p[1 - b]);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
+    }
+
+    /* 7. b=k0 */
+    b = k[0] & 1;
+
+    /* 8. (r1-b,rb)=xycz-addc(rb,r1-b) */
+    result = soft_ecc_xycz_addc(scl, curve_params, &p[b], &p[1 - b], &p[1 - b],
+                                &p[b]);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result = scl->bignum_func.set_modulus(scl, &bignum_ctx, curve_params->p,
+                                          curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    /* 9. lambda=finallnvz(r0,r1,p,b); */
+    result =
+        scl->bignum_func.mod_sub(scl, &bignum_ctx, p[1].x, p[0].x,
+                                 (uint64_t *)lambda, curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)lambda,
+                                       p[b].y, (uint64_t *)lambda,
+                                       curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)lambda,
+                                       point->x, (uint64_t *)lambda,
+                                       curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result =
+        scl->bignum_func.mod_inv(scl, &bignum_ctx, (uint64_t *)lambda,
+                                 (uint64_t *)lambda, curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)lambda,
+                                       point->y, (uint64_t *)lambda,
+                                       curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)lambda,
+                                       p[b].x, (uint64_t *)lambda,
+                                       curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    /* 10. (rb,r1-b)=xycz-add(r1-b,rb) */
+    result = soft_ecc_xycz_add(scl, curve_params, &p[1 - b], &p[b], &p[b],
+                               &p[1 - b]);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    /* 11. return.. */
+    /* x0.lambda */
+    result = scl->bignum_func.mod_square(scl, &bignum_ctx, (uint64_t *)lambda,
+                                         (uint64_t *)lambda2,
+                                         curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)lambda2,
+                                       p[0].x, q->x, curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    /* y0.lambda */
+    result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)lambda,
+                                       (uint64_t *)lambda2, (uint64_t *)lambda2,
+                                       curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)lambda2,
+                                       p[0].y, q->y, curve_params->curve_wsize);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    return (SCL_OK);
 }
