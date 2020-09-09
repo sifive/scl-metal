@@ -42,6 +42,8 @@
 #include <api/asymmetric/ecc/ecc.h>
 #include <api/software/asymmetric/ecc/soft_ecc.h>
 
+#include <api/software/bignumbers/soft_bignumbers.h>
+
 /* SECP256R1 */
 static uint64_t ecc_xg_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
     0xf4a13945d898c296, 0x77037d812deb33a0, 0xf8bce6e563a440f2,
@@ -80,19 +82,20 @@ static const uint64_t ecc_square_p_p256r1[ECC_SECP256R1_64B_WORDS_SIZE * 2] = {
 static const ecc_bignum_affine_point_t ecc_g_p256r1 = {ecc_xg_p256r1,
                                                        ecc_yg_p256r1};
 
-const ecc_curve_t ecc_secp256r1 = {ecc_a_p256r1,
-                                   ecc_b_p256r1,
-                                   ecc_p_p256r1,
-                                   ecc_n_p256r1,
-                                   &ecc_g_p256r1,
-                                   ecc_inverse_2_p256r1,
-                                   ecc_square_p_p256r1,
-                                   ecc_precomputed_1_x_p256r1,
-                                   ecc_precomputed_1_y_p256r1,
-                                   ECC_SECP256R1_32B_WORDS_SIZE,
-                                   ECC_SECP256R1_BYTESIZE,
-                                   ECC_SECP256R1_BITSIZE,
-                                   ECC_SECP256R1};
+const ecc_curve_t ecc_secp256r1 = {
+    .a = ecc_a_p256r1,
+    .b = ecc_b_p256r1,
+    .p = ecc_p_p256r1,
+    .n = ecc_n_p256r1,
+    .g = &ecc_g_p256r1,
+    .inverse_2 = ecc_inverse_2_p256r1,
+    .square_p = ecc_square_p_p256r1,
+    .precomputed_1_x = ecc_precomputed_1_x_p256r1,
+    .precomputed_1_y = ecc_precomputed_1_y_p256r1,
+    .curve_wsize = ECC_SECP256R1_32B_WORDS_SIZE,
+    .curve_bsize = ECC_SECP256R1_BYTESIZE,
+    .curve_bitsize = ECC_SECP256R1_BITSIZE,
+    .curve = ECC_SECP256R1};
 
 /* SECP384R1 */
 static uint64_t ecc_xg_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
@@ -124,22 +127,29 @@ static const uint64_t ecc_inverse_2_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
     0x0000000080000000, 0x7fffffff80000000, 0xffffffffffffffff,
     0xffffffffffffffff, 0xffffffffffffffff, 0x7fffffffffffffff};
 
+static const uint64_t ecc_square_p_p384r1[ECC_SECP384R1_64B_WORDS_SIZE * 2] = {
+    0xFFFFFFFE00000001, 0x0000000200000000, 0xFFFFFFFE00000000,
+    0x0000000200000000, 0x0000000000000001, 0x0000000000000000,
+    0x00000001FFFFFFFE, 0xFFFFFFFE00000000, 0xFFFFFFFFFFFFFFFD,
+    0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF};
+
 static const ecc_bignum_affine_point_t ecc_g_p384r1 = {ecc_xg_p384r1,
                                                        ecc_yg_p384r1};
 
-const ecc_curve_t ecc_secp384r1 = {ecc_a_p384r1,
-                                   ecc_b_p384r1,
-                                   ecc_p_p384r1,
-                                   ecc_n_p384r1,
-                                   &ecc_g_p384r1,
-                                   ecc_inverse_2_p384r1,
-                                   NULL,
-                                   ecc_precomputed_1_x_p384r1,
-                                   ecc_precomputed_1_y_p384r1,
-                                   ECC_SECP384R1_32B_WORDS_SIZE,
-                                   ECC_SECP384R1_BYTESIZE,
-                                   ECC_SECP384R1_BITSIZE,
-                                   ECC_SECP384R1};
+const ecc_curve_t ecc_secp384r1 = {
+    .a = ecc_a_p384r1,
+    .b = ecc_b_p384r1,
+    .p = ecc_p_p384r1,
+    .n = ecc_n_p384r1,
+    .g = &ecc_g_p384r1,
+    .inverse_2 = ecc_inverse_2_p384r1,
+    .square_p = ecc_square_p_p384r1,
+    .precomputed_1_x = ecc_precomputed_1_x_p384r1,
+    .precomputed_1_y = ecc_precomputed_1_y_p384r1,
+    .curve_wsize = ECC_SECP384R1_32B_WORDS_SIZE,
+    .curve_bsize = ECC_SECP384R1_BYTESIZE,
+    .curve_bitsize = ECC_SECP384R1_BITSIZE,
+    .curve = ECC_SECP384R1};
 
 /* SECP521R1 */
 static uint64_t ecc_xg_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
@@ -180,22 +190,31 @@ static const uint64_t ecc_inverse_2_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000100};
 
+static const uint64_t ecc_square_p_p521r1[ECC_SECP521R1_64B_WORDS_SIZE * 2] = {
+    0x0000000000000001, 0x0000000000000000, 0x0000000000000000,
+    0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
+    0x0000000000000000, 0x0000000000000000, 0xFFFFFFFFFFFFFC00,
+    0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
+    0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
+    0xFFFFFFFFFFFFFFFF, 0x000000000003FFFF, 0x0000000000000000};
+
 static const ecc_bignum_affine_point_t ecc_g_p521r1 = {ecc_xg_p521r1,
                                                        ecc_yg_p521r1};
 
-const ecc_curve_t ecc_secp521r1 = {ecc_a_p521r1,
-                                   ecc_b_p521r1,
-                                   ecc_p_p521r1,
-                                   ecc_n_p521r1,
-                                   &ecc_g_p521r1,
-                                   ecc_inverse_2_p521r1,
-                                   NULL,
-                                   ecc_precomputed_1_x_p521r1,
-                                   ecc_precomputed_1_y_p521r1,
-                                   ECC_SECP521R1_32B_WORDS_SIZE,
-                                   ECC_SECP521R1_BYTESIZE,
-                                   ECC_SECP521R1_BITSIZE,
-                                   ECC_SECP521R1};
+const ecc_curve_t ecc_secp521r1 = {
+    .a = ecc_a_p521r1,
+    .b = ecc_b_p521r1,
+    .p = ecc_p_p521r1,
+    .n = ecc_n_p521r1,
+    .g = &ecc_g_p521r1,
+    .inverse_2 = ecc_inverse_2_p521r1,
+    .square_p = ecc_square_p_p521r1,
+    .precomputed_1_x = ecc_precomputed_1_x_p521r1,
+    .precomputed_1_y = ecc_precomputed_1_y_p521r1,
+    .curve_wsize = ECC_SECP521R1_32B_WORDS_SIZE,
+    .curve_bsize = ECC_SECP521R1_BYTESIZE,
+    .curve_bitsize = ECC_SECP521R1_BITSIZE,
+    .curve = ECC_SECP521R1};
 
 void soft_ecc_affine_copy(const ecc_bignum_affine_point_t *const src,
                           ecc_bignum_affine_point_t *const dst,
@@ -1867,4 +1886,305 @@ int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
     }
 
     return (SCL_OK);
+}
+
+/**
+ * Modular Arthmetic optimized for ecc
+ */
+
+int32_t soft_ecc_mod_secp384r1(const metal_scl_t *const scl,
+                               const uint64_t *const in, size_t in_nb_32b_words,
+                               const uint64_t *const modulus,
+                               size_t modulus_nb_32b_words,
+                               uint64_t *const remainder)
+{
+    int32_t result = 0;
+    int32_t carry = 0;
+
+    const uint32_t *in32 = (const uint32_t *)in;
+
+    /* NOTE: We use NIST.FIPS 186-4 notation */
+    uint32_t a[ECC_SECP384R1_32B_WORDS_SIZE * 2] __attribute__((aligned(8)));
+    uint32_t s[ECC_SECP384R1_32B_WORDS_SIZE] __attribute__((aligned(8)));
+
+    size_t i;
+
+    if ((NULL == scl) || (NULL == in) || (NULL == modulus) ||
+        (NULL == remainder))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.add))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    /* output should be modulus size */
+    if ((in_nb_32b_words > ECC_SECP384R1_32B_WORDS_SIZE * 2) &&
+        (modulus_nb_32b_words != ECC_SECP384R1_32B_WORDS_SIZE))
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    /**
+     * We use an intermediate buffer here instead of using direcly in buffer and
+     * branching to manage length
+     */
+    for (i = 0; i < in_nb_32b_words; i++)
+    {
+        a[i] = in32[i];
+    }
+
+    for (; i < ECC_SECP384R1_32B_WORDS_SIZE * 2; i++)
+    {
+        a[i] = 0;
+    }
+
+    /* s2 */
+    for (i = 0; i < ECC_SECP384R1_32B_WORDS_SIZE; i++)
+    {
+        s[i] = a[i + 12];
+    }
+
+    result = scl->bignum_func.add(scl, (uint64_t *)a, (uint64_t *)s, remainder,
+                                  ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry = result;
+
+    /* s3 */
+    s[0] = a[21];
+    s[1] = a[22];
+    s[2] = a[23];
+    /* s3..s11=a12..a20 */
+    for (i = 3; i < ECC_SECP384R1_32B_WORDS_SIZE; i++)
+    {
+        s[i] = a[i + 9];
+    }
+
+    result = scl->bignum_func.add(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* s4 */
+    s[0] = 0;
+    s[1] = a[23];
+    s[2] = 0;
+    s[3] = a[20];
+
+    for (i = 4; i < ECC_SECP384R1_32B_WORDS_SIZE; i++)
+    {
+        s[i] = a[8 + i];
+    }
+
+    result = scl->bignum_func.add(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* s1 */
+    memset(s, 0, sizeof(s));
+    s[4] = a[21];
+    s[5] = a[22];
+    s[6] = a[23];
+
+    /* 2 * s1 */
+    result = scl->bignum_func.add(scl, (uint64_t *)s, (uint64_t *)s,
+                                  (uint64_t *)s, ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* 2 * s1 + previous */
+    result = scl->bignum_func.add(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* s5 */
+    s[4] = a[20];
+    s[5] = a[21];
+    s[6] = a[22];
+    s[7] = a[23];
+
+    result = scl->bignum_func.add(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* s6 */
+    s[0] = a[20];
+    s[3] = a[21];
+    s[4] = a[22];
+    s[5] = a[23];
+    s[6] = 0;
+    s[7] = 0;
+
+    result = scl->bignum_func.add(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* d2 (computed now because very close to s6 */
+    s[0] = 0;
+    s[1] = a[20];
+    s[2] = a[21];
+    s[3] = a[22];
+    s[4] = a[23];
+    s[5] = 0;
+
+    result = scl->bignum_func.sub(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry -= result;
+
+    /*  d3 (computed now because very close to d2) */
+    s[1] = 0;
+    s[2] = 0;
+    s[3] = a[23];
+
+    result = scl->bignum_func.sub(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry -= result;
+
+    /* d1 */
+    s[0] = a[23];
+    for (i = 1; i < ECC_SECP384R1_32B_WORDS_SIZE; i++)
+    {
+        s[i] = a[i + 11];
+    }
+
+    result = scl->bignum_func.sub(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry -= result;
+
+    if (carry < 0)
+    {
+        while (carry < 0)
+        {
+            result = scl->bignum_func.add(scl, remainder, modulus, remainder,
+                                          ECC_SECP384R1_32B_WORDS_SIZE);
+            if (SCL_OK > result)
+            {
+                return (result);
+            }
+
+            carry += result;
+        }
+    }
+    else
+    {
+        while ((carry != 0) ||
+               (0 < scl->bignum_func.compare(scl, remainder, modulus,
+                                             ECC_SECP384R1_32B_WORDS_SIZE)))
+        {
+            result = scl->bignum_func.sub(scl, remainder, modulus, remainder,
+                                          ECC_SECP384R1_32B_WORDS_SIZE);
+            if (SCL_OK > result)
+            {
+                return (result);
+            }
+
+            carry -= result;
+        }
+    }
+
+    return (result);
+}
+
+int32_t soft_ecc_mod(const metal_scl_t *const scl, const uint64_t *const in,
+                     size_t in_nb_32b_words, const uint64_t *const modulus,
+                     size_t modulus_nb_32b_words, uint64_t *const remainder)
+{
+    int32_t result = 0;
+
+    if ((NULL == scl) || (NULL == in) || (NULL == ecc_secp384r1.square_p))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl->bignum_func.compare_len_diff))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    // if ((ecc_p_p256r1 == modulus) && (ECC_SECP256R1_32B_WORDS_SIZE ==
+    // modulus_nb_32b_words))
+    // {
+
+    // }
+    // else if ((ecc_p_p384r1 == modulus) && (ECC_SECP384R1_32B_WORDS_SIZE ==
+    // modulus_nb_32b_words))
+    // {
+
+    // }
+    // else if ((ecc_p_p521r1 == modulus) && (ECC_SECP521R1_32B_WORDS_SIZE ==
+    // modulus_nb_32b_words))
+    // {
+
+    // }
+
+    if ((ecc_secp384r1.p == modulus) &&
+        (ECC_SECP384R1_32B_WORDS_SIZE == modulus_nb_32b_words))
+    {
+        result = scl->bignum_func.compare_len_diff(
+            scl, in, in_nb_32b_words, ecc_secp384r1.square_p,
+            ECC_SECP384R1_32B_WORDS_SIZE * 2);
+        if (0 <= result)
+        {
+            return (SCL_ERROR);
+        }
+
+        result = soft_ecc_mod_secp384r1(scl, in, in_nb_32b_words, modulus,
+                                        modulus_nb_32b_words, remainder);
+    }
+    else
+    {
+        result = soft_bignum_mod(scl, in, in_nb_32b_words, modulus,
+                                 modulus_nb_32b_words, remainder);
+    }
+
+    return (result);
 }

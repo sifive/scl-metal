@@ -286,4 +286,52 @@ int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
                           const uint64_t *const k, size_t k_nb_32bits_words,
                           ecc_bignum_affine_point_t *const q);
 
+/**
+ * Modular Arthmetic optimized for ecc
+ */
+
+/**
+ * @brief compute modulus p param for curve secp381r1
+ * @details perform : remainder = in mod modulus
+ *
+ * @param[in] scl                   metal scl context
+ * @param[in] in                    input big integer (on which the modulus is
+ * applied)
+ * @param[in] in_nb_32b_words       number of 32 words in input array
+ * @param[in] modulus               modulus big integer to apply
+ * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
+ * @param[out] remainder            remainder array (big integer)
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @note remainder should be at least of length equal to modulus_nb_32b_words
+ * @warning This function might call @ref soft_bignum_div depending on scl
+ * content and therefore have buffer allocation on stack
+ */
+int32_t soft_ecc_mod_secp384r1(const metal_scl_t *const scl,
+                               const uint64_t *const in, size_t in_nb_32b_words,
+                               const uint64_t *const modulus,
+                               size_t modulus_nb_32b_words,
+                               uint64_t *const remainder);
+
+/**
+ * @brief compute modulus with optimizations for standards curves
+ * @details perform : remainder = in mod modulus
+ *
+ * @param[in] scl                   metal scl context
+ * @param[in] in                    input big integer (on which the modulus is
+ * applied)
+ * @param[in] in_nb_32b_words       number of 32 words in input array
+ * @param[in] modulus               modulus big integer to apply
+ * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
+ * @param[out] remainder            remainder array (big integer)
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @note remainder should be at least of length equal to modulus_nb_32b_words
+ * @warning This function might call @ref soft_bignum_div depending on scl
+ * content and therefore have buffer allocation on stack
+ */
+int32_t soft_ecc_mod(const metal_scl_t *const scl, const uint64_t *const in,
+                     size_t in_nb_32b_words, const uint64_t *const modulus,
+                     size_t modulus_nb_32b_words, uint64_t *const remainder);
+
 #endif /* SCL_BACKEND_SOFT_ECC_H */
