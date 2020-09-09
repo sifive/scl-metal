@@ -148,7 +148,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_add(const metal_scl_t *const scl,
                                         size_t nb_32b_words);
 
 /**
- * @brief Do big number ber subtraction
+ * @brief Do big number subtraction
  *
  * @param[in] scl           metal scl context
  * @param[in] in_a              Input array a

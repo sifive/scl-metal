@@ -257,9 +257,9 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
                         uint64_t *const out, size_t nb_32b_words)
 {
     size_t i = 0;
-    uint64_t carry = 0;
-    uint64_t previous = 0;
-    uint64_t current = 0;
+    uint32_t carry = 0;
+    uint64_t result = 0;
+    uint32_t result32 = 0;
     /*@-noeffect@*/
     (void)scl;
     /*@+noeffect@*/
@@ -276,25 +276,21 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
 
     for (i = 0; i < nb_32b_words / 2; i++)
     {
-        previous = in_a[i];
-        current = in_a[i] + carry;
-        carry = current < previous ? (uint64_t)1 : (uint64_t)0;
-
-        previous = current;
-        out[i] = current + in_b[i];
-        carry |= out[i] < previous ? (uint64_t)1 : (uint64_t)0;
+        result = in_a[i] + in_b[i] + carry;
+        carry = (carry && (in_a[i] == 0xFFFFFFFFFFFFFFFFUL))
+                    ? 1
+                    : ((result < in_b[i]) ? 1 : 0);
+        out[i] = result;
     }
 
     if (0 != nb_32b_words % 2)
     {
-        previous = *((const uint32_t *)&in_a[i]);
-        current = *((const uint32_t *)&in_a[i]) + carry;
-        carry = current < previous ? (uint64_t)1 : (uint64_t)0;
-
-        previous = current;
-        *((uint32_t *)&out[i]) =
-            (uint32_t)previous + *((const uint32_t *)&in_b[i]);
-        carry |= *((uint32_t *)&out[i]) < previous ? (uint64_t)1 : (uint64_t)0;
+        result32 = *((const uint32_t *)&in_a[i]) +
+                   *((const uint32_t *)&in_b[i]) + carry;
+        carry = (carry && (*((const uint32_t *)&in_a[i]) == 0xFFFFFFFFUL))
+                    ? 1
+                    : ((result32 < *((const uint32_t *)&in_b[i])) ? 1 : 0);
+        *((uint32_t *)&out[i]) = result32;
     }
 
     /* carry is equal to 0 or 1 */
@@ -307,8 +303,8 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
 {
     size_t i = 0;
     uint64_t borrow = 0;
-    uint64_t previous = 0;
-    uint64_t current = 0;
+    uint64_t result = 0;
+    uint32_t result32 = 0;
     /*@-noeffect@*/
     (void)scl;
     /*@+noeffect@*/
@@ -325,25 +321,21 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
 
     for (i = 0; i < nb_32b_words / 2; i++)
     {
-        previous = in_a[i];
-        current = in_a[i] - borrow;
-        borrow = current > previous ? (uint64_t)1 : (uint64_t)0;
-
-        previous = current;
-        out[i] = current - in_b[i];
-        borrow |= out[i] > previous ? (uint64_t)1 : (uint64_t)0;
+        result = in_a[i] - in_b[i] - borrow;
+        borrow = (borrow && (in_b[i] == 0xFFFFFFFFFFFFFFFFUL))
+                     ? 1
+                     : ((result > in_a[i]) ? 1 : 0);
+        out[i] = result;
     }
 
     if (0 != nb_32b_words % 2)
     {
-        previous = *((const uint32_t *)&in_a[i]);
-        current = *((const uint32_t *)&in_a[i]) - borrow;
-        borrow = current > previous ? (uint64_t)1 : (uint64_t)0;
-
-        previous = current;
-        *((uint32_t *)&out[i]) =
-            (uint32_t)current - *((const uint32_t *)&in_b[i]);
-        borrow |= *((uint32_t *)&out[i]) > previous ? (uint64_t)1 : (uint64_t)0;
+        result32 = (*((const uint32_t *)&in_a[i]) -
+                    *((const uint32_t *)&in_b[i]) - (uint32_t)borrow);
+        borrow = (borrow && (*((const uint32_t *)&in_b[i]) == 0xFFFFFFFFUL))
+                     ? 1
+                     : ((result32 > *((const uint32_t *)&in_a[i])) ? 1 : 0);
+        *((uint32_t *)&out[i]) = result32;
     }
 
     /* borrow is equal to 0 or 1 */
