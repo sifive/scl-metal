@@ -101,6 +101,9 @@ else
 	endif
 endif
 
+FILTER_PATTERN = -O0 -Os
+override CFLAGS := $(filter-out $(FILTER_PATTERN),$(CFLAGS)) -Ofast
+
 ################################################################################
 #                               MACROS
 ################################################################################
@@ -121,7 +124,7 @@ libscl.a: $(OBJS) err
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c err
 	$(HIDE) mkdir -p $(dir $@)
-	$(HIDE) $(CC) $(CFLAGS) -ggdb3 -c -o $@ $<
+	$(HIDE) $(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY : check-format
 check-format:
