@@ -305,8 +305,8 @@ struct __bignum_func
      * @param[in] in_b              Input array b
      * @param[out] out              Output array (addition result)
      * @param[in] nb_32b_words      number of 32 bits words to use in calcul
-     * @return 0 success
-     * @return != 0 otherwise @ref scl_errors_t
+     * @return >= 0  carry from the operation
+     * @return < 0 otherwise @ref scl_errors_t
      * @warning Warning the big number need to be little endian convert if
      * necessary
      * @warning nb_32b_words is limited to 0x3FFFFFFF
@@ -325,14 +325,14 @@ struct __bignum_func
      * @param[in] in_b              Input array b
      * @param[out] out              Output array (substration result)
      * @param[in] nb_32b_words      number of 32 bits words to use in calcul
-     * @return 0 success
-     * @return != 0 otherwise @ref scl_errors_t
+     * @return >= 0  carry from the operation
+     * @return < 0 otherwise @ref scl_errors_t
      * @warning Warning the big number need to be little endian convert if
      * necessary
      * @warning nb_32b_words is limited to 0x3FFFFFFF
      * @warning bignumber in input are considered unsigned
-     * @warning carry is set when in_a < in_b (in case a positive number is
-     * intended, you can do a bitwise not)
+     * @warning borrow is set when in_a < in_b (in case a positive number is
+     * intended, you can use negate function)
      * @note it is safe to reuse any input buffer as output buffer
      */
     int32_t (*sub)(const metal_scl_t *const scl,
