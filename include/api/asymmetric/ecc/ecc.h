@@ -145,6 +145,12 @@ typedef struct ecc_affine_point_s
     uint8_t *y;
 } ecc_affine_point_t;
 
+typedef struct ecc_affine_const_point_s
+{
+    const uint8_t *x;
+    const uint8_t *y;
+} ecc_affine_const_point_t;
+
 typedef struct ecc_signature_s
 {
     uint8_t *r;

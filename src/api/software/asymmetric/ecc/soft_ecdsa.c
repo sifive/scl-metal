@@ -508,10 +508,10 @@ cleanup:
 }
 
 int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
-                                const ecc_affine_point_t *const pub_key,
+                                const ecc_curve_t *const curve_params,
+                                const ecc_affine_const_point_t *const pub_key,
                                 const ecc_signature_t *const signature,
-                                const uint8_t *const hash, size_t hash_len,
-                                const ecc_curve_t *const curve_params)
+                                const uint8_t *const hash, size_t hash_len)
 {
     int32_t result;
     bignum_ctx_t bignum_ctx;
@@ -595,7 +595,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
                                           curve_params->curve_wsize);
         if (result >= 0)
         {
-            result = SCL_ERROR;
+            result = SCL_ERR_SIGNATURE;
             goto cleanup;
         }
 
@@ -603,21 +603,21 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
                                           curve_params->curve_wsize);
         if (result >= 0)
         {
-            result = SCL_ERROR;
+            result = SCL_ERR_SIGNATURE;
             goto cleanup;
         }
 
         result = scl->bignum_func.is_null(scl, r, curve_params->curve_wsize);
         if (false != result)
         {
-            result = SCL_ERROR;
+            result = SCL_ERR_SIGNATURE;
             goto cleanup;
         }
 
         result = scl->bignum_func.is_null(scl, s, curve_params->curve_wsize);
         if (false != result)
         {
-            result = SCL_ERROR;
+            result = SCL_ERR_SIGNATURE;
             goto cleanup;
         }
 
@@ -824,7 +824,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
         /* if (r==v) the signature is ok */
         if (0 != memcmp(r, z1, curve_params->curve_wsize * sizeof(uint32_t)))
         {
-            result = SCL_ERROR;
+            result = SCL_ERR_SIGNATURE;
             goto cleanup;
         }
     }

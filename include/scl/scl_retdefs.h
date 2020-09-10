@@ -90,6 +90,9 @@ typedef enum
     /*! @brief error on parity */
     SCL_ERR_PARITY = -20,
 
+    /*! @brief error signature */
+    SCL_ERR_SIGNATURE = -21,
+
     /*! @brief error functionnality not present */
     SCL_NOT_PRESENT = -30,
     /*! @brief error functionnality not yet supported */

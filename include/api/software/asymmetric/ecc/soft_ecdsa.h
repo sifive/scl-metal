@@ -49,9 +49,9 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
                              const uint8_t *const hash, size_t hash_len);
 
 int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
-                                const ecc_affine_point_t *const pub_key,
+                                const ecc_curve_t *const curve_params,
+                                const ecc_affine_const_point_t *const pub_key,
                                 const ecc_signature_t *const signature,
-                                const uint8_t *const hash, size_t hash_len,
-                                const ecc_curve_t *const curve_params);
+                                const uint8_t *const hash, size_t hash_len);
 
 #endif /* SCL_BACKEND_SOFT_ECDSA_H */
