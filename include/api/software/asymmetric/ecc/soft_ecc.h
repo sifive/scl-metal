@@ -133,12 +133,22 @@ CRYPTO_FUNCTION int32_t soft_ecc_infinite_jacobian(
     const metal_scl_t *const scl,
     const ecc_bignum_jacobian_point_t *const point, size_t nb_32b_words);
 
-int32_t soft_ecc_add_affine_affine(const metal_scl_t *const scl,
-                                   const ecc_curve_t *const curve_params,
-                                   const ecc_bignum_affine_point_t *const in1,
-                                   const ecc_bignum_affine_point_t *const in2,
-                                   ecc_bignum_affine_point_t *const out,
-                                   size_t nb_32b_words);
+/**
+ * @brief
+ *
+ * @param scl
+ * @param curve_params
+ * @param in1
+ * @param in2
+ * @param out
+ * @param nb_32b_words
+ * @return CRYPTO_FUNCTION
+ */
+CRYPTO_FUNCTION int32_t soft_ecc_add_affine_affine(
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_affine_point_t *const in1,
+    const ecc_bignum_affine_point_t *const in2,
+    ecc_bignum_affine_point_t *const out, size_t nb_32b_words);
 
 /**
  * @brief Add 2 jacobian points
@@ -183,17 +193,20 @@ CRYPTO_FUNCTION int32_t soft_ecc_double_jacobian(
  * @param[in] bit_idx       bit index to extract
  * @return 1 or 0 depending if the bit is set or not
  */
-size_t soft_ecc_bit_extract(const uint32_t *const array, size_t bit_idx);
+CRYPTO_FUNCTION size_t soft_ecc_bit_extract(const uint32_t *const array,
+                                            size_t bit_idx);
 
 /**
  * @brief setting the msbit corresponding to the curve p msb position
  */
-void soft_ecc_set_msbit_curve(uint32_t *const array, size_t *const array_size,
-                              size_t np, size_t words_tmp,
-                              const ecc_curve_t *const curve_params);
+CRYPTO_FUNCTION void
+soft_ecc_set_msbit_curve(uint32_t *const array, size_t *const array_size,
+                         size_t np, size_t words_tmp,
+                         const ecc_curve_t *const curve_params);
 
-void soft_ecc_msbit_and_size(size_t *const msb, size_t *const msw,
-                             const ecc_curve_t *const curve_params);
+CRYPTO_FUNCTION void
+soft_ecc_msbit_and_size(size_t *const msb, size_t *const msw,
+                        const ecc_curve_t *const curve_params);
 
 /**
  * @brief (X,Y)-only co-Zaddition with update - XYCZ-ADD
@@ -208,12 +221,12 @@ void soft_ecc_msbit_and_size(size_t *const msb, size_t *const msw,
  * @param out2
  * @return int32_t
  */
-int32_t soft_ecc_xycz_add(const metal_scl_t *const scl,
-                          const ecc_curve_t *const curve_params,
-                          const ecc_bignum_affine_point_t *const in1,
-                          const ecc_bignum_affine_point_t *const in2,
-                          ecc_bignum_affine_point_t *const out1,
-                          ecc_bignum_affine_point_t *const out2);
+CRYPTO_FUNCTION int32_t soft_ecc_xycz_add(
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_affine_point_t *const in1,
+    const ecc_bignum_affine_point_t *const in2,
+    ecc_bignum_affine_point_t *const out1,
+    ecc_bignum_affine_point_t *const out2);
 
 /**
  * @brief (X,Y)-only co-Zconjugate addition - XYCZ-ADDC
@@ -228,12 +241,12 @@ int32_t soft_ecc_xycz_add(const metal_scl_t *const scl,
  * @param out2
  * @return int32_t
  */
-int32_t soft_ecc_xycz_addc(const metal_scl_t *const scl,
-                           const ecc_curve_t *const curve_params,
-                           const ecc_bignum_affine_point_t *const in1,
-                           const ecc_bignum_affine_point_t *const in2,
-                           ecc_bignum_affine_point_t *const out1,
-                           ecc_bignum_affine_point_t *const out2);
+CRYPTO_FUNCTION int32_t soft_ecc_xycz_addc(
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_affine_point_t *const in1,
+    const ecc_bignum_affine_point_t *const in2,
+    ecc_bignum_affine_point_t *const out1,
+    ecc_bignum_affine_point_t *const out2);
 
 /**
  * @brief (X,Y)-only initial doubling with Co-Z Update - XYCZ-IDBL
@@ -247,25 +260,11 @@ int32_t soft_ecc_xycz_addc(const metal_scl_t *const scl,
  * @param out2
  * @return int32_t
  */
-int32_t soft_ecc_xycz_idbl(const metal_scl_t *const scl,
-                           const ecc_curve_t *const curve_params,
-                           const ecc_bignum_affine_point_t *const in,
-                           ecc_bignum_affine_point_t *const out1,
-                           ecc_bignum_affine_point_t *const out2);
-
-/**
- * @brief Montgomery ladder with(X,Y)-only co-Zaddition
- * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
- * Curves (Rivain) algo 9
- *
- * @param[in] scl
- * @param curve_params
- * @param q
- * @param k
- * @param size
- * @param point
- * @return int32_t
- */
+CRYPTO_FUNCTION int32_t soft_ecc_xycz_idbl(
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_affine_point_t *const in,
+    ecc_bignum_affine_point_t *const out1,
+    ecc_bignum_affine_point_t *const out2);
 
 /**
  * @brief Montgomery ladder with(X,Y)-only co-Zaddition  q = k * point
@@ -280,15 +279,37 @@ int32_t soft_ecc_xycz_idbl(const metal_scl_t *const scl,
  * @param[out] q
  * @return int32_t
  */
-int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
-                          const ecc_curve_t *const curve_params,
-                          const ecc_bignum_affine_point_t *const point,
-                          const uint64_t *const k, size_t k_nb_32bits_words,
-                          ecc_bignum_affine_point_t *const q);
+CRYPTO_FUNCTION int32_t soft_ecc_mult_coz(
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_affine_point_t *const point, const uint64_t *const k,
+    size_t k_nb_32bits_words, ecc_bignum_affine_point_t *const q);
 
 /**
  * Modular Arthmetic optimized for ecc
  */
+/**
+ * @brief compute modulus p param for curve secp256r1
+ * @details perform : remainder = in mod modulus
+ *
+ * @param[in] scl                   metal scl context
+ * @param[in] in                    input big integer (on which the modulus is
+ * applied)
+ * @param[in] in_nb_32b_words       number of 32 words in input array
+ * @param[in] modulus               modulus big integer to apply
+ * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
+ * @param[out] remainder            remainder array (big integer)
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @note remainder should be at least of length equal to modulus_nb_32b_words
+ * @warning This function might call @ref soft_bignum_div depending on scl
+ * content and therefore have buffer allocation on stack
+ */
+CRYPTO_FUNCTION int32_t soft_ecc_mod_secp256r1(const metal_scl_t *const scl,
+                                               const uint64_t *const in,
+                                               size_t in_nb_32b_words,
+                                               const uint64_t *const modulus,
+                                               size_t modulus_nb_32b_words,
+                                               uint64_t *const remainder);
 
 /**
  * @brief compute modulus p param for curve secp381r1
@@ -307,11 +328,36 @@ int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
  * @warning This function might call @ref soft_bignum_div depending on scl
  * content and therefore have buffer allocation on stack
  */
-int32_t soft_ecc_mod_secp384r1(const metal_scl_t *const scl,
-                               const uint64_t *const in, size_t in_nb_32b_words,
-                               const uint64_t *const modulus,
-                               size_t modulus_nb_32b_words,
-                               uint64_t *const remainder);
+CRYPTO_FUNCTION int32_t soft_ecc_mod_secp384r1(const metal_scl_t *const scl,
+                                               const uint64_t *const in,
+                                               size_t in_nb_32b_words,
+                                               const uint64_t *const modulus,
+                                               size_t modulus_nb_32b_words,
+                                               uint64_t *const remainder);
+
+/**
+ * @brief compute modulus p param for curve secp521r1
+ * @details perform : remainder = in mod modulus
+ *
+ * @param[in] scl                   metal scl context
+ * @param[in] in                    input big integer (on which the modulus is
+ * applied)
+ * @param[in] in_nb_32b_words       number of 32 words in input array
+ * @param[in] modulus               modulus big integer to apply
+ * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
+ * @param[out] remainder            remainder array (big integer)
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @note remainder should be at least of length equal to modulus_nb_32b_words
+ * @warning This function might call @ref soft_bignum_div depending on scl
+ * content and therefore have buffer allocation on stack
+ */
+CRYPTO_FUNCTION int32_t soft_ecc_mod_secp521r1(const metal_scl_t *const scl,
+                                               const uint64_t *const in,
+                                               size_t in_nb_32b_words,
+                                               const uint64_t *const modulus,
+                                               size_t modulus_nb_32b_words,
+                                               uint64_t *const remainder);
 
 /**
  * @brief compute modulus with optimizations for standards curves
@@ -330,8 +376,11 @@ int32_t soft_ecc_mod_secp384r1(const metal_scl_t *const scl,
  * @warning This function might call @ref soft_bignum_div depending on scl
  * content and therefore have buffer allocation on stack
  */
-int32_t soft_ecc_mod(const metal_scl_t *const scl, const uint64_t *const in,
-                     size_t in_nb_32b_words, const uint64_t *const modulus,
-                     size_t modulus_nb_32b_words, uint64_t *const remainder);
+CRYPTO_FUNCTION int32_t soft_ecc_mod(const metal_scl_t *const scl,
+                                     const uint64_t *const in,
+                                     size_t in_nb_32b_words,
+                                     const uint64_t *const modulus,
+                                     size_t modulus_nb_32b_words,
+                                     uint64_t *const remainder);
 
 #endif /* SCL_BACKEND_SOFT_ECC_H */

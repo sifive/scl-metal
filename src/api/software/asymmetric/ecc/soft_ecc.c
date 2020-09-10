@@ -1892,6 +1892,243 @@ int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
  * Modular Arthmetic optimized for ecc
  */
 
+int32_t soft_ecc_mod_secp256r1(const metal_scl_t *const scl,
+                               const uint64_t *const in, size_t in_nb_32b_words,
+                               const uint64_t *const modulus,
+                               size_t modulus_nb_32b_words,
+                               uint64_t *const remainder)
+{
+    int32_t result = 0;
+    int32_t carry = 0;
+
+    const uint32_t *in32 = (const uint32_t *)in;
+
+    /* NOTE: We use NIST.FIPS 186-4 notation */
+    uint32_t a[ECC_SECP256R1_32B_WORDS_SIZE * 2] __attribute__((aligned(8)));
+    uint32_t s[ECC_SECP256R1_32B_WORDS_SIZE] __attribute__((aligned(8)));
+
+    size_t i;
+
+    if ((NULL == scl) || (NULL == in) || (NULL == modulus) ||
+        (NULL == remainder))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.add))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    /* output should be modulus size */
+    if ((in_nb_32b_words > ECC_SECP256R1_32B_WORDS_SIZE * 2) &&
+        (modulus_nb_32b_words != ECC_SECP256R1_32B_WORDS_SIZE))
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    for (i = 0; i < in_nb_32b_words; i++)
+    {
+        a[i] = in32[i];
+    }
+
+    for (; i < ECC_SECP256R1_32B_WORDS_SIZE * 2; i++)
+    {
+        a[i] = 0;
+    }
+
+    /* s1 */
+    s[0] = s[1] = s[2] = 0;
+    s[3] = a[11];
+    s[4] = a[12];
+    s[5] = a[13];
+    s[6] = a[14];
+    s[7] = a[15];
+
+    /* 2*s1 -> we add twice */
+    result = scl->bignum_func.add(scl, (uint64_t *)s, (uint64_t *)s,
+                                  (uint64_t *)s, ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+    carry = result;
+
+    result = scl->bignum_func.add(scl, (uint64_t *)a, (uint64_t *)s, remainder,
+                                  ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* s2 */
+    s[7] = 0;
+    s[3] = a[12];
+    s[4] = a[13];
+    s[5] = a[14];
+    s[6] = a[15];
+
+    result = scl->bignum_func.add(scl, (uint64_t *)s, (uint64_t *)s,
+                                  (uint64_t *)s, ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    result = scl->bignum_func.add(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* s3 */
+    s[3] = s[4] = s[5] = 0;
+    s[0] = a[8];
+    s[1] = a[9];
+    s[2] = a[10];
+    s[6] = a[14];
+    s[7] = a[15];
+
+    result = scl->bignum_func.add(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* s4 */
+    s[0] = a[9];
+    s[1] = a[10];
+    s[2] = a[11];
+    s[3] = a[13];
+    s[4] = a[14];
+    s[5] = a[15];
+    s[6] = a[13];
+    s[7] = a[8];
+
+    result = scl->bignum_func.add(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    /* d1 */
+    s[3] = s[4] = s[5] = 0;
+    s[0] = a[11];
+    s[1] = a[12];
+    s[2] = a[13];
+    s[6] = a[8];
+    s[7] = a[10];
+
+    result = scl->bignum_func.sub(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry -= result;
+
+    /* d2 */
+    s[0] = a[12];
+    s[1] = a[13];
+    s[2] = a[14];
+    s[3] = a[15];
+    s[6] = a[9];
+    s[7] = a[11];
+
+    result = scl->bignum_func.sub(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry -= result;
+
+    /* d3 */
+    s[6] = 0;
+    s[0] = a[13];
+    s[1] = a[14];
+    s[2] = a[15];
+    s[3] = a[8];
+    s[4] = a[9];
+    s[5] = a[10];
+    s[7] = a[12];
+
+    result = scl->bignum_func.sub(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry -= result;
+
+    /* d4 */
+    s[2] = 0;
+    s[0] = a[14];
+    s[1] = a[15];
+    s[3] = a[9];
+    s[4] = a[10];
+    s[5] = a[11];
+    s[7] = a[13];
+
+    result = scl->bignum_func.sub(scl, remainder, (uint64_t *)s, remainder,
+                                  ECC_SECP256R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry -= result;
+
+    if (carry < 0)
+    {
+        while (carry < 0)
+        {
+            result = scl->bignum_func.add(scl, remainder, modulus, remainder,
+                                          ECC_SECP256R1_32B_WORDS_SIZE);
+            if (SCL_OK > result)
+            {
+                return (result);
+            }
+
+            carry += result;
+        }
+    }
+    else
+    {
+        while ((carry != 0) ||
+               (0 < scl->bignum_func.compare(scl, remainder, modulus,
+                                             ECC_SECP256R1_32B_WORDS_SIZE)))
+        {
+            result = scl->bignum_func.sub(scl, remainder, modulus, remainder,
+                                          ECC_SECP256R1_32B_WORDS_SIZE);
+            if (SCL_OK > result)
+            {
+                return (result);
+            }
+
+            carry -= result;
+        }
+    }
+
+    return (result);
+}
+
 int32_t soft_ecc_mod_secp384r1(const metal_scl_t *const scl,
                                const uint64_t *const in, size_t in_nb_32b_words,
                                const uint64_t *const modulus,
@@ -2134,13 +2371,129 @@ int32_t soft_ecc_mod_secp384r1(const metal_scl_t *const scl,
     return (result);
 }
 
+int32_t soft_ecc_mod_secp521r1(const metal_scl_t *const scl,
+                               const uint64_t *const in, size_t in_nb_32b_words,
+                               const uint64_t *const modulus,
+                               size_t modulus_nb_32b_words,
+                               uint64_t *const remainder)
+{
+    int32_t result = 0;
+    int32_t carry = 0;
+
+    uint32_t temp;
+
+    const uint32_t *in32 = (const uint32_t *)in;
+
+    /* NOTE: We use NIST.FIPS 186-4 notation */
+
+    /*
+     * Warnings here, we use 64 bit word size lenght on purpose, to maintain
+     * two 8 bytes aligned blocks
+     */
+    uint32_t a[ECC_SECP521R1_64B_WORDS_SIZE * 4] __attribute__((aligned(8)));
+
+    size_t i;
+
+    if ((NULL == scl) || (NULL == in) || (NULL == modulus) ||
+        (NULL == remainder))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.add))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    /* output should be modulus size */
+    if ((in_nb_32b_words > ECC_SECP521R1_32B_WORDS_SIZE * 2) &&
+        (modulus_nb_32b_words != ECC_SECP521R1_32B_WORDS_SIZE))
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    /**
+     * We use an intermediate buffer here instead of using direcly in buffer and
+     * branching to manage length
+     */
+
+    /* copy all inputs */
+    for (i = 0; i < in_nb_32b_words; i++)
+    {
+        a[i] = in32[i];
+    }
+
+    /* zeroise what's remain */
+    for (; i < ECC_SECP521R1_32B_WORDS_SIZE; i++)
+    {
+        a[i] = 0;
+    }
+
+    /* shift 521 msb to split in 2 buffer aligned on 8 bytes */
+    temp = a[ECC_SECP521R1_32B_WORDS_SIZE - 1] & 0x1FF;
+
+    result = scl->bignum_func.leftshift(
+        scl, (uint64_t *)&a[ECC_SECP521R1_32B_WORDS_SIZE - 1],
+        (uint64_t *)&a[ECC_SECP521R1_32B_WORDS_SIZE - 1],
+        2 * sizeof(uint32_t) - 9, ECC_SECP521R1_32B_WORDS_SIZE + 1);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    a[ECC_SECP521R1_32B_WORDS_SIZE - 1] = temp;
+
+    result = scl->bignum_func.add(
+        scl, (uint64_t *)&a[ECC_SECP521R1_64B_WORDS_SIZE * 2], (uint64_t *)a,
+        remainder, ECC_SECP384R1_32B_WORDS_SIZE);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    carry += result;
+
+    if (carry < 0)
+    {
+        while (carry < 0)
+        {
+            result = scl->bignum_func.add(scl, remainder, modulus, remainder,
+                                          ECC_SECP521R1_32B_WORDS_SIZE);
+            if (SCL_OK > result)
+            {
+                return (result);
+            }
+
+            carry += result;
+        }
+    }
+    else
+    {
+        while ((carry != 0) ||
+               (0 < scl->bignum_func.compare(scl, remainder, modulus,
+                                             ECC_SECP521R1_32B_WORDS_SIZE)))
+        {
+            result = scl->bignum_func.sub(scl, remainder, modulus, remainder,
+                                          ECC_SECP521R1_32B_WORDS_SIZE);
+            if (SCL_OK > result)
+            {
+                return (result);
+            }
+
+            carry -= result;
+        }
+    }
+
+    return (result);
+}
+
 int32_t soft_ecc_mod(const metal_scl_t *const scl, const uint64_t *const in,
                      size_t in_nb_32b_words, const uint64_t *const modulus,
                      size_t modulus_nb_32b_words, uint64_t *const remainder)
 {
     int32_t result = 0;
 
-    if ((NULL == scl) || (NULL == in) || (NULL == ecc_secp384r1.square_p))
+    if ((NULL == scl))
     {
         return (SCL_INVALID_INPUT);
     }
@@ -2150,24 +2503,22 @@ int32_t soft_ecc_mod(const metal_scl_t *const scl, const uint64_t *const in,
         return (SCL_ERROR_API_ENTRY_POINT);
     }
 
-    // if ((ecc_p_p256r1 == modulus) && (ECC_SECP256R1_32B_WORDS_SIZE ==
-    // modulus_nb_32b_words))
-    // {
+    if ((ecc_p_p256r1 == modulus) &&
+        (ECC_SECP256R1_32B_WORDS_SIZE == modulus_nb_32b_words))
+    {
+        result = scl->bignum_func.compare_len_diff(
+            scl, in, in_nb_32b_words, ecc_secp256r1.square_p,
+            ECC_SECP256R1_32B_WORDS_SIZE * 2);
+        if (0 <= result)
+        {
+            return (SCL_ERROR);
+        }
 
-    // }
-    // else if ((ecc_p_p384r1 == modulus) && (ECC_SECP384R1_32B_WORDS_SIZE ==
-    // modulus_nb_32b_words))
-    // {
-
-    // }
-    // else if ((ecc_p_p521r1 == modulus) && (ECC_SECP521R1_32B_WORDS_SIZE ==
-    // modulus_nb_32b_words))
-    // {
-
-    // }
-
-    if ((ecc_secp384r1.p == modulus) &&
-        (ECC_SECP384R1_32B_WORDS_SIZE == modulus_nb_32b_words))
+        result = soft_ecc_mod_secp256r1(scl, in, in_nb_32b_words, modulus,
+                                        modulus_nb_32b_words, remainder);
+    }
+    else if ((ecc_p_p384r1 == modulus) &&
+             (ECC_SECP384R1_32B_WORDS_SIZE == modulus_nb_32b_words))
     {
         result = scl->bignum_func.compare_len_diff(
             scl, in, in_nb_32b_words, ecc_secp384r1.square_p,
@@ -2178,6 +2529,20 @@ int32_t soft_ecc_mod(const metal_scl_t *const scl, const uint64_t *const in,
         }
 
         result = soft_ecc_mod_secp384r1(scl, in, in_nb_32b_words, modulus,
+                                        modulus_nb_32b_words, remainder);
+    }
+    else if ((ecc_p_p521r1 == modulus) &&
+             (ECC_SECP521R1_32B_WORDS_SIZE == modulus_nb_32b_words))
+    {
+        result = scl->bignum_func.compare_len_diff(
+            scl, in, in_nb_32b_words, ecc_secp521r1.square_p,
+            ECC_SECP521R1_32B_WORDS_SIZE * 2);
+        if (0 <= result)
+        {
+            return (SCL_ERROR);
+        }
+
+        result = soft_ecc_mod_secp521r1(scl, in, in_nb_32b_words, modulus,
                                         modulus_nb_32b_words, remainder);
     }
     else
