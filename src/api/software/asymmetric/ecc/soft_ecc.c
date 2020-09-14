@@ -45,44 +45,54 @@
 #include <api/software/bignumbers/soft_bignumbers.h>
 
 /* SECP256R1 */
-static uint64_t ecc_xg_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
-    0xf4a13945d898c296, 0x77037d812deb33a0, 0xf8bce6e563a440f2,
-    0x6b17d1f2e12c4247};
-static uint64_t ecc_yg_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
-    0xcbb6406837bf51f5, 0x2bce33576b315ece, 0x8ee7eb4a7c0f9e16,
-    0x4fe342e2fe1a7f9b};
-static const uint64_t ecc_a_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
-    0xfffffffffffffffc, 0x00000000ffffffff, 0x0000000000000000,
-    0xffffffff00000001};
-static const uint64_t ecc_b_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
-    0x3bce3c3e27d2604b, 0x651d06b0cc53b0f6, 0xb3ebbd55769886bc,
-    0x5ac635d8aa3a93e7};
-static const uint64_t ecc_p_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
-    0xffffffffffffffff, 0x00000000ffffffff, 0x0000000000000000,
-    0xffffffff00000001};
-static const uint64_t ecc_n_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
-    0xf3b9cac2fc632551, 0xbce6faada7179e84, 0xffffffffffffffff,
-    0xffffffff00000000};
-static const uint64_t ecc_precomputed_1_x_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] =
-    {0x39912513c420924a, 0x00b60867487cab57, 0x5afb62de48adde64,
-     0x0b197a2e1e67a44b};
-static const uint64_t ecc_precomputed_1_y_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] =
-    {0x461ac4c72efba5a0, 0xf0a0ab1147404cbf, 0xa990c7a29839be03,
-     0x5b5fc4ce0c6bac1e};
-static const uint64_t ecc_inverse_2_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
-    0x0000000000000000, 0x0000000080000000, 0x8000000000000000,
-    0x7fffffff80000000};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_xg_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
+        0xf4a13945d898c296, 0x77037d812deb33a0, 0xf8bce6e563a440f2,
+        0x6b17d1f2e12c4247};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_yg_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
+        0xcbb6406837bf51f5, 0x2bce33576b315ece, 0x8ee7eb4a7c0f9e16,
+        0x4fe342e2fe1a7f9b};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_a_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
+        0xfffffffffffffffc, 0x00000000ffffffff, 0x0000000000000000,
+        0xffffffff00000001};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_b_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
+        0x3bce3c3e27d2604b, 0x651d06b0cc53b0f6, 0xb3ebbd55769886bc,
+        0x5ac635d8aa3a93e7};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_p_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
+        0xffffffffffffffff, 0x00000000ffffffff, 0x0000000000000000,
+        0xffffffff00000001};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_n_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
+        0xf3b9cac2fc632551, 0xbce6faada7179e84, 0xffffffffffffffff,
+        0xffffffff00000000};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_precomputed_1_x_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
+        0x39912513c420924a, 0x00b60867487cab57, 0x5afb62de48adde64,
+        0x0b197a2e1e67a44b};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_precomputed_1_y_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
+        0x461ac4c72efba5a0, 0xf0a0ab1147404cbf, 0xa990c7a29839be03,
+        0x5b5fc4ce0c6bac1e};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_inverse_2_p256r1[ECC_SECP256R1_64B_WORDS_SIZE] = {
+        0x0000000000000000, 0x0000000080000000, 0x8000000000000000,
+        0x7fffffff80000000};
 
-static const uint64_t ecc_square_p_p256r1[ECC_SECP256R1_64B_WORDS_SIZE * 2] = {
-    0x0000000000000001, 0xfffffffe00000000, 0xffffffffffffffff,
-    0x00000001fffffffe, 0x00000001fffffffe, 0x00000001fffffffe,
-    0xfffffffe00000001, 0xfffffffe00000002,
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_square_p_p256r1[ECC_SECP256R1_64B_WORDS_SIZE * 2] = {
+        0x0000000000000001, 0xfffffffe00000000, 0xffffffffffffffff,
+        0x00000001fffffffe, 0x00000001fffffffe, 0x00000001fffffffe,
+        0xfffffffe00000001, 0xfffffffe00000002,
 };
 
-static const ecc_bignum_affine_point_t ecc_g_p256r1 = {ecc_xg_p256r1,
-                                                       ecc_yg_p256r1};
+CRYPTO_CONST_DATA static const ecc_bignum_affine_const_point_t ecc_g_p256r1 = {
+    ecc_xg_p256r1, ecc_yg_p256r1};
 
-const ecc_curve_t ecc_secp256r1 = {
+CRYPTO_CONST_DATA const ecc_curve_t ecc_secp256r1 = {
     .a = ecc_a_p256r1,
     .b = ecc_b_p256r1,
     .p = ecc_p_p256r1,
@@ -98,45 +108,55 @@ const ecc_curve_t ecc_secp256r1 = {
     .curve = ECC_SECP256R1};
 
 /* SECP384R1 */
-static uint64_t ecc_xg_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
-    0x3a545e3872760ab7, 0x5502f25dbf55296c, 0x59f741e082542a38,
-    0x6e1d3b628ba79b98, 0x8eb1c71ef320ad74, 0xaa87ca22be8b0537};
-static uint64_t ecc_yg_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
-    0x7a431d7c90ea0e5f, 0x0a60b1ce1d7e819d, 0xe9da3113b5f0b8c0,
-    0xf8f41dbd289a147c, 0x5d9e98bf9292dc29, 0x3617de4a96262c6f};
-static const uint64_t ecc_a_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
-    0x00000000fffffffc, 0xffffffff00000000, 0xfffffffffffffffe,
-    0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff};
-static const uint64_t ecc_b_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
-    0x2a85c8edd3ec2aef, 0xc656398d8a2ed19d, 0x0314088f5013875a,
-    0x181d9c6efe814112, 0x988e056be3f82d19, 0xb3312fa7e23ee7e4};
-static const uint64_t ecc_p_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
-    0x00000000ffffffff, 0xffffffff00000000, 0xfffffffffffffffe,
-    0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_xg_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
+        0x3a545e3872760ab7, 0x5502f25dbf55296c, 0x59f741e082542a38,
+        0x6e1d3b628ba79b98, 0x8eb1c71ef320ad74, 0xaa87ca22be8b0537};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_yg_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
+        0x7a431d7c90ea0e5f, 0x0a60b1ce1d7e819d, 0xe9da3113b5f0b8c0,
+        0xf8f41dbd289a147c, 0x5d9e98bf9292dc29, 0x3617de4a96262c6f};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_a_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
+        0x00000000fffffffc, 0xffffffff00000000, 0xfffffffffffffffe,
+        0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_b_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
+        0x2a85c8edd3ec2aef, 0xc656398d8a2ed19d, 0x0314088f5013875a,
+        0x181d9c6efe814112, 0x988e056be3f82d19, 0xb3312fa7e23ee7e4};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_p_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
+        0x00000000ffffffff, 0xffffffff00000000, 0xfffffffffffffffe,
+        0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff};
 
-static const uint64_t ecc_n_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
-    0xecec196accc52973, 0x581a0db248b0a77a, 0xc7634d81f4372ddf,
-    0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff};
-static const uint64_t ecc_precomputed_1_x_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] =
-    {0xd8ed2ff2a7dc885c, 0xb499e34b12f8e1fa, 0x7eb2ff3937d205ce,
-     0x9f1383e8a5127bf6, 0x09e7ad61d6c96f1b, 0x7fbbe67cf514dae5};
-static const uint64_t ecc_precomputed_1_y_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] =
-    {0x840182e0b0437ac0, 0xdf52f874de9d6cba, 0xc8efc7be6fee5e30,
-     0xd59af65ad33df9bd, 0xd5141a5d87f4a1b5, 0xf38aabe5f5ca9b9d};
-static const uint64_t ecc_inverse_2_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
-    0x0000000080000000, 0x7fffffff80000000, 0xffffffffffffffff,
-    0xffffffffffffffff, 0xffffffffffffffff, 0x7fffffffffffffff};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_n_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
+        0xecec196accc52973, 0x581a0db248b0a77a, 0xc7634d81f4372ddf,
+        0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_precomputed_1_x_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
+        0xd8ed2ff2a7dc885c, 0xb499e34b12f8e1fa, 0x7eb2ff3937d205ce,
+        0x9f1383e8a5127bf6, 0x09e7ad61d6c96f1b, 0x7fbbe67cf514dae5};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_precomputed_1_y_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
+        0x840182e0b0437ac0, 0xdf52f874de9d6cba, 0xc8efc7be6fee5e30,
+        0xd59af65ad33df9bd, 0xd5141a5d87f4a1b5, 0xf38aabe5f5ca9b9d};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_inverse_2_p384r1[ECC_SECP384R1_64B_WORDS_SIZE] = {
+        0x0000000080000000, 0x7fffffff80000000, 0xffffffffffffffff,
+        0xffffffffffffffff, 0xffffffffffffffff, 0x7fffffffffffffff};
 
-static const uint64_t ecc_square_p_p384r1[ECC_SECP384R1_64B_WORDS_SIZE * 2] = {
-    0xFFFFFFFE00000001, 0x0000000200000000, 0xFFFFFFFE00000000,
-    0x0000000200000000, 0x0000000000000001, 0x0000000000000000,
-    0x00000001FFFFFFFE, 0xFFFFFFFE00000000, 0xFFFFFFFFFFFFFFFD,
-    0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_square_p_p384r1[ECC_SECP384R1_64B_WORDS_SIZE * 2] = {
+        0xFFFFFFFE00000001, 0x0000000200000000, 0xFFFFFFFE00000000,
+        0x0000000200000000, 0x0000000000000001, 0x0000000000000000,
+        0x00000001FFFFFFFE, 0xFFFFFFFE00000000, 0xFFFFFFFFFFFFFFFD,
+        0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF};
 
-static const ecc_bignum_affine_point_t ecc_g_p384r1 = {ecc_xg_p384r1,
-                                                       ecc_yg_p384r1};
+CRYPTO_CONST_DATA static const ecc_bignum_affine_const_point_t ecc_g_p384r1 = {
+    ecc_xg_p384r1, ecc_yg_p384r1};
 
-const ecc_curve_t ecc_secp384r1 = {
+CRYPTO_CONST_DATA const ecc_curve_t ecc_secp384r1 = {
     .a = ecc_a_p384r1,
     .b = ecc_b_p384r1,
     .p = ecc_p_p384r1,
@@ -152,56 +172,66 @@ const ecc_curve_t ecc_secp384r1 = {
     .curve = ECC_SECP384R1};
 
 /* SECP521R1 */
-static uint64_t ecc_xg_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
-    0xf97e7e31c2e5bd66, 0x3348b3c1856a429b, 0xfe1dc127a2ffa8de,
-    0xa14b5e77efe75928, 0xf828af606b4d3dba, 0x9c648139053fb521,
-    0x9e3ecb662395b442, 0x858e06b70404e9cd, 0x00000000000000c6};
-static uint64_t ecc_yg_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
-    0x88be94769fd16650, 0x353c7086a272c240, 0xc550b9013fad0761,
-    0x97ee72995ef42640, 0x17afbd17273e662c, 0x98f54449579b4468,
-    0x5c8a5fb42c7d1bd9, 0x39296a789a3bc004, 0x0000000000000118};
-static const uint64_t ecc_a_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
-    0xfffffffffffffffc, 0xffffffffffffffff, 0xffffffffffffffff,
-    0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff,
-    0xffffffffffffffff, 0xffffffffffffffff, 0x00000000000001ff};
-static const uint64_t ecc_b_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
-    0xef451fd46b503f00, 0x3573df883d2c34f1, 0x1652c0bd3bb1bf07,
-    0x56193951ec7e937b, 0xb8b489918ef109e1, 0xa2da725b99b315f3,
-    0x929a21a0b68540ee, 0x953eb9618e1c9a1f, 0x0000000000000051};
-static const uint64_t ecc_p_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
-    0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff,
-    0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff,
-    0xffffffffffffffff, 0xffffffffffffffff, 0x00000000000001ff};
-static const uint64_t ecc_n_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
-    0xbb6fb71e91386409, 0x3bb5c9b8899c47ae, 0x7fcc0148f709a5d0,
-    0x51868783bf2f966b, 0xfffffffffffffffa, 0xffffffffffffffff,
-    0xffffffffffffffff, 0xffffffffffffffff, 0x00000000000001ff};
-static const uint64_t ecc_precomputed_1_x_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] =
-    {0x82e051426b4c3f67, 0x830492593fc34315, 0x2b17027d972d1c60,
-     0x650bd0df06941699, 0xc960bca9bf06dea4, 0xc9b131eef6bf6453,
-     0xc7865c906e2a0bd0, 0xffb964e05d5f6799, 0x0000000000000033};
-static const uint64_t ecc_precomputed_1_y_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] =
-    {0xcd247a0916056e76, 0xc0f214f14aabbfce, 0x7b7ba9428fb1cf42,
-     0x521e44f179dfcd33, 0x72151cc5030cfa52, 0x6e7315973f763269,
-     0x15eea047fa5b5eb9, 0x6870c5d0c9cc275d, 0x000000000000017c};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_xg_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
+        0xf97e7e31c2e5bd66, 0x3348b3c1856a429b, 0xfe1dc127a2ffa8de,
+        0xa14b5e77efe75928, 0xf828af606b4d3dba, 0x9c648139053fb521,
+        0x9e3ecb662395b442, 0x858e06b70404e9cd, 0x00000000000000c6};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_yg_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
+        0x88be94769fd16650, 0x353c7086a272c240, 0xc550b9013fad0761,
+        0x97ee72995ef42640, 0x17afbd17273e662c, 0x98f54449579b4468,
+        0x5c8a5fb42c7d1bd9, 0x39296a789a3bc004, 0x0000000000000118};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_a_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
+        0xfffffffffffffffc, 0xffffffffffffffff, 0xffffffffffffffff,
+        0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff,
+        0xffffffffffffffff, 0xffffffffffffffff, 0x00000000000001ff};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_b_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
+        0xef451fd46b503f00, 0x3573df883d2c34f1, 0x1652c0bd3bb1bf07,
+        0x56193951ec7e937b, 0xb8b489918ef109e1, 0xa2da725b99b315f3,
+        0x929a21a0b68540ee, 0x953eb9618e1c9a1f, 0x0000000000000051};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_p_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
+        0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff,
+        0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff,
+        0xffffffffffffffff, 0xffffffffffffffff, 0x00000000000001ff};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_n_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
+        0xbb6fb71e91386409, 0x3bb5c9b8899c47ae, 0x7fcc0148f709a5d0,
+        0x51868783bf2f966b, 0xfffffffffffffffa, 0xffffffffffffffff,
+        0xffffffffffffffff, 0xffffffffffffffff, 0x00000000000001ff};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_precomputed_1_x_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
+        0x82e051426b4c3f67, 0x830492593fc34315, 0x2b17027d972d1c60,
+        0x650bd0df06941699, 0xc960bca9bf06dea4, 0xc9b131eef6bf6453,
+        0xc7865c906e2a0bd0, 0xffb964e05d5f6799, 0x0000000000000033};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_precomputed_1_y_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
+        0xcd247a0916056e76, 0xc0f214f14aabbfce, 0x7b7ba9428fb1cf42,
+        0x521e44f179dfcd33, 0x72151cc5030cfa52, 0x6e7315973f763269,
+        0x15eea047fa5b5eb9, 0x6870c5d0c9cc275d, 0x000000000000017c};
 
-static const uint64_t ecc_inverse_2_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
-    0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
-    0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
-    0x0000000000000000, 0x0000000000000000, 0x0000000000000100};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_inverse_2_p521r1[ECC_SECP521R1_64B_WORDS_SIZE] = {
+        0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
+        0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
+        0x0000000000000000, 0x0000000000000000, 0x0000000000000100};
 
-static const uint64_t ecc_square_p_p521r1[ECC_SECP521R1_64B_WORDS_SIZE * 2] = {
-    0x0000000000000001, 0x0000000000000000, 0x0000000000000000,
-    0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
-    0x0000000000000000, 0x0000000000000000, 0xFFFFFFFFFFFFFC00,
-    0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
-    0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
-    0xFFFFFFFFFFFFFFFF, 0x000000000003FFFF, 0x0000000000000000};
+CRYPTO_CONST_DATA static const uint64_t
+    ecc_square_p_p521r1[ECC_SECP521R1_64B_WORDS_SIZE * 2] = {
+        0x0000000000000001, 0x0000000000000000, 0x0000000000000000,
+        0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
+        0x0000000000000000, 0x0000000000000000, 0xFFFFFFFFFFFFFC00,
+        0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
+        0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
+        0xFFFFFFFFFFFFFFFF, 0x000000000003FFFF, 0x0000000000000000};
 
-static const ecc_bignum_affine_point_t ecc_g_p521r1 = {ecc_xg_p521r1,
-                                                       ecc_yg_p521r1};
+CRYPTO_CONST_DATA static const ecc_bignum_affine_const_point_t ecc_g_p521r1 = {
+    ecc_xg_p521r1, ecc_yg_p521r1};
 
-const ecc_curve_t ecc_secp521r1 = {
+CRYPTO_CONST_DATA const ecc_curve_t ecc_secp521r1 = {
     .a = ecc_a_p521r1,
     .b = ecc_b_p521r1,
     .p = ecc_p_p521r1,
@@ -250,7 +280,7 @@ void soft_ecc_jacobian_zeroize(ecc_bignum_jacobian_point_t *const point,
 
 int32_t soft_ecc_convert_affine_to_jacobian(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
-    const ecc_bignum_affine_point_t *const in,
+    const ecc_bignum_affine_const_point_t *const in,
     ecc_bignum_jacobian_point_t *const out, size_t nb_32b_words)
 {
     if ((NULL == scl) || (NULL == in) || (NULL == out) ||
@@ -1130,8 +1160,8 @@ void soft_ecc_msbit_and_size(size_t *const msb, size_t *const msw,
 
 int32_t soft_ecc_xycz_add(const metal_scl_t *const scl,
                           const ecc_curve_t *const curve_params,
-                          const ecc_bignum_affine_point_t *const in1,
-                          const ecc_bignum_affine_point_t *const in2,
+                          const ecc_bignum_affine_const_point_t *const in1,
+                          const ecc_bignum_affine_const_point_t *const in2,
                           ecc_bignum_affine_point_t *const out1,
                           ecc_bignum_affine_point_t *const out2)
 {
@@ -1298,8 +1328,8 @@ int32_t soft_ecc_xycz_add(const metal_scl_t *const scl,
 
 int32_t soft_ecc_xycz_addc(const metal_scl_t *const scl,
                            const ecc_curve_t *const curve_params,
-                           const ecc_bignum_affine_point_t *const in1,
-                           const ecc_bignum_affine_point_t *const in2,
+                           const ecc_bignum_affine_const_point_t *const in1,
+                           const ecc_bignum_affine_const_point_t *const in2,
                            ecc_bignum_affine_point_t *const out1,
                            ecc_bignum_affine_point_t *const out2)
 {
@@ -1522,7 +1552,7 @@ int32_t soft_ecc_xycz_addc(const metal_scl_t *const scl,
 
 int32_t soft_ecc_xycz_idbl(const metal_scl_t *const scl,
                            const ecc_curve_t *const curve_params,
-                           const ecc_bignum_affine_point_t *const in,
+                           const ecc_bignum_affine_const_point_t *const in,
                            ecc_bignum_affine_point_t *const out1,
                            ecc_bignum_affine_point_t *const out2)
 {
@@ -1713,7 +1743,7 @@ int32_t soft_ecc_xycz_idbl(const metal_scl_t *const scl,
 
 int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
                           const ecc_curve_t *const curve_params,
-                          const ecc_bignum_affine_point_t *const point,
+                          const ecc_bignum_affine_const_point_t *const point,
                           const uint64_t *const k, size_t k_nb_32bits_words,
                           ecc_bignum_affine_point_t *const q)
 {
@@ -1761,16 +1791,18 @@ int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
         b = soft_ecc_bit_extract((const uint32_t *)k, i);
 
         /* 4.(r1-b,rb)=xycz-addc(rb,r1-b) */
-        result = soft_ecc_xycz_addc(scl, curve_params, &p[b], &p[1 - b],
-                                    &p[1 - b], &p[b]);
+        result = soft_ecc_xycz_addc(
+            scl, curve_params, (ecc_bignum_affine_const_point_t *)&p[b],
+            (ecc_bignum_affine_const_point_t *)&p[1 - b], &p[1 - b], &p[b]);
         if (SCL_OK > result)
         {
             return (result);
         }
 
         /* 5.(rb,r1-b)=xycz-add(r1-b,rb) */
-        result = soft_ecc_xycz_add(scl, curve_params, &p[1 - b], &p[b], &p[b],
-                                   &p[1 - b]);
+        result = soft_ecc_xycz_add(
+            scl, curve_params, (ecc_bignum_affine_const_point_t *)&p[1 - b],
+            (ecc_bignum_affine_const_point_t *)&p[b], &p[b], &p[1 - b]);
         if (SCL_OK > result)
         {
             return (result);
@@ -1781,8 +1813,9 @@ int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
     b = k[0] & 1;
 
     /* 8. (r1-b,rb)=xycz-addc(rb,r1-b) */
-    result = soft_ecc_xycz_addc(scl, curve_params, &p[b], &p[1 - b], &p[1 - b],
-                                &p[b]);
+    result = soft_ecc_xycz_addc(
+        scl, curve_params, (ecc_bignum_affine_const_point_t *)&p[b],
+        (ecc_bignum_affine_const_point_t *)&p[1 - b], &p[1 - b], &p[b]);
     if (SCL_OK > result)
     {
         return (result);
@@ -1845,8 +1878,9 @@ int32_t soft_ecc_mult_coz(const metal_scl_t *const scl,
     }
 
     /* 10. (rb,r1-b)=xycz-add(r1-b,rb) */
-    result = soft_ecc_xycz_add(scl, curve_params, &p[1 - b], &p[b], &p[b],
-                               &p[1 - b]);
+    result = soft_ecc_xycz_add(
+        scl, curve_params, (ecc_bignum_affine_const_point_t *)&p[1 - b],
+        (ecc_bignum_affine_const_point_t *)&p[b], &p[b], &p[1 - b]);
     if (SCL_OK > result)
     {
         return (result);
@@ -2400,7 +2434,8 @@ int32_t soft_ecc_mod_secp521r1(const metal_scl_t *const scl,
         return (SCL_INVALID_INPUT);
     }
 
-    if ((NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.add))
+    if ((NULL == scl->bignum_func.sub) || (NULL == scl->bignum_func.add) ||
+        (NULL == scl->bignum_func.leftshift))
     {
         return (SCL_ERROR_API_ENTRY_POINT);
     }
@@ -2424,7 +2459,7 @@ int32_t soft_ecc_mod_secp521r1(const metal_scl_t *const scl,
     }
 
     /* zeroise what's remain */
-    for (; i < ECC_SECP521R1_32B_WORDS_SIZE; i++)
+    for (; i < ECC_SECP521R1_64B_WORDS_SIZE * 4; i++)
     {
         a[i] = 0;
     }
@@ -2435,53 +2470,49 @@ int32_t soft_ecc_mod_secp521r1(const metal_scl_t *const scl,
     result = scl->bignum_func.leftshift(
         scl, (uint64_t *)&a[ECC_SECP521R1_32B_WORDS_SIZE - 1],
         (uint64_t *)&a[ECC_SECP521R1_32B_WORDS_SIZE - 1],
-        2 * sizeof(uint32_t) - 9, ECC_SECP521R1_32B_WORDS_SIZE + 1);
+        2 * sizeof(uint32_t) * __CHAR_BIT__ - 9,
+        ECC_SECP521R1_64B_WORDS_SIZE * 4 - (ECC_SECP521R1_32B_WORDS_SIZE - 1));
     if (SCL_OK > result)
     {
         return (result);
     }
 
     a[ECC_SECP521R1_32B_WORDS_SIZE - 1] = temp;
+    a[ECC_SECP521R1_32B_WORDS_SIZE] = 0;
 
     result = scl->bignum_func.add(
         scl, (uint64_t *)&a[ECC_SECP521R1_64B_WORDS_SIZE * 2], (uint64_t *)a,
-        remainder, ECC_SECP384R1_32B_WORDS_SIZE);
+        remainder, ECC_SECP521R1_32B_WORDS_SIZE);
     if (SCL_OK > result)
     {
         return (result);
     }
 
-    carry += result;
+    carry += (int32_t)(
+        ((uint32_t *)remainder)[ECC_SECP521R1_32B_WORDS_SIZE - 1] >> 9);
 
-    if (carry < 0)
+    truncate_array((uint8_t *)remainder,
+                   ECC_SECP521R1_32B_WORDS_SIZE * sizeof(uint32_t),
+                   ECC_SECP521R1_BITSIZE);
+
+    while ((carry != 0) ||
+           (0 < scl->bignum_func.compare(scl, remainder, modulus,
+                                         ECC_SECP521R1_32B_WORDS_SIZE)))
     {
-        while (carry < 0)
+        result = scl->bignum_func.sub(scl, remainder, modulus, remainder,
+                                      ECC_SECP521R1_32B_WORDS_SIZE);
+        if (SCL_OK > result)
         {
-            result = scl->bignum_func.add(scl, remainder, modulus, remainder,
-                                          ECC_SECP521R1_32B_WORDS_SIZE);
-            if (SCL_OK > result)
-            {
-                return (result);
-            }
-
-            carry += result;
+            return (result);
         }
-    }
-    else
-    {
-        while ((carry != 0) ||
-               (0 < scl->bignum_func.compare(scl, remainder, modulus,
-                                             ECC_SECP521R1_32B_WORDS_SIZE)))
-        {
-            result = scl->bignum_func.sub(scl, remainder, modulus, remainder,
-                                          ECC_SECP521R1_32B_WORDS_SIZE);
-            if (SCL_OK > result)
-            {
-                return (result);
-            }
+        carry -= (int32_t)(
+            (((uint32_t *)remainder)[ECC_SECP521R1_32B_WORDS_SIZE - 1] &
+             0x200) >>
+            9);
 
-            carry -= result;
-        }
+        truncate_array((uint8_t *)remainder,
+                       ECC_SECP521R1_32B_WORDS_SIZE * sizeof(uint32_t),
+                       ECC_SECP521R1_BITSIZE);
     }
 
     return (result);

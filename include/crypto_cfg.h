@@ -36,4 +36,6 @@
 #define CRYPTO_FUNCTION __attribute__((section("crypto_functions")))
 #define CRYPTO_DATA __attribute__((section("crypto_data")))
 
+#define CRYPTO_CONST_DATA __attribute__((section(".data")))
+
 #endif /* SCL_CRYPTO_CFG_H */

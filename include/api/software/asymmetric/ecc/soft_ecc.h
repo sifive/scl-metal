@@ -98,7 +98,7 @@ soft_ecc_jacobian_zeroize(ecc_bignum_jacobian_point_t *const point,
  */
 CRYPTO_FUNCTION int32_t soft_ecc_convert_affine_to_jacobian(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
-    const ecc_bignum_affine_point_t *const in,
+    const ecc_bignum_affine_const_point_t *const in,
     ecc_bignum_jacobian_point_t *const out, size_t nb_32b_words);
 
 /**
@@ -223,8 +223,8 @@ soft_ecc_msbit_and_size(size_t *const msb, size_t *const msw,
  */
 CRYPTO_FUNCTION int32_t soft_ecc_xycz_add(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
-    const ecc_bignum_affine_point_t *const in1,
-    const ecc_bignum_affine_point_t *const in2,
+    const ecc_bignum_affine_const_point_t *const in1,
+    const ecc_bignum_affine_const_point_t *const in2,
     ecc_bignum_affine_point_t *const out1,
     ecc_bignum_affine_point_t *const out2);
 
@@ -243,8 +243,8 @@ CRYPTO_FUNCTION int32_t soft_ecc_xycz_add(
  */
 CRYPTO_FUNCTION int32_t soft_ecc_xycz_addc(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
-    const ecc_bignum_affine_point_t *const in1,
-    const ecc_bignum_affine_point_t *const in2,
+    const ecc_bignum_affine_const_point_t *const in1,
+    const ecc_bignum_affine_const_point_t *const in2,
     ecc_bignum_affine_point_t *const out1,
     ecc_bignum_affine_point_t *const out2);
 
@@ -262,7 +262,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_xycz_addc(
  */
 CRYPTO_FUNCTION int32_t soft_ecc_xycz_idbl(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
-    const ecc_bignum_affine_point_t *const in,
+    const ecc_bignum_affine_const_point_t *const in,
     ecc_bignum_affine_point_t *const out1,
     ecc_bignum_affine_point_t *const out2);
 
@@ -281,7 +281,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_xycz_idbl(
  */
 CRYPTO_FUNCTION int32_t soft_ecc_mult_coz(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
-    const ecc_bignum_affine_point_t *const point, const uint64_t *const k,
+    const ecc_bignum_affine_const_point_t *const point, const uint64_t *const k,
     size_t k_nb_32bits_words, ecc_bignum_affine_point_t *const q);
 
 /**

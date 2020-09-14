@@ -45,7 +45,7 @@
 int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
                              const ecc_curve_t *const curve_params,
                              const uint8_t *const priv_key,
-                             ecc_signature_t *const signature,
+                             const ecdsa_signature_t *const signature,
                              const uint8_t *const hash, size_t hash_len)
 {
     int32_t result, result_2;
@@ -80,6 +80,10 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
     if ((NULL == scl->trng_func.get_data) ||
         (NULL == scl->bignum_func.is_null) || (NULL == scl->bignum_func.mod) ||
         (NULL == scl->bignum_func.compare) ||
+        (NULL == scl->bignum_func.mod_mult) ||
+        (NULL == scl->bignum_func.mod_add) ||
+        (NULL == scl->bignum_func.mod_sub) ||
+        (NULL == scl->bignum_func.mod_inv) ||
         (NULL == scl->bignum_func.set_modulus))
     {
         return (SCL_ERROR_API_ENTRY_POINT);
@@ -375,9 +379,8 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
             /* 6.3a h.r^(-1) */
             memset(e, 0, sizeof(e));
 
-            copy_swap_array(
-                (uint8_t *)e, hash,
-                MIN(hash_len, curve_params->curve_wsize * sizeof(uint32_t)));
+            copy_swap_array((uint8_t *)e, hash,
+                            MIN(hash_len, curve_params->curve_bsize));
 
             result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)w,
                                                (uint64_t *)e, (uint64_t *)w,
@@ -425,8 +428,7 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
             }
 
             /* 6.6a d+m2 (=d+y1) */
-            copy_swap_array((uint8_t *)d, priv_key,
-                            curve_params->curve_wsize * sizeof(uint32_t));
+            copy_swap_array((uint8_t *)d, priv_key, curve_params->curve_bsize);
 
             result = scl->bignum_func.mod_add(scl, &bignum_ctx, (uint64_t *)d,
                                               (uint64_t *)y1, (uint64_t *)u1,
@@ -510,7 +512,7 @@ cleanup:
 int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
                                 const ecc_curve_t *const curve_params,
                                 const ecc_affine_const_point_t *const pub_key,
-                                const ecc_signature_t *const signature,
+                                const ecdsa_signature_const_t *const signature,
                                 const uint8_t *const hash, size_t hash_len)
 {
     int32_t result;
@@ -531,6 +533,15 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
 
     {
         return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl->bignum_func.is_null) || (NULL == scl->bignum_func.mod) ||
+        (NULL == scl->bignum_func.compare) ||
+        (NULL == scl->bignum_func.mod_mult) ||
+        (NULL == scl->bignum_func.mod_inv) ||
+        (NULL == scl->bignum_func.set_modulus))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
     }
 
     /* Check curve length */
@@ -623,9 +634,8 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
 
         /* Copy hash into e */
         memset(e, 0, curve_params->curve_wsize * sizeof(uint32_t));
-        copy_swap_array(
-            (uint8_t *)e, hash,
-            MIN(hash_len, curve_params->curve_wsize * sizeof(uint32_t)));
+        copy_swap_array((uint8_t *)e, hash,
+                        MIN(hash_len, curve_params->curve_bsize));
 
         /* set modulus context */
         result = scl->bignum_func.set_modulus(scl, &bignum_ctx, curve_params->n,
@@ -705,9 +715,9 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
         point_aff.y = (uint64_t *)yq;
 
         /* Compute 1.Q */
-        result = soft_ecc_convert_affine_to_jacobian(scl, curve_params,
-                                                     &point_aff, &ip_jq[4],
-                                                     curve_params->curve_wsize);
+        result = soft_ecc_convert_affine_to_jacobian(
+            scl, curve_params, (ecc_bignum_affine_const_point_t *)&point_aff,
+            &ip_jq[4], curve_params->curve_wsize);
         if (SCL_OK != result)
         {
             goto cleanup;

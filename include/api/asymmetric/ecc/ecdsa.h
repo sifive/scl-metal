@@ -41,4 +41,10 @@ typedef struct ecdsa_signature_s
     uint8_t *s;
 } ecdsa_signature_t;
 
+typedef struct ecdsa_signature_const_s
+{
+    const uint8_t *r;
+    const uint8_t *s;
+} ecdsa_signature_const_t;
+
 #endif /* SCL_BACKEND_ECDSA_H */
