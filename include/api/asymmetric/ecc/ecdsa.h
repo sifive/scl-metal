@@ -35,16 +35,36 @@
 
 #include <stdint.h>
 
+/** 
+ * @addtogroup COMMON
+ * @addtogroup ECC
+ * @ingroup COMMON
+ *  @{
+ */
+
+/**
+ * @brief ECDSA structure to contains signature elements (r,s)
+ */
 typedef struct ecdsa_signature_s
 {
+    /*! @brief pointer to r element */
     uint8_t *r;
+    /*! @brief pointer to s element */
     uint8_t *s;
 } ecdsa_signature_t;
 
+/**
+ * @brief ECDSA structure to contains signature elements (r,s) when there
+ * constants
+ */
 typedef struct ecdsa_signature_const_s
 {
+    /*! @brief pointer to r element */
     const uint8_t *r;
+    /*! @brief pointer to s element */
     const uint8_t *s;
 } ecdsa_signature_const_t;
+
+/** @}*/
 
 #endif /* SCL_BACKEND_ECDSA_H */

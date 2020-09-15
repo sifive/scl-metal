@@ -36,6 +36,13 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/** 
+ * @addtogroup COMMON
+ * @addtogroup ECC
+ * @ingroup COMMON
+ *  @{
+ */
+
 /*! @brief size of curve SECP224R1 parameters in byte */
 #define ECC_SECP224R1_BYTESIZE 28
 /*! @brief size of curve SECP256R1 parameters in byte */
@@ -110,13 +117,6 @@
 
 #define ECDSA_MIN_32B_WORDSIZE ECC_SECP224R1_32B_WORDS_SIZE
 
-// #define SCL_ECC_INVERSE_2_OPTIMIZATION 1
-// #define SCL_ECDSA_SIGNATURE_COMPUTATION 0xFF
-// #define SCL_ECDSA_SIGNATURE_VERIFICATION 0x00
-
-// we use the SECG terminology (when applicable)
-// 8 up to now
-
 /*! @brief standard supported curves (SECG teminology is used) */
 enum ecc_std_curves_e
 {
@@ -132,6 +132,11 @@ enum ecc_std_curves_e
     ECC_CURVE_MAX_NB
 };
 
+/** 
+ * @brief Affine point (x,y) with big integer coordinates
+ * @note Coordinates are big integer, that implies 64 bits alignement, 32 bits
+ * granularity, and coordinate should be little endian
+ */
 typedef struct ecc_bignum_jacobian_point_s
 {
     uint64_t *x;
@@ -139,30 +144,47 @@ typedef struct ecc_bignum_jacobian_point_s
     uint64_t *z;
 } ecc_bignum_jacobian_point_t;
 
+/** 
+ * @brief Constant affine point (x,y)
+ */
 typedef struct ecc_affine_point_s
 {
     uint8_t *x;
     uint8_t *y;
 } ecc_affine_point_t;
 
+/** 
+ * @brief Constant affine point (x,y)
+ */
 typedef struct ecc_affine_const_point_s
 {
     const uint8_t *x;
     const uint8_t *y;
 } ecc_affine_const_point_t;
 
+/** 
+ * @brief Affine point (x,y) with big integer coordinates
+ * @note Coordinates are big integer, that implies 64 bits alignement, 32 bits
+ * granularity, and coordinate should be little endian
+ */
 typedef struct ecc_bignum_affine_point_s
 {
     uint64_t *x;
     uint64_t *y;
 } ecc_bignum_affine_point_t;
 
+/** 
+ * @brief Constant affine point with big integer coordinates
+ * @note Coordinates are big integer, that implies 64 bits alignement, 32 bits
+ * granularity, and coordinate should be little endian
+ */
 typedef struct ecc_bignum_affine_const_point_s
 {
     const uint64_t *x;
     const uint64_t *y;
 } ecc_bignum_affine_const_point_t;
 
+/*! @brief curve data structure */
 typedef struct ecc_curve_s
 {
     const uint64_t *a;
@@ -188,5 +210,7 @@ extern const ecc_curve_t ecc_secp384r1;
 
 /*! @brief SECP521R1 curve */
 extern const ecc_curve_t ecc_secp521r1;
+
+/** @}*/
 
 #endif /* SCL_BACKEND_ECC_H */

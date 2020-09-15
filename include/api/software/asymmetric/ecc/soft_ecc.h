@@ -41,6 +41,13 @@
 #include <api/asymmetric/ecc/ecc.h>
 #include <api/scl_api.h>
 
+/** 
+ * @addtogroup COMMON
+ * @addtogroup ECC
+ * @ingroup COMMON
+ *  @{
+ */
+
 /**
  * @brief copy ecc affine point
  *
@@ -134,15 +141,16 @@ CRYPTO_FUNCTION int32_t soft_ecc_infinite_jacobian(
     const ecc_bignum_jacobian_point_t *const point, size_t nb_32b_words);
 
 /**
- * @brief
+ * @brief Add two affine point
  *
- * @param scl
- * @param curve_params
- * @param in1
- * @param in2
- * @param out
- * @param nb_32b_words
- * @return CRYPTO_FUNCTION
+ * @param[in] scl               metal scl context
+ * @param[in] curve_params      elliptic curve parameters
+ * @param[in] in1               first point
+ * @param[in] in2               second point
+ * @param[out] out              adition result
+ * @param[in] nb_32b_words      Points coordinates number of 32 bits words
+ * @return 0 in case of success
+ * @return < 0 otherwise @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_ecc_add_affine_affine(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
@@ -197,29 +205,18 @@ CRYPTO_FUNCTION size_t soft_ecc_bit_extract(const uint32_t *const array,
                                             size_t bit_idx);
 
 /**
- * @brief setting the msbit corresponding to the curve p msb position
- */
-CRYPTO_FUNCTION void
-soft_ecc_set_msbit_curve(uint32_t *const array, size_t *const array_size,
-                         size_t np, size_t words_tmp,
-                         const ecc_curve_t *const curve_params);
-
-CRYPTO_FUNCTION void
-soft_ecc_msbit_and_size(size_t *const msb, size_t *const msw,
-                        const ecc_curve_t *const curve_params);
-
-/**
  * @brief (X,Y)-only co-Zaddition with update - XYCZ-ADD
  * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
  * Curves (Rivain) algo 18
  *
- * @param scl
- * @param curve_params
- * @param in1
- * @param in2
- * @param out1
- * @param out2
- * @return int32_t
+ * @param[in] scl           metal scl context
+ * @param[in] curve_params      ECC curve parameters 
+ * @param[in] in1               first input
+ * @param[in] in2               second input
+ * @param[out] out1             output point conjugate
+ * @param[out] out2             first input conjugate (output)
+ * @return 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_ecc_xycz_add(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
@@ -233,13 +230,14 @@ CRYPTO_FUNCTION int32_t soft_ecc_xycz_add(
  * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
  * Curves (Rivain) algo 19
  *
- * @param scl
- * @param curve_params
- * @param in1
- * @param in2
- * @param out1
- * @param out2
- * @return int32_t
+ * @param[in] scl               metal scl context
+ * @param[in] curve_params      ECC curve parameters 
+ * @param[in] in1               first input
+ * @param[in] in2               second input
+ * @param[out] out1             output point
+ * @param[out] out2             output point conjugate
+ * @return 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_ecc_xycz_addc(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
@@ -253,12 +251,13 @@ CRYPTO_FUNCTION int32_t soft_ecc_xycz_addc(
  * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
  * Curves (Rivain) algo 23
  *
- * @param scl
- * @param curve_params
- * @param in
- * @param out1
- * @param out2
- * @return int32_t
+ * @param[in] scl           metal scl context
+ * @param[in] curve_params  ECC curve parameters 
+ * @param[in] in            input point
+ * @param[out] out1         output point
+ * @param[out] out2         output point conjugate
+ * @return 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_ecc_xycz_idbl(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
@@ -271,13 +270,14 @@ CRYPTO_FUNCTION int32_t soft_ecc_xycz_idbl(
  * @details Fast and Regular Algorithms for Scalar Multiplication over Elliptic
  * Curves (Rivain) algo 9
  *
- * @param[in] scl
- * @param[in] curve_params
- * @param[in] point
- * @param[in] k
- * @param[in] k_nb_32bits_words
- * @param[out] q
- * @return int32_t
+ * @param[in] scl               metal scl context
+ * @param[in] curve_params      ECC curve parameters 
+ * @param[in] point             input point
+ * @param[in] k                 scalar to multiply
+ * @param[in] k_nb_32bits_words scalar length
+ * @param[out] q                output point
+ * @return 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
  */
 CRYPTO_FUNCTION int32_t soft_ecc_mult_coz(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
@@ -298,7 +298,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_mult_coz(
  * @param[in] modulus               modulus big integer to apply
  * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
  * @param[out] remainder            remainder array (big integer)
- * @return >= 0 success
+ * @return 0 success
  * @return < 0 in case of errors @ref scl_errors_t
  * @note remainder should be at least of length equal to modulus_nb_32b_words
  * @warning This function might call @ref soft_bignum_div depending on scl
@@ -322,7 +322,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_mod_secp256r1(const metal_scl_t *const scl,
  * @param[in] modulus               modulus big integer to apply
  * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
  * @param[out] remainder            remainder array (big integer)
- * @return >= 0 success
+ * @return 0 success
  * @return < 0 in case of errors @ref scl_errors_t
  * @note remainder should be at least of length equal to modulus_nb_32b_words
  * @warning This function might call @ref soft_bignum_div depending on scl
@@ -346,7 +346,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_mod_secp384r1(const metal_scl_t *const scl,
  * @param[in] modulus               modulus big integer to apply
  * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
  * @param[out] remainder            remainder array (big integer)
- * @return >= 0 success
+ * @return 0 success
  * @return < 0 in case of errors @ref scl_errors_t
  * @note remainder should be at least of length equal to modulus_nb_32b_words
  * @warning This function might call @ref soft_bignum_div depending on scl
@@ -370,7 +370,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_mod_secp521r1(const metal_scl_t *const scl,
  * @param[in] modulus               modulus big integer to apply
  * @param[in] modulus_nb_32b_words  number of 32 words in modulus array
  * @param[out] remainder            remainder array (big integer)
- * @return >= 0 success
+ * @return 0 success
  * @return < 0 in case of errors @ref scl_errors_t
  * @note remainder should be at least of length equal to modulus_nb_32b_words
  * @warning This function might call @ref soft_bignum_div depending on scl
@@ -382,5 +382,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_mod(const metal_scl_t *const scl,
                                      const uint64_t *const modulus,
                                      size_t modulus_nb_32b_words,
                                      uint64_t *const remainder);
+
+/** @}*/
 
 #endif /* SCL_BACKEND_SOFT_ECC_H */
