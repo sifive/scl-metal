@@ -55,7 +55,7 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
     ecc_bignum_affine_point_t q;
     bignum_ctx_t bignum_ctx;
 
-    size_t msb, msw, ext_k_size;
+    size_t msb, ext_k_size;
 
     if ((NULL == scl) || (NULL == priv_key) || (NULL == signature) ||
         (NULL == hash) || (NULL == curve_params))
@@ -84,6 +84,8 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
         (NULL == scl->bignum_func.mod_add) ||
         (NULL == scl->bignum_func.mod_sub) ||
         (NULL == scl->bignum_func.mod_inv) ||
+        (NULL == scl->bignum_func.set_bit) ||
+        (NULL == scl->bignum_func.get_msb_set) ||
         (NULL == scl->bignum_func.set_modulus))
     {
         return (SCL_ERROR_API_ENTRY_POINT);
@@ -107,16 +109,24 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
         uint32_t ext_k[curve_params->curve_wsize + 1]
             __attribute__((aligned(8)));
 
+        ext_k_size = curve_params->curve_wsize + 1;
+
         do
         {
-            /* determine the n msW */
-            soft_ecc_msbit_and_size(&msb, &msw, curve_params);
-            /* determine the msb position in the n msW */
-            nbbits = (msb - 1) % (sizeof(uint32_t) * __CHAR_BIT__);
-            if (0 == nbbits)
+            /* determine the n msb */
+            result = scl->bignum_func.get_msb_set(scl, curve_params->n,
+                                                  curve_params->curve_wsize);
+            if (SCL_OK > result)
             {
-                nbbits = (sizeof(uint32_t) * __CHAR_BIT__);
+                return (result);
             }
+            else if (0 == result)
+            {
+                /* at least on bit should be set */
+                return (SCL_ERROR);
+            }
+
+            nbbits = (size_t)result - 1;
 
             /* 3. randomly generate k [1,k-1] */
             do
@@ -132,7 +142,7 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
 
                 truncate_array((uint8_t *)k,
                                curve_params->curve_wsize * sizeof(uint32_t),
-                               curve_params->curve_bitsize);
+                               nbbits + 1);
 
                 result = scl->bignum_func.compare(scl, (uint64_t *)k,
                                                   curve_params->n,
@@ -152,8 +162,6 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
             /* 4 (x1,y1)=k.G */
             q.x = (uint64_t *)x1;
             q.y = (uint64_t *)y1;
-            // p.x = curve_params->xg;
-            // p.y = curve_params->yg;
 
             /**
              * algorithm for k protection
@@ -176,12 +184,30 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
              * a. determine the n msb position
              */
 
-            soft_ecc_msbit_and_size(&msb, &msw, curve_params);
+            result = scl->bignum_func.get_msb_set(scl, (uint64_t *)k,
+                                                  curve_params->curve_wsize);
+            if (SCL_OK > result)
+            {
+                return (result);
+            }
+            else if (0 == result)
+            {
+                /* at least on bit should be set */
+                return (SCL_ERROR);
+            }
+
+            msb = (size_t)result;
+
             /* b. prepare the new,extended value from k, aligned on n */
             memcpy(ext_k, k, curve_params->curve_wsize * sizeof(uint32_t));
             ext_k[curve_params->curve_wsize] = 0;
-            soft_ecc_set_msbit_curve(ext_k, &ext_k_size, msb, msw,
-                                     curve_params);
+
+            result = scl->bignum_func.set_bit(scl, (uint64_t *)ext_k,
+                                              ext_k_size, msb);
+            if (SCL_OK > result)
+            {
+                return (result);
+            }
 
             /* 4.1-compute (1|k).P, i.e. (ext_k).P, using coZ routines */
             result = scl->bignum_func.set_modulus(
@@ -219,8 +245,13 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
             {
                 /* very time consuming but usually not performed */
                 memset(ext_k, 0, sizeof(ext_k));
-                soft_ecc_set_msbit_curve(ext_k, &ext_k_size, msb, msw,
-                                         curve_params);
+                result = scl->bignum_func.set_bit(scl, (uint64_t *)ext_k,
+                                                  ext_k_size, msb);
+                if (SCL_OK > result)
+                {
+                    return (result);
+                }
+
                 result = soft_ecc_mult_coz(scl, curve_params, curve_params->g,
                                            (uint64_t *)ext_k, ext_k_size, &mp);
                 if (SCL_OK != result)
@@ -303,14 +334,14 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
             memset(x1, 0, sizeof(x1));
             do
             {
-                for (i = 0; i < msw; i++)
+                for (i = 0; i < curve_params->curve_wsize; i++)
                 {
                     result = scl->trng_func.get_data(scl, &x1[i]);
                 }
 
                 truncate_array((uint8_t *)x1,
                                curve_params->curve_wsize * sizeof(uint32_t),
-                               nbbits);
+                               nbbits + 1);
 
                 result = scl->bignum_func.compare(scl, (uint64_t *)x1,
                                                   curve_params->n,
@@ -335,14 +366,14 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
             memset(y1, 0, sizeof(x1));
             do
             {
-                for (i = 0; i < msw; i++)
+                for (i = 0; i < curve_params->curve_wsize; i++)
                 {
                     result = scl->trng_func.get_data(scl, &y1[i]);
                 }
 
                 truncate_array((uint8_t *)y1,
                                curve_params->curve_wsize * sizeof(uint32_t),
-                               nbbits);
+                               nbbits + 1);
 
                 result = scl->bignum_func.compare(scl, (uint64_t *)y1,
                                                   curve_params->n,
@@ -428,6 +459,7 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
             }
 
             /* 6.6a d+m2 (=d+y1) */
+            memset(d, 0, sizeof(d));
             copy_swap_array((uint8_t *)d, priv_key, curve_params->curve_bsize);
 
             result = scl->bignum_func.mod_add(scl, &bignum_ctx, (uint64_t *)d,

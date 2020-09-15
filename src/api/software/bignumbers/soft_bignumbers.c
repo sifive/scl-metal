@@ -698,7 +698,7 @@ int32_t soft_bignum_set_bit(const metal_scl_t *const scl, uint64_t *const array,
     }
 
     array_32b[bit_2_set / (sizeof(uint32_t) * __CHAR_BIT__)] |=
-        (uint32_t)(1 << bit_2_set % (sizeof(uint32_t) * __CHAR_BIT__));
+        (uint32_t)(1 << (bit_2_set % (sizeof(uint32_t) * __CHAR_BIT__)));
 
     return (SCL_OK);
 }

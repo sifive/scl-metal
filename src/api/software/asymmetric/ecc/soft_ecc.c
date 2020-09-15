@@ -1098,63 +1098,15 @@ int32_t soft_ecc_double_jacobian(const metal_scl_t *const scl,
 size_t soft_ecc_bit_extract(const uint32_t *const array, size_t bit_idx)
 {
 
-    if (array[bit_idx / (sizeof(uint32_t) * __CHAR_BIT__)] &
-        ((uint32_t)1 << ((uint32_t)(bit_idx %
-                                    (sizeof(uint32_t) * __CHAR_BIT__)))))
+    if (0 != (array[bit_idx / (sizeof(uint32_t) * __CHAR_BIT__)] &
+              ((uint32_t)1 << ((uint32_t)(bit_idx %
+                                          (sizeof(uint32_t) * __CHAR_BIT__))))))
     {
         return (1);
     }
     else
     {
         return (0);
-    }
-}
-
-void soft_ecc_set_msbit_curve(uint32_t *const array, size_t *const array_size,
-                              size_t np, size_t words_tmp,
-                              const ecc_curve_t *const curve_params)
-{
-    /**
-     * if the P msb position is not at the word type msb position
-     * we can use the same word for setting the msb
-     */
-    if ((curve_params->p[words_tmp - 1] >>
-         (sizeof(uint32_t) * __CHAR_BIT__ - 1)) == 0)
-    {
-        array[curve_params->curve_wsize - 1] +=
-            (uint32_t)(1 << (np % (sizeof(uint32_t) * __CHAR_BIT__)));
-        *array_size = (uint32_t)curve_params->curve_wsize;
-    }
-    else
-    /**
-     * but if the curve P msb position is max in the word type, we need to add
-     * the extra 1 bit in a new word
-     */
-    {
-        array[curve_params->curve_wsize] = 1;
-        *array_size = (uint32_t)curve_params->curve_wsize + 1;
-    }
-}
-
-void soft_ecc_msbit_and_size(size_t *const msb, size_t *const msw,
-                             const ecc_curve_t *const curve_params)
-{
-    /* theoretical position of the msb */
-    *msb = curve_params->curve_wsize * sizeof(uint32_t) * __CHAR_BIT__;
-    /* theoretical position of the msw */
-    *msw = curve_params->curve_wsize;
-    /* 1-search the highest non null word in curve n */
-    while (curve_params->n[*msw - 1] == 0)
-    {
-        (*msw)--;
-        (*msb) -= sizeof(uint32_t) * __CHAR_BIT__;
-    }
-    /* 2-in this msw, look for the msb */
-    while ((*msb > 0) &&
-           (soft_ecc_bit_extract((const uint32_t *)curve_params->n,
-                                 (*msb) - 1) == 0))
-    {
-        (*msb)--;
     }
 }
 
