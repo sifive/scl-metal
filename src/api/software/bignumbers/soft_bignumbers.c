@@ -405,28 +405,28 @@ int32_t soft_bignum_mult(const metal_scl_t *const scl,
 }
 
 int32_t soft_bignum_square_with_mult(const metal_scl_t *const scl,
-                                     const uint64_t *const input,
+                                     const uint64_t *const in,
                                      uint64_t *const out, size_t nb_32b_words)
 {
-    return (soft_bignum_mult(scl, input, input, out, nb_32b_words));
+    return (soft_bignum_mult(scl, in, in, out, nb_32b_words));
 }
 
 int32_t soft_bignum_square(const metal_scl_t *const scl,
-                           const uint64_t *const input, uint64_t *const out,
+                           const uint64_t *const in, uint64_t *const out,
                            size_t nb_32b_words)
 {
     size_t i, j;
     uint64_t product, tmp, u;
     uint32_t carry;
 
-    const uint32_t *in32 = (const uint32_t *)input;
+    const uint32_t *in32 = (const uint32_t *)in;
 
     uint32_t *out32 = (uint32_t *)out;
     /*@-noeffect@*/
     (void)scl;
     /*@+noeffect@*/
 
-    if ((NULL == input) || (NULL == out))
+    if ((NULL == in) || (NULL == out))
     {
         return (SCL_INVALID_INPUT);
     }
@@ -1227,16 +1227,16 @@ int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
 
 int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
                             const bignum_ctx_t *const ctx,
-                            const uint64_t *const input, uint64_t *const out,
+                            const uint64_t *const in, uint64_t *const out,
                             size_t nb_32b_words)
 {
     int32_t result = 0;
-    /* x in Hoac, x = input*/
-    const uint64_t *x = input;
+    /* x in Hoac, x = in*/
+    const uint64_t *x = in;
     /* y in Hoac, y = modulus */
     const uint64_t *y = ctx->modulus;
 
-    if ((NULL == scl) || (NULL == ctx) || (NULL == input) || (NULL == out) ||
+    if ((NULL == scl) || (NULL == ctx) || (NULL == in) || (NULL == out) ||
         (NULL == ctx->modulus))
     {
         return (SCL_INVALID_INPUT);
@@ -1257,7 +1257,7 @@ int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
     }
 
     result =
-        scl->bignum_func.is_null(scl, (const uint32_t *)input, nb_32b_words);
+        scl->bignum_func.is_null(scl, (const uint32_t *)in, nb_32b_words);
     if (SCL_OK > result)
     {
         return (result);

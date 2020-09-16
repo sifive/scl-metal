@@ -38,7 +38,7 @@
 
 #include <api/hash/sha512.h>
 
-/** 
+/**
  * @addtogroup COMMON
  * @addtogroup SHA
  * @ingroup COMMON

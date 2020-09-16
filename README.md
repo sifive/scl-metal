@@ -13,3 +13,10 @@ For SHA-2, it supports:
 - SHA224, SHA256, SHA384 and SHA512
 
 Supports the HCA version 0.5.x
+
+ECDSA signature and verification are supported:
+    - for standard curves SECP256r1, SECP384r1 and SECP521r1
+
+Warning:
+Local variable cleaning is not done yet, therefore it's not secure to use the library for cryptographic signature, but it's safe to use signature verification.
+A cleaning mechanism will be added in the future.

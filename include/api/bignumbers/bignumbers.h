@@ -36,7 +36,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-/** 
+/**
  * @addtogroup COMMON
  * @addtogroup BIGNUM
  * @ingroup COMMON
