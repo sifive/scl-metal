@@ -35,16 +35,18 @@
 
 #include <scl/scl_retdefs.h>
 
-#include <api/hardware/hca_macro.h>
-#include <api/hardware/scl_hca.h>
-#include <api/hardware/v0.5/hash/hca_sha.h>
 #include <api/hash/sha.h>
 
 #include <metal/io.h>
 #include <metal/machine/platform.h>
 
+#include <api/hardware/scl_hca.h>
+#include <api/hardware/hca_macro.h>
+
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 #include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 
+#include <api/hardware/v0.5/hash/hca_sha.h>
 #include <api/hardware/v0.5/hash/hca_sha224.h>
 #include <api/hardware/v0.5/hash/hca_sha256.h>
 #include <api/hardware/v0.5/hash/hca_sha384.h>
@@ -176,3 +178,4 @@ int32_t hca_sha_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     // just in case
     return (SCL_ERROR);
 }
+#endif  /* METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0) */

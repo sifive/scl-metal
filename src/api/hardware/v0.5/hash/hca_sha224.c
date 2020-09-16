@@ -40,8 +40,10 @@
 #include <api/macro.h>
 #include <api/utils.h>
 
+#include <api/hardware/scl_hca.h>
 #include <api/hardware/hca_macro.h>
 
+#if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 #include <api/hardware/v0.5/hash/hca_sha224.h>
 #include <api/hardware/v0.5/hash/hca_sha256.h>
 #include <api/hardware/v0.5/hash/hca_sha_miscellaneous.h>
@@ -204,3 +206,4 @@ int32_t hca_sha224_read(const metal_scl_t *const scl, uint8_t *const data_out)
     }
     return SCL_OK;
 }
+#endif /* METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0) */
