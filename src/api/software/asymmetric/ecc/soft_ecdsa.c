@@ -337,6 +337,10 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
                 for (i = 0; i < curve_params->curve_wsize; i++)
                 {
                     result = scl->trng_func.get_data(scl, &x1[i]);
+                    if (SCL_OK > result)
+                    {
+                        return (result);
+                    }
                 }
 
                 truncate_array((uint8_t *)x1,
@@ -369,6 +373,10 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
                 for (i = 0; i < curve_params->curve_wsize; i++)
                 {
                     result = scl->trng_func.get_data(scl, &y1[i]);
+                    if (SCL_OK > result)
+                    {
+                        return (result);
+                    }
                 }
 
                 truncate_array((uint8_t *)y1,
