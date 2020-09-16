@@ -92,6 +92,8 @@ typedef enum
 
     /*! @brief error signature */
     SCL_ERR_SIGNATURE = -21,
+    /*! @brief error invalid hash */
+    SCL_ERR_HASH = -22,
 
     /*! @brief error functionnality not present */
     SCL_NOT_PRESENT = -30,

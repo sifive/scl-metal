@@ -23,29 +23,33 @@
  ******************************************************************************/
 
 /**
- * @file soft_ecdsa.h
- * @brief software elliptic curve digital signature algorithm implementation
+ * @file scl_aes.h
+ * @brief defines the AES.
+ * AES is NIST FIPS-197
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef SCL_BACKEND_SOFT_ECDSA_H
-#define SCL_BACKEND_SOFT_ECDSA_H
+#ifndef SCL_ECDSA_H
+#define SCL_ECDSA_H
 
 #include <stddef.h>
 #include <stdint.h>
 
-#include <crypto_cfg.h>
+#include <scl_cfg.h>
+
+#include <scl/scl_defs.h>
+#include <scl/scl_retdefs.h>
 
 #include <api/asymmetric/ecc/ecc.h>
 #include <api/asymmetric/ecc/ecdsa.h>
 #include <api/scl_api.h>
 
 /**
- * @addtogroup COMMON
- * @addtogroup ECC
- * @ingroup COMMON
+ * @addtogroup SCL
+ * @addtogroup SCL_ECDSA
+ * @ingroup SCL
  *  @{
  */
 
@@ -71,7 +75,7 @@
  * @note signature elements buffer shall be at least curve_params->curve_bsize
  * long
  */
-CRYPTO_FUNCTION int32_t soft_ecdsa_signature(
+SCL_FUNCTION int32_t scl_ecdsa_signature(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
     const uint8_t *const priv_key, const ecdsa_signature_t *const signature,
     const uint8_t *const hash, size_t hash_len);
@@ -98,7 +102,7 @@ CRYPTO_FUNCTION int32_t soft_ecdsa_signature(
  * @note signature elements shall be at least curve_params->curve_bsize
  * long
  */
-CRYPTO_FUNCTION int32_t soft_ecdsa_verification(
+SCL_FUNCTION int32_t scl_ecdsa_verification(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
     const ecc_affine_const_point_t *const pub_key,
     const ecdsa_signature_const_t *const signature, const uint8_t *const hash,
@@ -106,4 +110,4 @@ CRYPTO_FUNCTION int32_t soft_ecdsa_verification(
 
 /** @}*/
 
-#endif /* SCL_BACKEND_SOFT_ECDSA_H */
+#endif /* SCL_ECDSA_H */

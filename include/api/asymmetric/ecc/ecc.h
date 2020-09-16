@@ -36,7 +36,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-/** 
+/**
  * @addtogroup COMMON
  * @addtogroup ECC
  * @ingroup COMMON
@@ -132,7 +132,7 @@ enum ecc_std_curves_e
     ECC_CURVE_MAX_NB
 };
 
-/** 
+/**
  * @brief Affine point (x,y) with big integer coordinates
  * @note Coordinates are big integer, that implies 64 bits alignement, 32 bits
  * granularity, and coordinate should be little endian
@@ -144,7 +144,7 @@ typedef struct ecc_bignum_jacobian_point_s
     uint64_t *z;
 } ecc_bignum_jacobian_point_t;
 
-/** 
+/**
  * @brief Constant affine point (x,y)
  */
 typedef struct ecc_affine_point_s
@@ -153,7 +153,7 @@ typedef struct ecc_affine_point_s
     uint8_t *y;
 } ecc_affine_point_t;
 
-/** 
+/**
  * @brief Constant affine point (x,y)
  */
 typedef struct ecc_affine_const_point_s
@@ -162,7 +162,7 @@ typedef struct ecc_affine_const_point_s
     const uint8_t *y;
 } ecc_affine_const_point_t;
 
-/** 
+/**
  * @brief Affine point (x,y) with big integer coordinates
  * @note Coordinates are big integer, that implies 64 bits alignement, 32 bits
  * granularity, and coordinate should be little endian
@@ -173,7 +173,7 @@ typedef struct ecc_bignum_affine_point_s
     uint64_t *y;
 } ecc_bignum_affine_point_t;
 
-/** 
+/**
  * @brief Constant affine point with big integer coordinates
  * @note Coordinates are big integer, that implies 64 bits alignement, 32 bits
  * granularity, and coordinate should be little endian

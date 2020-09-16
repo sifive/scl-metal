@@ -35,7 +35,7 @@
 
 #include <stdint.h>
 
-/** 
+/**
  * @addtogroup COMMON
  * @addtogroup ECC
  * @ingroup COMMON

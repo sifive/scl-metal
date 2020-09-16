@@ -41,7 +41,7 @@
 #include <api/asymmetric/ecc/ecc.h>
 #include <api/scl_api.h>
 
-/** 
+/**
  * @addtogroup COMMON
  * @addtogroup ECC
  * @ingroup COMMON
@@ -210,7 +210,7 @@ CRYPTO_FUNCTION size_t soft_ecc_bit_extract(const uint32_t *const array,
  * Curves (Rivain) algo 18
  *
  * @param[in] scl           metal scl context
- * @param[in] curve_params      ECC curve parameters 
+ * @param[in] curve_params      ECC curve parameters
  * @param[in] in1               first input
  * @param[in] in2               second input
  * @param[out] out1             output point conjugate
@@ -231,7 +231,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_xycz_add(
  * Curves (Rivain) algo 19
  *
  * @param[in] scl               metal scl context
- * @param[in] curve_params      ECC curve parameters 
+ * @param[in] curve_params      ECC curve parameters
  * @param[in] in1               first input
  * @param[in] in2               second input
  * @param[out] out1             output point
@@ -252,7 +252,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_xycz_addc(
  * Curves (Rivain) algo 23
  *
  * @param[in] scl           metal scl context
- * @param[in] curve_params  ECC curve parameters 
+ * @param[in] curve_params  ECC curve parameters
  * @param[in] in            input point
  * @param[out] out1         output point
  * @param[out] out2         output point conjugate
@@ -271,7 +271,7 @@ CRYPTO_FUNCTION int32_t soft_ecc_xycz_idbl(
  * Curves (Rivain) algo 9
  *
  * @param[in] scl               metal scl context
- * @param[in] curve_params      ECC curve parameters 
+ * @param[in] curve_params      ECC curve parameters
  * @param[in] point             input point
  * @param[in] k                 scalar to multiply
  * @param[in] k_nb_32bits_words scalar length
