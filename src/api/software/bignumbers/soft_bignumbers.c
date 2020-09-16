@@ -30,10 +30,10 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
+#include <limits.h>
 #include <stdbool.h>
-#include <string.h>
-
 #include <stdio.h>
+#include <string.h>
 
 #include <api/macro.h>
 #include <api/utils.h>
@@ -396,7 +396,7 @@ int32_t soft_bignum_mult(const metal_scl_t *const scl,
             }
 
             /* load 32 bits msb into carry */
-            carry += (uint32_t)(ab >> (sizeof(uint32_t) * __CHAR_BIT__));
+            carry += (uint32_t)(ab >> (sizeof(uint32_t) * CHAR_BIT));
         }
         res[i + nb_32b_words] += carry;
     }
@@ -448,7 +448,7 @@ int32_t soft_bignum_square(const metal_scl_t *const scl,
         product =
             (uint64_t)in32[i] * (uint64_t)in32[i] + (uint64_t)out32[i + i];
         out32[i + i] = (uint32_t)product;
-        u = product >> (sizeof(uint32_t) * __CHAR_BIT__);
+        u = product >> (sizeof(uint32_t) * CHAR_BIT);
         /* 2.2 */
         for (j = i + 1; j < nb_32b_words; j++)
         {
@@ -462,8 +462,8 @@ int32_t soft_bignum_square(const metal_scl_t *const scl,
             carry += (uint32_t)(tmp < product);
             out32[i + j] = (uint32_t)tmp;
             /* carry is on double word */
-            u = ((uint64_t)carry << (sizeof(uint32_t) * __CHAR_BIT__)) +
-                (tmp >> (sizeof(uint32_t) * __CHAR_BIT__));
+            u = ((uint64_t)carry << (sizeof(uint32_t) * CHAR_BIT)) +
+                (tmp >> (sizeof(uint32_t) * CHAR_BIT));
         }
         /* extra carry management */
         j = nb_32b_words;
@@ -471,7 +471,7 @@ int32_t soft_bignum_square(const metal_scl_t *const scl,
         {
             tmp = (uint64_t)out32[i + j] + u;
             out32[i + j] = (uint32_t)tmp;
-            u = tmp >> (sizeof(uint32_t) * __CHAR_BIT__);
+            u = tmp >> (sizeof(uint32_t) * CHAR_BIT);
             j++;
         }
     }
@@ -494,17 +494,17 @@ int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
     }
 
     if ((0 == nb_32b_words) ||
-        (shift >= nb_32b_words * sizeof(uint32_t) * __CHAR_BIT__))
+        (shift >= nb_32b_words * sizeof(uint32_t) * CHAR_BIT))
     {
         return (SCL_INVALID_LENGTH);
     }
 
-    bit_shift_div64 = shift / (sizeof(uint64_t) * __CHAR_BIT__);
-    bit_shift_mod64 = shift & ((sizeof(uint64_t) * __CHAR_BIT__) - 1);
+    bit_shift_div64 = shift / (sizeof(uint64_t) * CHAR_BIT);
+    bit_shift_mod64 = shift & ((sizeof(uint64_t) * CHAR_BIT) - 1);
 
     i = nb_32b_words / 2;
 
-    revshift = (sizeof(uint64_t) * __CHAR_BIT__) - bit_shift_mod64;
+    revshift = (sizeof(uint64_t) * CHAR_BIT) - bit_shift_mod64;
 
     if (0 != nb_32b_words % 2)
     {
@@ -534,7 +534,7 @@ int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
         out[i] = in[i - bit_shift_div64] << bit_shift_mod64;
     }
 
-    memset(out, 0, shift / __CHAR_BIT__);
+    memset(out, 0, shift / CHAR_BIT);
 
     return (SCL_OK);
 }
@@ -557,17 +557,17 @@ int32_t soft_bignum_rightshift(const metal_scl_t *const scl,
     }
 
     if ((0 == nb_32b_words) ||
-        (shift >= nb_32b_words * sizeof(uint32_t) * __CHAR_BIT__))
+        (shift >= nb_32b_words * sizeof(uint32_t) * CHAR_BIT))
     {
         return (SCL_INVALID_LENGTH);
     }
 
-    bit_shift_div64 = shift / (sizeof(uint64_t) * __CHAR_BIT__);
-    bit_shift_mod64 = shift & ((sizeof(uint64_t) * __CHAR_BIT__) - 1);
+    bit_shift_div64 = shift / (sizeof(uint64_t) * CHAR_BIT);
+    bit_shift_mod64 = shift & ((sizeof(uint64_t) * CHAR_BIT) - 1);
 
     i = 0;
 
-    revshift = (sizeof(uint64_t) * __CHAR_BIT__) - bit_shift_mod64;
+    revshift = (sizeof(uint64_t) * CHAR_BIT) - bit_shift_mod64;
 
     while (i + bit_shift_div64 + 1 < nb_32b_words / 2)
     {
@@ -595,8 +595,8 @@ int32_t soft_bignum_rightshift(const metal_scl_t *const scl,
     }
 
     memset((void *)((uint8_t *)&out_32b[nb_32b_words] -
-                    (uint8_t *)(shift / __CHAR_BIT__)),
-           0, shift / __CHAR_BIT__);
+                    (uint8_t *)(shift / CHAR_BIT)),
+           0, shift / CHAR_BIT);
 
     return (SCL_OK);
 }
@@ -605,7 +605,7 @@ int32_t soft_bignum_msb_set_in_word(uint64_t word_64b)
 {
     size_t i;
 
-    for (i = 0; i < sizeof(word_64b) * __CHAR_BIT__; i++, word_64b >>= 1)
+    for (i = 0; i < sizeof(word_64b) * CHAR_BIT; i++, word_64b >>= 1)
     {
         if (0 == word_64b)
         {
@@ -635,8 +635,7 @@ int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
      * Check length, to avoid conflict with error codes on return, in practice
      * this should never happen except for tests
      */
-    if (((size_t)0x80000000 <=
-         nb_32b_words * sizeof(uint64_t) * __CHAR_BIT__) ||
+    if (((size_t)0x80000000 <= nb_32b_words * sizeof(uint64_t) * CHAR_BIT) ||
         (0 == nb_32b_words))
     {
         return (SCL_INVALID_LENGTH);
@@ -648,7 +647,7 @@ int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
     {
         if (0 != (uint32_t)array[i])
         {
-            shift_word = i * sizeof(uint64_t) * __CHAR_BIT__;
+            shift_word = i * sizeof(uint64_t) * CHAR_BIT;
             shift_word +=
                 (size_t)soft_bignum_msb_set_in_word((uint32_t)array[i]);
             return ((int32_t)shift_word);
@@ -661,7 +660,7 @@ int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
         i--;
         if (0 != array[i])
         {
-            shift_word = i * sizeof(uint64_t) * __CHAR_BIT__;
+            shift_word = i * sizeof(uint64_t) * CHAR_BIT;
             shift_word += (size_t)soft_bignum_msb_set_in_word(array[i]);
             return ((int32_t)shift_word);
         }
@@ -692,13 +691,13 @@ int32_t soft_bignum_set_bit(const metal_scl_t *const scl, uint64_t *const array,
         return (SCL_INVALID_LENGTH);
     }
 
-    if (bit_2_set >= nb_32b_words * sizeof(uint32_t) * __CHAR_BIT__)
+    if (bit_2_set >= nb_32b_words * sizeof(uint32_t) * CHAR_BIT)
     {
         return (SCL_INVALID_INPUT);
     }
 
-    array_32b[bit_2_set / (sizeof(uint32_t) * __CHAR_BIT__)] |=
-        (uint32_t)(1 << (bit_2_set % (sizeof(uint32_t) * __CHAR_BIT__)));
+    array_32b[bit_2_set / (sizeof(uint32_t) * CHAR_BIT)] |=
+        (uint32_t)(1 << (bit_2_set % (sizeof(uint32_t) * CHAR_BIT)));
 
     return (SCL_OK);
 }
@@ -797,9 +796,9 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
     bitshift_dico = (size_t)result;
 
     /* We allocate +1 word to manage overflow */
-    p_len = (bitshift_dico - 1) / (sizeof(uint32_t) * __CHAR_BIT__) + 1;
+    p_len = (bitshift_dico - 1) / (sizeof(uint32_t) * CHAR_BIT) + 1;
 
-    p_len += (bitshift_dico - 1) % (sizeof(uint32_t) * __CHAR_BIT__) ? 1 : 0;
+    p_len += (bitshift_dico - 1) % (sizeof(uint32_t) * CHAR_BIT) ? 1 : 0;
 
     /* get highest bit of divisor */
     result = scl->bignum_func.get_msb_set(scl, divisor, divisor_nb_32b_words);
@@ -811,7 +810,7 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
     bitshift_dico -= (size_t)result;
 
     {
-        // p_len = bitshift_dico / (sizeof(uint32_t) * __CHAR_BIT__) +
+        // p_len = bitshift_dico / (sizeof(uint32_t) * CHAR_BIT) +
         // divisor_nb_32b_words + 1;
 
         /** p : representative of the calculations on b * 2 ^ n (the second

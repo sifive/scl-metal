@@ -30,6 +30,7 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
+#include <limits.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -793,7 +794,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
             }
         }
 
-        n = curve_params->curve_wsize * sizeof(uint32_t) * __CHAR_BIT__;
+        n = curve_params->curve_wsize * sizeof(uint32_t) * CHAR_BIT;
 
         /* 3. r=infinite */
         memset(x1, 0, curve_params->curve_wsize * sizeof(uint32_t));

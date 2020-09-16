@@ -31,6 +31,7 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
+#include <limits.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -1098,9 +1099,9 @@ int32_t soft_ecc_double_jacobian(const metal_scl_t *const scl,
 size_t soft_ecc_bit_extract(const uint32_t *const array, size_t bit_idx)
 {
 
-    if (0 != (array[bit_idx / (sizeof(uint32_t) * __CHAR_BIT__)] &
+    if (0 != (array[bit_idx / (sizeof(uint32_t) * CHAR_BIT)] &
               ((uint32_t)1 << ((uint32_t)(bit_idx %
-                                          (sizeof(uint32_t) * __CHAR_BIT__))))))
+                                          (sizeof(uint32_t) * CHAR_BIT))))))
     {
         return (1);
     }
@@ -2422,7 +2423,7 @@ int32_t soft_ecc_mod_secp521r1(const metal_scl_t *const scl,
     result = scl->bignum_func.leftshift(
         scl, (uint64_t *)&a[ECC_SECP521R1_32B_WORDS_SIZE - 1],
         (uint64_t *)&a[ECC_SECP521R1_32B_WORDS_SIZE - 1],
-        2 * sizeof(uint32_t) * __CHAR_BIT__ - 9,
+        2 * sizeof(uint32_t) * CHAR_BIT - 9,
         ECC_SECP521R1_64B_WORDS_SIZE * 4 - (ECC_SECP521R1_32B_WORDS_SIZE - 1));
     if (SCL_OK > result)
     {
