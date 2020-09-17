@@ -99,6 +99,20 @@
     })
 #endif
 
+#ifndef IS_ALIGNED_4_BYTES
+/**
+ * @brief Test is a pointer is aliged on a 4-byte address
+ */
+#define IS_ALIGNED_4_BYTES(p)   (!(((uintptr_t)(p)) & 0x3u))
+#endif
+
+#ifndef IS_ALIGNED_8_BYTES
+/**
+ * @brief Test is a pointer is aliged on a 8-byte address
+ */
+#define IS_ALIGNED_8_BYTES(p)   (!(((uintptr_t)(p)) & 0x7u))
+#endif
+
 /** @}*/
 
 #endif /* SCL_BACKEND_MACRO_H */

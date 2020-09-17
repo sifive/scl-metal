@@ -38,6 +38,7 @@
 #include <metal/io.h>
 #include <metal/machine/platform.h>
 
+#include <api/macro.h>
 #include <api/hardware/hca_macro.h>
 #include <api/hardware/scl_hca.h>
 
@@ -151,7 +152,7 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         while ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >> HCA_REGISTER_CR_IFIFOFULL_OFFSET )
                 & HCA_REGISTER_CR_IFIFOFULL_MASK ) ;
 #if __riscv_xlen == 64
-        if ((uint64_t)data_in & 0x7)
+        if ( ! IS_ALIGNED_8_BYTES(data_in) )
         {
             i = k << 4;
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
@@ -171,7 +172,7 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 1];
         }
 #elif __riscv_xlen == 32
-        if ((uint32_t)data_in & 0x3)
+        if ( ! IS_ALIGNED_4_BYTES(data_in) )
         {
             i = k << 4;
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) =
@@ -204,7 +205,7 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
 
             // Read AES result
 #if __riscv_xlen == 64
-        if ((uint64_t)data_out & 0x7)
+        if ( ! IS_ALIGNED_8_BYTES(data_out) )
         {
             register uint64_t val;
             i = k << 4;
@@ -239,7 +240,7 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
             out64[i + 1] = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
         }
 #elif __riscv_xlen == 32
-        if ((uint32_t)data_out & 0x3)
+        if ( ! IS_ALIGNED_4_BYTES(data_out) )
         {
             register uint32_t val;
             i = k << 4;
@@ -407,7 +408,7 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
             while ( (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_CR) >> HCA_REGISTER_CR_IFIFOFULL_OFFSET )
                     & HCA_REGISTER_CR_IFIFOFULL_MASK ) ;
 #if __riscv_xlen == 64
-            if ((uint64_t)aad & 0x7)
+            if ( ! IS_ALIGNED_8_BYTES(aad) )
             {
                 /* get uint8_t index base on 128bits index */
                 i = k * BLOCK128_NB_BYTE;
@@ -429,7 +430,7 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
                 METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = aad64[i + 1];
             }
 #elif __riscv_xlen == 32
-            if ((uint32_t)aad & 0x3)
+            if ( ! IS_ALIGNED_4_BYTES(aad) )
             {
                 /* get uint8_t index base on 128bits index */
                 i = k * BLOCK128_NB_BYTE;
@@ -650,7 +651,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 
             // Read output result
 #if __riscv_xlen == 64
-        if (0 != (uint64_t)data_out % sizeof(uint64_t))
+        if ( ! IS_ALIGNED_8_BYTES(data_out) )
         {
             register uint64_t val;
             val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
@@ -678,7 +679,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
             out64[1] = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
         }
 #elif __riscv_xlen == 32
-        if (0 != (uint32_t)data_out % sizeof(uint32_t))
+        if ( ! IS_ALIGNED_4_BYTES(data_out) )
         {
             register uint32_t val;
             val = METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
@@ -758,7 +759,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
                 & HCA_REGISTER_CR_OFIFOEMPTY_MASK );
         // Read AES result
 #if __riscv_xlen == 64
-        if (0 != (uint64_t)data_out % sizeof(uint64_t))
+        if ( ! IS_ALIGNED_8_BYTES(data_out) )
         {
             register uint64_t val;
             val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
@@ -787,7 +788,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
             out64[i + 1] = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
         }
 #elif __riscv_xlen == 32
-        if (0 != (uint32_t)data_out % sizeof(uint32_t))
+        if ( ! IS_ALIGNED_4_BYTES(data_out) )
         {
             register uint32_t val;
             val = METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);

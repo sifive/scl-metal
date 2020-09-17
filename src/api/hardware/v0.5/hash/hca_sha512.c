@@ -215,7 +215,7 @@ void hca_sha512_append_bit_len(uint8_t *const buffer, uint64_t *const length)
 int32_t hca_sha512_read(const metal_scl_t *const scl, uint8_t *const data_out)
 {
     // Read hash
-    if ((uint32_t)data_out & 0x7)
+    if ( ! IS_ALIGNED_8_BYTES(data_out) )
     {
         register uint64_t val;
         val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_HASH);

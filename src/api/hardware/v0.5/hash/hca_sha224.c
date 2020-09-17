@@ -143,7 +143,7 @@ int32_t hca_sha224_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
 int32_t hca_sha224_read(const metal_scl_t *const scl, uint8_t *const data_out)
 {
     // Read hash
-    if ((uint64_t)data_out & 0x3)
+    if ( ! IS_ALIGNED_4_BYTES(data_out) )
     {
         register uint64_t val;
         val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_HASH);
