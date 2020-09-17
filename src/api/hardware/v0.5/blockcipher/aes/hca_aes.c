@@ -100,16 +100,6 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
                        scl_endianness_t data_endianness,
                        const uint8_t *const data_in, size_t data_len, uint8_t *const data_out)
 {
-
-#if __riscv_xlen == 64
-    const uint64_t *in64 = (const uint64_t *)data_in;
-    uint64_t *out64 = (uint64_t *)data_out;
-    register uint64_t val;
-#elif __riscv_xlen == 32
-    const uint32_t *in32 = (const uint32_t *)data_in;
-    uint32_t *out32 = (uint32_t *)data_out;
-    register uint32_t val;
-#endif
     uint64_t i, k;
     uint64_t NbBlocks128;
 
@@ -171,6 +161,11 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         }
         else
         {
+            #pragma GCC diagnostic push
+            // data_in is known to be aligned on uint64_t
+            #pragma GCC diagnostic ignored "-Wcast-align"
+            const uint64_t *in64 = (const uint64_t *)data_in;
+            #pragma GCC diagnostic pop
             i = k << 1;
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i];
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 1];
@@ -190,6 +185,11 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         }
         else
         {
+            #pragma GCC diagnostic push
+            // data_in is known to be aligned on uint32_t
+            #pragma GCC diagnostic ignored "-Wcast-align"
+            const uint32_t *in32 = (const uint32_t *)data_in;
+            #pragma GCC diagnostic pop
             i = k << 2;
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i];
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 1];
@@ -206,6 +206,7 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
 #if __riscv_xlen == 64
         if ((uint64_t)data_out & 0x7)
         {
+            register uint64_t val;
             i = k << 4;
             val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
             data_out[i] = (uint8_t)val;
@@ -228,6 +229,11 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         }
         else
         {
+            #pragma GCC diagnostic push
+            // data_out is known to be aligned on uint64_t
+            #pragma GCC diagnostic ignored "-Wcast-align"
+            uint64_t *out64 = (uint64_t *)data_out;
+            #pragma GCC diagnostic pop
             i = k << 1;
             out64[i] = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
             out64[i + 1] = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
@@ -235,6 +241,7 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
 #elif __riscv_xlen == 32
         if ((uint32_t)data_out & 0x3)
         {
+            register uint32_t val;
             i = k << 4;
             val = METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
             data_out[i] = (uint8_t)val;
@@ -259,6 +266,11 @@ int32_t hca_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
         }
         else
         {
+            #pragma GCC diagnostic push
+            // data_out is known to be aligned on uint32_t
+            #pragma GCC diagnostic ignored "-Wcast-align"
+            uint32_t *out32 = (uint32_t *)data_out;
+            #pragma GCC diagnostic pop
             i = k << 2;
             out32[i] = METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
             out32[i + 1] = METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
@@ -276,11 +288,6 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
                      scl_endianness_t data_endianness, uint32_t auth_option,
                      const uint8_t *const aad, size_t aad_byte_len, uint64_t payload_len)
 {
-#if __riscv_xlen == 64
-    const uint64_t *aad64 = (const uint64_t *)aad;
-#elif __riscv_xlen == 32
-    const uint32_t *aad32 = (const uint32_t *)aad;
-#endif /* __riscv_xlen */
     uint32_t i, j, k;
     uint64_t NbBlocks128;
     uint64_t tmp[BLOCK128_NB_UINT64]                __attribute__ ((aligned (8)));
@@ -411,6 +418,11 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
             }
             else
             {
+                #pragma GCC diagnostic push
+                // aad is known to be aligned on uint64_t
+                #pragma GCC diagnostic ignored "-Wcast-align"
+                const uint64_t *aad64 = (const uint64_t *)aad;
+                #pragma GCC diagnostic pop
                 /* get uint64_t index base on 128bits index */
                 i = k * BLOCK128_NB_UINT64;
                 METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = aad64[i];
@@ -432,6 +444,11 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
             }
             else
             {
+                #pragma GCC diagnostic push
+                // aad is known to be aligned on uint32_t
+                #pragma GCC diagnostic ignored "-Wcast-align"
+                const uint32_t *aad32 = (const uint32_t *)aad;
+                #pragma GCC diagnostic pop
                 /* get uint32_t index base on 128bits index */
                 i = k * BLOCK128_NB_UINT32;
                 METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = aad32[i];
@@ -515,11 +532,9 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 #if __riscv_xlen == 64
     const uint64_t *in64 = (const uint64_t *)data_in;
     uint64_t *out64 = (uint64_t *)data_out;
-    register uint64_t val;
 #elif __riscv_xlen == 32
     const uint32_t *in32 = (const uint32_t *)data_in;
     uint32_t *out32 = (uint32_t *)data_out;
-    register uint32_t val;
 #endif /* __riscv_xlen */
     size_t i, k;
     uint64_t NbBlocks128;
@@ -637,6 +652,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 #if __riscv_xlen == 64
         if (0 != (uint64_t)data_out % sizeof(uint64_t))
         {
+            register uint64_t val;
             val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
             data_out[0] = (uint8_t)val;
             data_out[1] = (uint8_t)(val >> 8);
@@ -664,6 +680,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 #elif __riscv_xlen == 32
         if (0 != (uint32_t)data_out % sizeof(uint32_t))
         {
+            register uint32_t val;
             val = METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
             data_out[0] = (uint8_t)val;
             data_out[1] = (uint8_t)(val >> 8);
@@ -743,6 +760,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 #if __riscv_xlen == 64
         if (0 != (uint64_t)data_out % sizeof(uint64_t))
         {
+            register uint64_t val;
             val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
             data_out[out_offset] = (uint8_t)val;
             data_out[out_offset + 1] = (uint8_t)(val >> 8);
@@ -771,6 +789,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
 #elif __riscv_xlen == 32
         if (0 != (uint32_t)data_out % sizeof(uint32_t))
         {
+            register uint32_t val;
             val = METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_AES_OUT);
             data_out[out_offset] = (uint8_t)val;
             data_out[out_offset + 1] = (uint8_t)(val >> 8);
