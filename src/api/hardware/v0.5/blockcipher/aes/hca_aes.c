@@ -504,7 +504,7 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
                 METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = tmp[0];
             }
 #elif __riscv_xlen == 32
-            aad32 = (uint32_t *)tmp;
+            uint32_t * aad32 = (uint32_t *)tmp;
             if ( SCL_LITTLE_ENDIAN_MODE == data_endianness)
             {
                 METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = aad32[0];
