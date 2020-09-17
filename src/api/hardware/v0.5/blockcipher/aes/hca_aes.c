@@ -609,7 +609,7 @@ int32_t hca_aes_auth_core(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[1];
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[0];
         }
-        in64 = (uint64_t *)(data_in + in_offset);
+        in64 = (const uint64_t *)(data_in + in_offset);
 #elif __riscv_xlen == 32
         in32 = (uint32_t *)(ctx->buf);
         if ( SCL_LITTLE_ENDIAN_MODE == ctx->data_endianness)
