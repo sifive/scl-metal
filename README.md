@@ -17,6 +17,9 @@ Supports the HCA version 0.5.x
 ECDSA signature and verification are supported:
     - for standard curves SECP256r1, SECP384r1 and SECP521r1
 
-Warning:
+## Warning:
 Local variable cleaning is not done yet, therefore it's not secure to use the library for cryptographic signature, but it's safe to use signature verification.
 A cleaning mechanism will be added in the future.
+
+## Optimization
+Computation speed can be improved by placing **crypto_const_data** section/symbol into RAM. This avoid very Flash access and speed up computation (on ecdsa).

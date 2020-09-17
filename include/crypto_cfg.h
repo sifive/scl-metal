@@ -36,6 +36,13 @@
 #define CRYPTO_FUNCTION __attribute__((section("crypto_functions")))
 #define CRYPTO_DATA __attribute__((section("crypto_data")))
 
-#define CRYPTO_CONST_DATA __attribute__((section(".data")))
+/**
+ * @brief Macro to add section qualifier to some contant data section. 
+ * @details This allow user to place constants (ecdsa curves parameters) in RAM
+ * by doing so we speed up computation. But that put constant data in a
+ * writable section and might cause security issue (i.e. the memory zone should
+ * be set not writable/executable with pmp to avoid any issue).
+ */
+#define CRYPTO_CONST_DATA __attribute__((section("crypto_const_data")))
 
 #endif /* SCL_CRYPTO_CFG_H */
