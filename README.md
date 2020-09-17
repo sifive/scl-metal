@@ -23,4 +23,5 @@ A cleaning mechanism will be added in the future.
 
 ## Optimization
 Computation speed can be improved by placing **crypto_const_data** section/symbol into RAM. This avoid Flash access and speed up computation (on ecdsa).
+Placing crypto_const_data in RAM should be done with special care (Security issues if constant are modified). Reserving a non writable/executable section protected by PMP might be a good idea.
 This is only an improvment if the rodata are located in Flash.
