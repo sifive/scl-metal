@@ -87,7 +87,6 @@ int32_t hca_sha_init(const metal_scl_t *const scl, sha_ctx_t *const ctx,
         break;
     default:
         return (SCL_ERROR);
-        break;
     }
 
     // Set HCA_MODE to SHA
@@ -126,23 +125,17 @@ int32_t hca_sha_core(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     case SCL_HASH_SHA224:
         // same core than sha256
         return (hca_sha256_core(scl, ctx, data, data_byte_len));
-        break;
     case SCL_HASH_SHA256:
         return (hca_sha256_core(scl, ctx, data, data_byte_len));
-        break;
     case SCL_HASH_SHA384:
         // same core than sha384
         return (hca_sha512_core(scl, ctx, data, data_byte_len));
-        break;
     case SCL_HASH_SHA512:
         return (hca_sha512_core(scl, ctx, data, data_byte_len));
-        break;
     default:
-        return (SCL_ERROR);
         break;
     }
 
-    // just in case
     return (SCL_ERROR);
 }
 
@@ -160,22 +153,16 @@ int32_t hca_sha_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     {
     case SCL_HASH_SHA224:
         return (hca_sha224_finish(scl, ctx, hash, hash_len));
-        break;
     case SCL_HASH_SHA256:
         return (hca_sha256_finish(scl, ctx, hash, hash_len));
-        break;
     case SCL_HASH_SHA384:
         return (hca_sha384_finish(scl, ctx, hash, hash_len));
-        break;
     case SCL_HASH_SHA512:
         return (hca_sha512_finish(scl, ctx, hash, hash_len));
-        break;
     default:
-        return (SCL_ERROR);
         break;
     }
 
-    // just in case
     return (SCL_ERROR);
 }
 #endif  /* METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0) */
