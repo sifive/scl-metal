@@ -22,4 +22,4 @@ Local variable cleaning is not done yet, therefore it's not secure to use the li
 A cleaning mechanism will be added in the future.
 
 ## Optimization
-Computation speed can be improved by placing **crypto_const_data** section/symbol into RAM. This avoid very Flash access and speed up computation (on ecdsa).
+Computation speed can be improved by placing **crypto_const_data** section/symbol into RAM. This avoid Flash access and speed up computation (on ecdsa).
