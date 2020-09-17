@@ -47,8 +47,6 @@
     (((uint64_t)UINT32((const uint8_t *)data) << 32) +                         \
      (uint64_t)UINT32((const uint8_t *)data + 4))
 
-SCL_DATA metal_scl_t *scl_ctx = NULL;
-
 int32_t scl_format_key(const uint8_t *const key, const size_t key_byte_len,
                        uint64_t *key_formated)
 {
