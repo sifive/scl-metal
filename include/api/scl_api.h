@@ -635,6 +635,10 @@ struct __ecdsa_func
      * @note private key shall be curve_params->curve_bsize
      * @note signature elements buffer shall be at least
      * curve_params->curve_bsize long
+     * @warning For security purpose, the hash length should be equal to
+     * superior to curve_params->curve_bsize. Otherwise, the strength of the
+     * signature is reduce to the lowest strength between the hash or the
+     * signature.
      */
     int32_t (*signature)(const metal_scl_t *const scl,
                          const ecc_curve_t *const curve_params,
@@ -664,6 +668,10 @@ struct __ecdsa_func
      * @note public key shall be curve_params->curve_bsize
      * @note signature elements shall be at least curve_params->curve_bsize
      * long
+     * @warning For security purpose, the hash length should be equal to
+     * superior to curve_params->curve_bsize. Otherwise, the strength of the
+     * signature is reduce to the lowest strength between the hash or the
+     * signature.
      */
     int32_t (*verification)(const metal_scl_t *const scl,
                             const ecc_curve_t *const curve_params,
