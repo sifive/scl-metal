@@ -628,7 +628,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
 
         /**
          * variables that contain the precomputed values
-         * xP + jQ window method matrix
+         * iP + jQ window method matrix
          */
         ecc_bignum_jacobian_point_t ip_jq[SCL_ECDSA_ARRAY_SIZE];
 
