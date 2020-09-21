@@ -32,6 +32,7 @@
  */
 
 #include <string.h>
+#include <limits.h>
 
 #include <scl_cfg.h>
 
@@ -48,11 +49,13 @@
 
 #define CCM_TQ(t, q) ((uint8_t)((uint8_t)t + ((uint8_t)q << 4)))
 
+#define MAX_VALUE_FROM_N_BYTES(_n_) ((1ull << (_n_)*CHAR_BIT) - 1ull)
+
 int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
                          aes_auth_ctx_t *const ctx, const uint8_t *const key,
                          size_t key_byte_len, const uint8_t *const iv,
                          size_t iv_byte_len, const uint8_t *const aad,
-                         size_t aad_byte_len, uint64_t pld_byte_len,
+                         size_t aad_byte_len, size_t pld_byte_len,
                          size_t tag_byte_len, scl_process_t mode)
 {
     int32_t ret;
@@ -80,32 +83,38 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
 
     // determine ccmq value
     // 2^16
-    if (pld_byte_len < (((uint64_t)1 << (2 * 8))))
+    if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(2u) )
     {
         ccmq = 2;
     }
     // 2^24
-    else if (pld_byte_len < (((uint64_t)1 << (3 * 8))))
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(3u) )
     {
         ccmq = 3;
     }
     // 2^32
-    else if (pld_byte_len < (((uint64_t)1 << (4 * 8))))
+    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(4u) )
     {
         ccmq = 4;
     }
+#if __riscv_xlen == 32
+    else
+    {
+        return (SCL_INVALID_INPUT);
+    }
+#else
     // 2^40
-    else if (pld_byte_len < (((uint64_t)1 << (5 * 8))))
+    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(5u) )
     {
         ccmq = 5;
     }
     // 2^48
-    else if (pld_byte_len < (((uint64_t)1 << (6 * 8))))
+    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(6u) )
     {
         ccmq = 6;
     }
     // 2^56
-    else if (pld_byte_len < (((uint64_t)1 << (7 * 8))))
+    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(7u) )
     {
         ccmq = 7;
     }
@@ -114,6 +123,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     {
         ccmq = 8;
     }
+#endif
 
     ret = scl_format_key(key, key_byte_len, formated);
 
@@ -162,7 +172,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
 int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx,
                          aes_auth_ctx_t *const ctx, uint8_t *const dst,
                          size_t *const dst_byte_len, const uint8_t *const pld,
-                         uint64_t pld_byte_len)
+                         size_t pld_byte_len)
 {
     if (NULL == scl_ctx)
     {
@@ -176,7 +186,7 @@ int32_t scl_aes_ccm_core(const metal_scl_t *const scl_ctx,
 int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx,
                            aes_auth_ctx_t *const ctx, uint8_t *const tag,
                            size_t tag_byte_len, uint8_t *const dst,
-                           const uint8_t *const pld, uint64_t pld_byte_len)
+                           const uint8_t *const pld, size_t pld_byte_len)
 {
     int32_t ret;
     uint8_t tmp_tag[BLOCK128_NB_BYTE] __attribute__((aligned(8))) = {0};
@@ -238,7 +248,7 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx,
 
 int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx, uint8_t *const tag,
                     size_t tag_byte_len, uint8_t *const dst,
-                    const uint8_t *const pld, uint64_t pld_byte_len,
+                    const uint8_t *const pld, size_t pld_byte_len,
                     const uint8_t *const key, size_t key_byte_len,
                     const uint8_t *const iv, size_t iv_byte_len,
                     const uint8_t *const aad, size_t aad_byte_len,

@@ -119,7 +119,7 @@ struct __aes_func
                          scl_process_t aes_process,
                          scl_endianness_t data_endianness, uint32_t auth_option,
                          const uint8_t *const aad, size_t aad_len,
-                         uint64_t payload_len);
+                         size_t payload_len);
     /**
      * @brief perform AES cipher with authentication operation
      *
@@ -136,7 +136,7 @@ struct __aes_func
      */
     int32_t (*auth_core)(const metal_scl_t *const scl,
                          aes_auth_ctx_t *const ctx,
-                         const uint8_t *const payload, uint64_t payload_len,
+                         const uint8_t *const payload, size_t payload_len,
                          uint8_t *const data_out, size_t *const len_out);
     /**
      * @brief finish AES cipher with authentication operation
