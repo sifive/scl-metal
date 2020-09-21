@@ -47,9 +47,11 @@
 
 #include <scl/scl_aes_ccm.h>
 
+#include <api/macro.h>
+
 #define CCM_TQ(t, q) ((uint8_t)((uint8_t)t + ((uint8_t)q << 4)))
 
-#define MAX_VALUE_FROM_N_BYTES(_n_) ((1ull << (_n_)*CHAR_BIT) - 1ull)
+#define MAX_VALUE_FROM_N_BYTES(_n_) ((size_t)((1ull << (_n_)*CHAR_BIT) - 1ull))
 
 int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
                          aes_auth_ctx_t *const ctx, const uint8_t *const key,
@@ -69,6 +71,8 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     {
         return (SCL_INVALID_INPUT);
     }
+
+    ASSERT_COMPILE(sizeof(size_t) == (__riscv_xlen / CHAR_BIT));
 
     // get ccmt value
     if (tag_byte_len > BLOCK128_NB_BYTE)
@@ -92,17 +96,17 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     {
         ccmq = 3;
     }
+#if __riscv_xlen == 32
+    else
+    {
+        ccmq = 4;
+    }
+#else
     // 2^32
     else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(4u) )
     {
         ccmq = 4;
     }
-#if __riscv_xlen == 32
-    else
-    {
-        return (SCL_INVALID_INPUT);
-    }
-#else
     // 2^40
     else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(5u) )
     {
