@@ -83,7 +83,9 @@ override CFLAGS += -I $(INCLUDE_DIR)
 override CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual \
 					-Wunreachable-code -Wstrict-aliasing -Wdangling-else \
 					-Wconversion -Wsign-conversion -Wmissing-include-dirs \
-					-Wduplicated-branches -Wduplicated-cond -Warray-bounds 
+					-Wduplicated-branches -Wduplicated-cond -Warray-bounds \
+					-Wlogical-op -Wrestrict -Wnull-dereference \
+					-Wjump-misses-init -Wdouble-promotion -Wformat=2
 
 override ASFLAGS = $(CFLAGS)
 
