@@ -601,7 +601,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
         uint32_t s[curve_params->curve_wsize] __attribute__((aligned(8)));
 
         /**
-         * The notation used here follow the ones in Wikipedia
+         * The notation used here follow the ones in ANSI X9-62
          */
         uint32_t e[curve_params->curve_wsize] __attribute__((aligned(8)));
         uint32_t z[curve_params->curve_wsize] __attribute__((aligned(8)));
@@ -642,7 +642,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
         copy_swap_array((uint8_t *)r, signature->r, curve_params->curve_bsize);
         copy_swap_array((uint8_t *)s, signature->s, curve_params->curve_bsize);
 
-        /* Check that r and s are in the interval [1, n-1] */
+        /* a. Check that r and s are in the interval [1, n-1] */
         result = scl->bignum_func.compare(scl, (uint64_t *)r, curve_params->n,
                                           curve_params->curve_wsize);
         if (result >= 0)
@@ -673,7 +673,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
             goto cleanup;
         }
 
-        /* Copy hash into e */
+        /* c. Copy hash into e */
         memset(e, 0, curve_params->curve_wsize * sizeof(uint32_t));
         copy_swap_array((uint8_t *)e, hash,
                         MIN(hash_len, curve_params->curve_bsize));
@@ -695,7 +695,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
             return (result);
         }
 
-        /* Compute u1 = e.z mod n */
+        /* d. Compute u1 = e.z mod n and u2 = r.z mod n */
         result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)e,
                                            (uint64_t *)z, (uint64_t *)u1,
                                            curve_params->curve_wsize);
@@ -704,7 +704,6 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
             return (result);
         }
 
-        /* Compute u2 = r.z mod n */
         result = scl->bignum_func.mod_mult(scl, &bignum_ctx, (uint64_t *)r,
                                            (uint64_t *)z, (uint64_t *)u2,
                                            curve_params->curve_wsize);
@@ -855,6 +854,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
         point_aff.x = (uint64_t *)x1;
         point_aff.y = (uint64_t *)y1;
 
+        /* f. */
         result = soft_ecc_convert_jacobian_to_affine(scl, curve_params,
                                                      &point_jac, &point_aff,
                                                      curve_params->curve_wsize);
@@ -863,7 +863,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
             goto cleanup;
         }
 
-        /* v=x1 mod n (using z1 as v) */
+        /* g. v=x1 mod n (using z1 as v) */
         result = scl->bignum_func.mod(
             scl, (uint64_t *)x1, curve_params->curve_wsize, curve_params->n,
             curve_params->curve_wsize, (uint64_t *)z1);
@@ -872,7 +872,7 @@ int32_t soft_ecdsa_verification(const metal_scl_t *const scl,
             goto cleanup;
         }
 
-        /* if (r==v) the signature is ok */
+        /* h. if (r==v) the signature is ok */
         if (0 != memcmp(r, z1, curve_params->curve_wsize * sizeof(uint32_t)))
         {
             result = SCL_ERR_SIGNATURE;
