@@ -64,7 +64,7 @@
  */
 CRYPTO_FUNCTION int32_t hca_sha_block(const metal_scl_t *const scl,
                                       hash_mode_t hash_mode,
-                                      uint32_t NbBlocks512,
+                                      size_t NbBlocks512,
                                       const uint8_t *const data_in);
 
 /** @}*/

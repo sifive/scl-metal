@@ -46,13 +46,8 @@
 #include <api/hardware/v0.5/sifive_hca-0.5.x.h>
 
 int32_t hca_sha_block(const metal_scl_t *const scl, hash_mode_t hash_mode,
-                      uint32_t NbBlocks512, const uint8_t *const data_in)
+                      size_t NbBlocks512, const uint8_t *const data_in)
 {
-#if __riscv_xlen == 64
-    const uint64_t *in64 = (const uint64_t *)data_in;
-#elif __riscv_xlen == 32
-    const uint32_t *in32 = (const uint32_t *)data_in;
-#endif
     size_t i;
 
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_SHA_REV))
@@ -104,6 +99,11 @@ int32_t hca_sha_block(const metal_scl_t *const scl, hash_mode_t hash_mode,
         }
         else
         {
+            #pragma GCC diagnostic push
+            // data_in is known to be aligned on uint64_t
+            #pragma GCC diagnostic ignored "-Wcast-align"
+            const uint64_t *in64 = (const uint64_t *)data_in;
+            #pragma GCC diagnostic pop
             i = k << 3;
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i];
             METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in64[i + 1];
@@ -153,6 +153,11 @@ int32_t hca_sha_block(const metal_scl_t *const scl, hash_mode_t hash_mode,
         }
         else
         {
+            #pragma GCC diagnostic push
+            // data_in is known to be aligned on uint32_t
+            #pragma GCC diagnostic ignored "-Wcast-align"
+            const uint32_t *in32 = (const uint32_t *)data_in;
+            #pragma GCC diagnostic pop
             i = k << 4;
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i];
             METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_FIFO_IN) = in32[i + 1];

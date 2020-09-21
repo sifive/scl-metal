@@ -56,22 +56,16 @@ int32_t soft_sha_init(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     {
     case SCL_HASH_SHA224:
         return (soft_sha224_init(&(ctx->ctx.sha224), data_endianness));
-        break;
     case SCL_HASH_SHA256:
         return (soft_sha256_init(&(ctx->ctx.sha256), data_endianness));
-        break;
     case SCL_HASH_SHA384:
         return (soft_sha384_init(&(ctx->ctx.sha384), data_endianness));
-        break;
     case SCL_HASH_SHA512:
         return (soft_sha512_init(&(ctx->ctx.sha512), data_endianness));
-        break;
     default:
-        return (SCL_ERROR);
         break;
     }
 
-    // just in case
     return (SCL_ERROR);
 }
 
@@ -89,22 +83,16 @@ int32_t soft_sha_core(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     {
     case SCL_HASH_SHA224:
         return (soft_sha224_core(&(ctx->ctx.sha224), data, data_byte_len));
-        break;
     case SCL_HASH_SHA256:
         return (soft_sha256_core(&(ctx->ctx.sha256), data, data_byte_len));
-        break;
     case SCL_HASH_SHA384:
         return (soft_sha384_core(&(ctx->ctx.sha384), data, data_byte_len));
-        break;
     case SCL_HASH_SHA512:
         return (soft_sha512_core(&(ctx->ctx.sha512), data, data_byte_len));
-        break;
     default:
-        return (SCL_ERROR);
         break;
     }
 
-    // just in case
     return (SCL_ERROR);
 }
 
@@ -122,21 +110,15 @@ int32_t soft_sha_finish(const metal_scl_t *const scl, sha_ctx_t *const ctx,
     {
     case SCL_HASH_SHA224:
         return (soft_sha224_finish(&(ctx->ctx.sha224), hash, hash_len));
-        break;
     case SCL_HASH_SHA256:
         return (soft_sha256_finish(&(ctx->ctx.sha256), hash, hash_len));
-        break;
     case SCL_HASH_SHA384:
         return (soft_sha384_finish(&(ctx->ctx.sha384), hash, hash_len));
-        break;
     case SCL_HASH_SHA512:
         return (soft_sha512_finish(&(ctx->ctx.sha512), hash, hash_len));
-        break;
     default:
-        return (SCL_ERROR);
         break;
     }
 
-    // just in case
     return (SCL_ERROR);
 }

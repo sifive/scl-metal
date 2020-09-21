@@ -118,7 +118,7 @@ int32_t scl_valid_hash_digest_length(size_t inputlength)
     case SHA512_BYTE_HASHSIZE:
         return (SCL_OK);
     default:
-        return (SCL_INVALID_INPUT);
+        break;
     }
 
     return (SCL_INVALID_INPUT);
