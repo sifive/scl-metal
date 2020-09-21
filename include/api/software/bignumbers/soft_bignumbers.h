@@ -227,8 +227,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_square(const metal_scl_t *const scl,
  * @note implementation based on Handbook of applied Cryptography $14.16
  */
 CRYPTO_FUNCTION int32_t soft_bignum_square_with_mult(
-    const metal_scl_t *const scl, const uint64_t *const in,
-    uint64_t *const out, size_t nb_32b_words);
+    const metal_scl_t *const scl, const uint64_t *const in, uint64_t *const out,
+    size_t nb_32b_words);
 
 /**
  * @brief bignumber left shift
@@ -307,8 +307,9 @@ CRYPTO_FUNCTION int32_t soft_bignum_set_bit(const metal_scl_t *const scl,
 
 /**
  * @brief perform big integer division
- * @details perform : remainder = dividend % divisor and quotient = dividend % divisor
- * 
+ * @details perform : remainder = dividend % divisor and quotient = dividend %
+ * divisor
+ *
  *
  * @param[in] scl                   metal scl context
  * @param[in] dividend              dividend array (big integer)

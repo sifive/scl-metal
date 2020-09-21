@@ -1256,8 +1256,7 @@ int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
         return (SCL_INVALID_LENGTH);
     }
 
-    result =
-        scl->bignum_func.is_null(scl, (const uint32_t *)in, nb_32b_words);
+    result = scl->bignum_func.is_null(scl, (const uint32_t *)in, nb_32b_words);
     if (SCL_OK > result)
     {
         return (result);
