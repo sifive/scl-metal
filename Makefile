@@ -11,7 +11,8 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/api \
 		$(SOURCE_DIR)/api/software \
 		$(SOURCE_DIR)/api/software/hash \
-		$(SOURCE_DIR)/api/software/bignumbers 
+		$(SOURCE_DIR)/api/software/bignumbers \
+		$(SOURCE_DIR)/api/software/asymmetric/ecc
 		
 # the version management will be improved, this is just a draft to test
 # compilation of the version specific files
@@ -31,7 +32,8 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/hash \
 		$(SOURCE_DIR)/hash/sha \
 		$(SOURCE_DIR)/bignumbers \
-		$(SOURCE_DIR)/random
+		$(SOURCE_DIR)/random \
+		$(SOURCE_DIR)/asymmetric/ecc
 
 SCL_DIR = $(CURRENT_DIR)
 include $(CURRENT_DIR)/scripts/scl.mk
@@ -41,9 +43,11 @@ override INCLUDE_DIRS := $(SCL_INCLUDES)
  # API
 override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/api \
+	$(CURRENT_DIR)/include/api/asymmetric/ecc \
 	$(CURRENT_DIR)/include/api/software \
 	$(CURRENT_DIR)/include/api/software/hash \
 	$(CURRENT_DIR)/include/api/software/bignumbers \
+	$(CURRENT_DIR)/include/api/software/asymmetric/ecc \
 	$(CURRENT_DIR)/include/api/hardware \
 	$(CURRENT_DIR)/include/api/hardware/v0.5 \
 	$(CURRENT_DIR)/include/api/hardware/v0.5/blockcipher/aes \
@@ -75,7 +79,11 @@ override SPHINX_DIR = $(DOCS_DIR)/sphinx
 #                        COMPILATION FLAGS
 ################################################################################
 
-override CFLAGS += -I $(INCLUDE_DIR) -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual -Wunreachable-code -Wstrict-aliasing -Wdangling-else -Wconversion -Wsign-conversion
+override CFLAGS += -I $(INCLUDE_DIR) 
+override CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual \
+					-Wunreachable-code -Wstrict-aliasing -Wdangling-else \
+					-Wconversion -Wsign-conversion -Wmissing-include-dirs \
+					-Wduplicated-branches -Wduplicated-cond -Warray-bounds 
 
 override ASFLAGS = $(CFLAGS)
 
@@ -92,6 +100,9 @@ else
 		ARFLAGS ?= cru
 	endif
 endif
+
+FILTER_PATTERN = -O0 -Os
+override CFLAGS := $(filter-out $(FILTER_PATTERN),$(CFLAGS)) -Ofast
 
 ################################################################################
 #                               MACROS
@@ -113,11 +124,15 @@ libscl.a: $(OBJS) err
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c err
 	$(HIDE) mkdir -p $(dir $@)
-	$(HIDE) $(CC) $(CFLAGS) -ggdb3 -c -o $@ $<
+	$(HIDE) $(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY : check-format
 check-format:
 	clang-format -i $(SOURCES) $(INCLUDES)
+
+.PHONY : dos2unix
+dos2unix:
+	dos2unix $(SOURCES) $(INCLUDES)
 
 .PHONY : splint
 splint: $(SPLINT_RESULTS)
@@ -125,7 +140,7 @@ splint: $(SPLINT_RESULTS)
 
 $(BUILD_DIR)/splint/%.c.splint: $(SOURCE_DIR)/%.c
 	$(HIDE) mkdir -p $(dir $@)
-	$(HIDE) splint -preproc -forcehints -standard -I $(INCLUDE_DIR) $< > $@ ; true
+	$(HIDE) splint -preproc -standard -I $(INCLUDE_DIR) $< > $@ ; true
 
 .PHONY : docs
 docs: generate-doxygen

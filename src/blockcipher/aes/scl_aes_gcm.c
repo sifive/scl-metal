@@ -106,16 +106,18 @@ int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx,
     return (ret);
 }
 
-int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      uint8_t *const dst, size_t *const dst_byte_len,
-                                      const uint8_t *const src, size_t src_byte_len)
+int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx,
+                         aes_auth_ctx_t *const ctx, uint8_t *const dst,
+                         size_t *const dst_byte_len, const uint8_t *const src,
+                         size_t src_byte_len)
 {
     if (NULL == scl_ctx)
     {
         return (SCL_INVALID_INPUT);
     }
 
-    return scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst, dst_byte_len);
+    return scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst,
+                                       dst_byte_len);
 }
 
 int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx,
@@ -140,7 +142,8 @@ int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx,
 
     if ((NULL != src) && src_byte_len)
     {
-        ret = scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst, &dst_byte_len);
+        ret = scl_ctx->aes_func.auth_core(scl_ctx, ctx, src, src_byte_len, dst,
+                                          &dst_byte_len);
         if (SCL_OK != ret)
         {
             return (ret);
@@ -149,11 +152,13 @@ int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx,
 
     if (NULL == dst)
     {
-        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, NULL, (uint64_t *)tmp_tag);
+        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, NULL,
+                                            (uint64_t *)tmp_tag);
     }
     else
     {
-        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, &dst[dst_byte_len], (uint64_t *)tmp_tag);
+        ret = scl_ctx->aes_func.auth_finish(scl_ctx, ctx, &dst[dst_byte_len],
+                                            (uint64_t *)tmp_tag);
     }
 
     if (SCL_OK != ret)
@@ -163,12 +168,13 @@ int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx,
 
     for (i = 0; i < tag_byte_len; i++)
     {
-        tag[i]=tmp_tag[sizeof(tmp_tag) - 1 - i];
+        tag[i] = tmp_tag[sizeof(tmp_tag) - 1 - i];
     }
 
     /* @FIXME: */
-    /* ctx should be erased and be sure compiler optimization do not remove this operation */
-    memset(ctx,0,sizeof(aes_auth_ctx_t));
+    /* ctx should be erased and be sure compiler optimization do not remove this
+     * operation */
+    memset(ctx, 0, sizeof(aes_auth_ctx_t));
 
     return (ret);
 }
@@ -197,13 +203,15 @@ int32_t scl_aes_gcm(const metal_scl_t *const scl_ctx, uint8_t *const tag,
         return (ret);
     }
 
-    ret = scl_aes_gcm_core(scl_ctx, &ctx_aes_auth, dst, &dst_byte_len, src, src_byte_len);
+    ret = scl_aes_gcm_core(scl_ctx, &ctx_aes_auth, dst, &dst_byte_len, src,
+                           src_byte_len);
     if (SCL_OK != ret)
     {
         return (ret);
     }
 
-    ret = scl_aes_gcm_finish(scl_ctx, &ctx_aes_auth, tag, tag_byte_len, &dst[dst_byte_len], NULL, 0);
+    ret = scl_aes_gcm_finish(scl_ctx, &ctx_aes_auth, tag, tag_byte_len,
+                             &dst[dst_byte_len], NULL, 0);
 
     return (ret);
 }

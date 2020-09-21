@@ -34,8 +34,9 @@
 #define SCL_BACKEND_BIGNUMBERS_H
 
 #include <stdint.h>
+#include <stddef.h>
 
-/** 
+/**
  * @addtogroup COMMON
  * @addtogroup BIGNUM
  * @ingroup COMMON

@@ -30,7 +30,9 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
+#include <limits.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 
 #include <api/macro.h>
@@ -255,8 +257,9 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
                         uint64_t *const out, size_t nb_32b_words)
 {
     size_t i = 0;
-    uint64_t carry = 0;
-    uint64_t previous = 0;
+    uint32_t carry = 0;
+    uint64_t result = 0;
+    uint32_t result32 = 0;
     /*@-noeffect@*/
     (void)scl;
     /*@+noeffect@*/
@@ -273,19 +276,21 @@ int32_t soft_bignum_add(const metal_scl_t *const scl,
 
     for (i = 0; i < nb_32b_words / 2; i++)
     {
-        previous = in_a[i];
-        out[i] = in_a[i] + in_b[i];
-        out[i] += carry;
-        carry = out[i] < previous ? (uint64_t)1 : (uint64_t)0;
+        result = in_a[i] + in_b[i] + carry;
+        carry = (carry && (in_a[i] == 0xFFFFFFFFFFFFFFFFUL))
+                    ? 1
+                    : ((result < in_b[i]) ? 1 : 0);
+        out[i] = result;
     }
 
     if (0 != nb_32b_words % 2)
     {
-        previous = *((const uint32_t *)&in_a[i]);
-        *((uint32_t *)&out[i]) =
-            *((const uint32_t *)&in_a[i]) + *((const uint32_t *)&in_b[i]);
-        *((uint32_t *)&out[i]) += (uint32_t)carry;
-        carry = *((uint32_t *)&out[i]) < previous ? (uint64_t)1 : (uint64_t)0;
+        result32 = *((const uint32_t *)&in_a[i]) +
+                   *((const uint32_t *)&in_b[i]) + carry;
+        carry = (carry && (*((const uint32_t *)&in_a[i]) == 0xFFFFFFFFUL))
+                    ? 1
+                    : ((result32 < *((const uint32_t *)&in_b[i])) ? 1 : 0);
+        *((uint32_t *)&out[i]) = result32;
     }
 
     /* carry is equal to 0 or 1 */
@@ -298,8 +303,8 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
 {
     size_t i = 0;
     uint64_t borrow = 0;
-    uint64_t previous = 0;
-    uint64_t current = 0;
+    uint64_t result = 0;
+    uint32_t result32 = 0;
     /*@-noeffect@*/
     (void)scl;
     /*@+noeffect@*/
@@ -316,25 +321,21 @@ int32_t soft_bignum_sub(const metal_scl_t *const scl,
 
     for (i = 0; i < nb_32b_words / 2; i++)
     {
-        previous = in_a[i];
-        current = in_a[i] - borrow;
-        borrow = current > previous ? (uint64_t)1 : (uint64_t)0;
-
-        previous = current;
-        out[i] = current - in_b[i];
-        borrow |= out[i] > previous ? (uint64_t)1 : (uint64_t)0;
+        result = in_a[i] - in_b[i] - borrow;
+        borrow = (borrow && (in_b[i] == 0xFFFFFFFFFFFFFFFFUL))
+                     ? 1
+                     : ((result > in_a[i]) ? 1 : 0);
+        out[i] = result;
     }
 
     if (0 != nb_32b_words % 2)
     {
-        previous = *((const uint32_t *)&in_a[i]);
-        current = *((const uint32_t *)&in_a[i]) - borrow;
-        borrow = current > previous ? (uint64_t)1 : (uint64_t)0;
-
-        previous = current;
-        *((uint32_t *)&out[i]) =
-            (uint32_t)current - *((const uint32_t *)&in_b[i]);
-        borrow |= *((uint32_t *)&out[i]) > previous ? (uint64_t)1 : (uint64_t)0;
+        result32 = (*((const uint32_t *)&in_a[i]) -
+                    *((const uint32_t *)&in_b[i]) - (uint32_t)borrow);
+        borrow = (borrow && (*((const uint32_t *)&in_b[i]) == 0xFFFFFFFFUL))
+                     ? 1
+                     : ((result32 > *((const uint32_t *)&in_a[i])) ? 1 : 0);
+        *((uint32_t *)&out[i]) = result32;
     }
 
     /* borrow is equal to 0 or 1 */
@@ -395,11 +396,85 @@ int32_t soft_bignum_mult(const metal_scl_t *const scl,
             }
 
             /* load 32 bits msb into carry */
-            carry += (uint32_t)(ab >> (sizeof(uint32_t) * __CHAR_BIT__));
+            carry += (uint32_t)(ab >> (sizeof(uint32_t) * CHAR_BIT));
         }
         res[i + nb_32b_words] += carry;
     }
 
+    return (SCL_OK);
+}
+
+int32_t soft_bignum_square_with_mult(const metal_scl_t *const scl,
+                                     const uint64_t *const in,
+                                     uint64_t *const out, size_t nb_32b_words)
+{
+    return (soft_bignum_mult(scl, in, in, out, nb_32b_words));
+}
+
+int32_t soft_bignum_square(const metal_scl_t *const scl,
+                           const uint64_t *const in, uint64_t *const out,
+                           size_t nb_32b_words)
+{
+    size_t i, j;
+    uint64_t product, tmp, u;
+    uint32_t carry;
+
+    const uint32_t *in32 = (const uint32_t *)in;
+
+    uint32_t *out32 = (uint32_t *)out;
+    /*@-noeffect@*/
+    (void)scl;
+    /*@+noeffect@*/
+
+    if ((NULL == in) || (NULL == out))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if (0 == nb_32b_words)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    /**
+     * carefull here, nb_32b_words is 2 * the number of 64 bits words of inputs
+     */
+    memset(out, 0, nb_32b_words * 2 * sizeof(uint32_t));
+
+    /* 1. */
+    for (i = 0; i < nb_32b_words; i++)
+    {
+        /* 2.1*/
+        product =
+            (uint64_t)in32[i] * (uint64_t)in32[i] + (uint64_t)out32[i + i];
+        out32[i + i] = (uint32_t)product;
+        u = product >> (sizeof(uint32_t) * CHAR_BIT);
+        /* 2.2 */
+        for (j = i + 1; j < nb_32b_words; j++)
+        {
+            product = (uint64_t)in32[i] * (uint64_t)in32[j];
+            tmp = (uint64_t)out32[i + j] + u;
+            carry = tmp < u;
+            /* manage overflow */
+            tmp += product;
+            carry += (uint32_t)(tmp < product);
+            tmp += product;
+            carry += (uint32_t)(tmp < product);
+            out32[i + j] = (uint32_t)tmp;
+            /* carry is on double word */
+            u = ((uint64_t)carry << (sizeof(uint32_t) * CHAR_BIT)) +
+                (tmp >> (sizeof(uint32_t) * CHAR_BIT));
+        }
+        /* extra carry management */
+        j = nb_32b_words;
+        while (u > 0)
+        {
+            tmp = (uint64_t)out32[i + j] + u;
+            out32[i + j] = (uint32_t)tmp;
+            u = tmp >> (sizeof(uint32_t) * CHAR_BIT);
+            j++;
+        }
+    }
     return (SCL_OK);
 }
 
@@ -419,24 +494,24 @@ int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
     }
 
     if ((0 == nb_32b_words) ||
-        (shift >= nb_32b_words * sizeof(uint32_t) * __CHAR_BIT__))
+        (shift >= nb_32b_words * sizeof(uint32_t) * CHAR_BIT))
     {
         return (SCL_INVALID_LENGTH);
     }
 
-    bit_shift_div64 = shift / (sizeof(uint64_t) * __CHAR_BIT__);
-    bit_shift_mod64 = shift & ((sizeof(uint64_t) * __CHAR_BIT__) - 1);
+    bit_shift_div64 = shift / (sizeof(uint64_t) * CHAR_BIT);
+    bit_shift_mod64 = shift & ((sizeof(uint64_t) * CHAR_BIT) - 1);
 
     i = nb_32b_words / 2;
 
-    revshift = (sizeof(uint64_t) * __CHAR_BIT__) - bit_shift_mod64;
+    revshift = (sizeof(uint64_t) * CHAR_BIT) - bit_shift_mod64;
 
     if (0 != nb_32b_words % 2)
     {
         *((uint32_t *)&out[i]) =
             (uint32_t)(in[i - bit_shift_div64] << bit_shift_mod64);
 
-        if (i >= bit_shift_div64 + 1)
+        if ((i >= bit_shift_div64 + 1) && (bit_shift_mod64 != 0))
         {
             *((uint32_t *)&out[i]) |=
                 (uint32_t)(in[i - bit_shift_div64 - 1] >> revshift);
@@ -447,7 +522,10 @@ int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
     {
         i--;
         out[i] = in[i - bit_shift_div64] << bit_shift_mod64;
-        out[i] |= in[i - bit_shift_div64 - 1] >> revshift;
+        if (bit_shift_mod64 != 0)
+        {
+            out[i] |= in[i - bit_shift_div64 - 1] >> revshift;
+        }
     }
 
     if (i > bit_shift_div64)
@@ -456,7 +534,7 @@ int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
         out[i] = in[i - bit_shift_div64] << bit_shift_mod64;
     }
 
-    memset(out, 0, shift / __CHAR_BIT__);
+    memset(out, 0, shift / CHAR_BIT);
 
     return (SCL_OK);
 }
@@ -479,17 +557,17 @@ int32_t soft_bignum_rightshift(const metal_scl_t *const scl,
     }
 
     if ((0 == nb_32b_words) ||
-        (shift >= nb_32b_words * sizeof(uint32_t) * __CHAR_BIT__))
+        (shift >= nb_32b_words * sizeof(uint32_t) * CHAR_BIT))
     {
         return (SCL_INVALID_LENGTH);
     }
 
-    bit_shift_div64 = shift / (sizeof(uint64_t) * __CHAR_BIT__);
-    bit_shift_mod64 = shift & ((sizeof(uint64_t) * __CHAR_BIT__) - 1);
+    bit_shift_div64 = shift / (sizeof(uint64_t) * CHAR_BIT);
+    bit_shift_mod64 = shift & ((sizeof(uint64_t) * CHAR_BIT) - 1);
 
     i = 0;
 
-    revshift = (sizeof(uint64_t) * __CHAR_BIT__) - bit_shift_mod64;
+    revshift = (sizeof(uint64_t) * CHAR_BIT) - bit_shift_mod64;
 
     while (i + bit_shift_div64 + 1 < nb_32b_words / 2)
     {
@@ -517,8 +595,8 @@ int32_t soft_bignum_rightshift(const metal_scl_t *const scl,
     }
 
     memset((void *)((uint8_t *)&out_32b[nb_32b_words] -
-                    (uint8_t *)(shift / __CHAR_BIT__)),
-           0, shift / __CHAR_BIT__);
+                    (uint8_t *)(shift / CHAR_BIT)),
+           0, shift / CHAR_BIT);
 
     return (SCL_OK);
 }
@@ -527,7 +605,7 @@ int32_t soft_bignum_msb_set_in_word(uint64_t word_64b)
 {
     size_t i;
 
-    for (i = 0; i < sizeof(word_64b) * __CHAR_BIT__; i++, word_64b >>= 1)
+    for (i = 0; i < sizeof(word_64b) * CHAR_BIT; i++, word_64b >>= 1)
     {
         if (0 == word_64b)
         {
@@ -557,8 +635,7 @@ int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
      * Check length, to avoid conflict with error codes on return, in practice
      * this should never happen except for tests
      */
-    if (((size_t)0x80000000 <=
-         nb_32b_words * sizeof(uint64_t) * __CHAR_BIT__) ||
+    if (((size_t)0x80000000 <= nb_32b_words * sizeof(uint64_t) * CHAR_BIT) ||
         (0 == nb_32b_words))
     {
         return (SCL_INVALID_LENGTH);
@@ -570,7 +647,7 @@ int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
     {
         if (0 != (uint32_t)array[i])
         {
-            shift_word = i * sizeof(uint64_t) * __CHAR_BIT__;
+            shift_word = i * sizeof(uint64_t) * CHAR_BIT;
             shift_word +=
                 (size_t)soft_bignum_msb_set_in_word((uint32_t)array[i]);
             return ((int32_t)shift_word);
@@ -583,7 +660,7 @@ int32_t soft_bignum_get_msb_set(const metal_scl_t *const scl,
         i--;
         if (0 != array[i])
         {
-            shift_word = i * sizeof(uint64_t) * __CHAR_BIT__;
+            shift_word = i * sizeof(uint64_t) * CHAR_BIT;
             shift_word += (size_t)soft_bignum_msb_set_in_word(array[i]);
             return ((int32_t)shift_word);
         }
@@ -614,13 +691,13 @@ int32_t soft_bignum_set_bit(const metal_scl_t *const scl, uint64_t *const array,
         return (SCL_INVALID_LENGTH);
     }
 
-    if (bit_2_set >= nb_32b_words * sizeof(uint32_t) * __CHAR_BIT__)
+    if (bit_2_set >= nb_32b_words * sizeof(uint32_t) * CHAR_BIT)
     {
         return (SCL_INVALID_INPUT);
     }
 
-    array_32b[bit_2_set / (sizeof(uint32_t) * __CHAR_BIT__)] |=
-        (uint32_t)(1 << bit_2_set % (sizeof(uint32_t) * __CHAR_BIT__));
+    array_32b[bit_2_set / (sizeof(uint32_t) * CHAR_BIT)] |=
+        (uint32_t)(1 << (bit_2_set % (sizeof(uint32_t) * CHAR_BIT)));
 
     return (SCL_OK);
 }
@@ -719,9 +796,9 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
     bitshift_dico = (size_t)result;
 
     /* We allocate +1 word to manage overflow */
-    p_len = (bitshift_dico - 1) / (sizeof(uint32_t) * __CHAR_BIT__) + 1;
+    p_len = (bitshift_dico - 1) / (sizeof(uint32_t) * CHAR_BIT) + 1;
 
-    p_len += (bitshift_dico - 1) % (sizeof(uint32_t) * __CHAR_BIT__) ? 1 : 0;
+    p_len += (bitshift_dico - 1) % (sizeof(uint32_t) * CHAR_BIT) ? 1 : 0;
 
     /* get highest bit of divisor */
     result = scl->bignum_func.get_msb_set(scl, divisor, divisor_nb_32b_words);
@@ -733,7 +810,7 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
     bitshift_dico -= (size_t)result;
 
     {
-        // p_len = bitshift_dico / (sizeof(uint32_t) * __CHAR_BIT__) +
+        // p_len = bitshift_dico / (sizeof(uint32_t) * CHAR_BIT) +
         // divisor_nb_32b_words + 1;
 
         /** p : representative of the calculations on b * 2 ^ n (the second
@@ -857,6 +934,7 @@ int32_t soft_bignum_div(const metal_scl_t *const scl,
             {
                 return (result);
             }
+
             memset(remainder, 0, divisor_nb_32b_words * sizeof(uint32_t));
             memcpy(remainder, aux,
                    MIN(divisor_nb_32b_words, p_len) * sizeof(uint32_t));
@@ -1116,7 +1194,7 @@ int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
         return (SCL_INVALID_INPUT);
     }
 
-    if (NULL == scl->bignum_func.mult)
+    if ((NULL == scl->bignum_func.mult) || (NULL == scl->bignum_func.mod))
     {
         return (SCL_ERROR_API_ENTRY_POINT);
     }
@@ -1149,16 +1227,16 @@ int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
 
 int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
                             const bignum_ctx_t *const ctx,
-                            const uint64_t *const input, uint64_t *const out,
+                            const uint64_t *const in, uint64_t *const out,
                             size_t nb_32b_words)
 {
     int32_t result = 0;
-    /* x in Hoac, x = input*/
-    const uint64_t *x = input;
+    /* x in Hoac, x = in*/
+    const uint64_t *x = in;
     /* y in Hoac, y = modulus */
     const uint64_t *y = ctx->modulus;
 
-    if ((NULL == scl) || (NULL == ctx) || (NULL == input) || (NULL == out) ||
+    if ((NULL == scl) || (NULL == ctx) || (NULL == in) || (NULL == out) ||
         (NULL == ctx->modulus))
     {
         return (SCL_INVALID_INPUT);
@@ -1178,8 +1256,7 @@ int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
         return (SCL_INVALID_LENGTH);
     }
 
-    result =
-        scl->bignum_func.is_null(scl, (const uint32_t *)input, nb_32b_words);
+    result = scl->bignum_func.is_null(scl, (const uint32_t *)in, nb_32b_words);
     if (SCL_OK > result)
     {
         return (result);
@@ -1399,6 +1476,50 @@ int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
         }
 
         memcpy(out, c, nb_32b_words * sizeof(uint32_t));
+    }
+
+    return (SCL_OK);
+}
+
+int32_t soft_bignum_mod_square(const metal_scl_t *const scl,
+                               const bignum_ctx_t *const ctx,
+                               const uint64_t *const in, uint64_t *const out,
+                               size_t nb_32b_words)
+{
+    int32_t result;
+    uint32_t square_result[nb_32b_words * 2] __attribute__((aligned(8)));
+
+    if ((NULL == scl) || (NULL == ctx) || (NULL == ctx->modulus))
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl->bignum_func.square) || (NULL == scl->bignum_func.mod))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
+    /* output should be modulus size */
+    if (nb_32b_words != ctx->modulus_nb_32b_words)
+    {
+        return (SCL_INVALID_LENGTH);
+    }
+
+    result = scl->bignum_func.square(scl, in, (uint64_t *)square_result,
+                                     nb_32b_words);
+    if (SCL_OK > result)
+    {
+        return (result);
+    }
+
+    /*@-compdef@*/
+    result =
+        scl->bignum_func.mod(scl, (uint64_t *)square_result, nb_32b_words * 2,
+                             ctx->modulus, ctx->modulus_nb_32b_words, out);
+    /*@+compdef@*/
+    if (SCL_OK > result)
+    {
+        return (result);
     }
 
     return (SCL_OK);

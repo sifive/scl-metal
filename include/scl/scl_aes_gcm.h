@@ -37,12 +37,12 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <scl_cfg.h>
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
+#include <scl_cfg.h>
 
-#include <api/scl_api.h>
 #include <api/blockcipher/aes/aes.h>
+#include <api/scl_api.h>
 
 /**
  * \addtogroup SCL
@@ -52,7 +52,8 @@
  */
 
 /**
- * @brief compute AES-GCM operation (according mode parameter) on the data in parameter and return result
+ * @brief compute AES-GCM operation (according mode parameter) on the data in
+ * parameter and return result
  *
  * @param[in] scl_ctx           scl context
  * @param[out] tag              output tag buffer - result of AES-GCM operation
@@ -62,9 +63,11 @@
  * @param[in] src_byte_len      length in bytes of data
  * @param[in] key               Key to use for the AES-GCM operation
  * @param[in] key_byte_len      length in bytes of key
- * @param[in] iv                Initial Vector (iv) use for the AES-GCM operation
+ * @param[in] iv                Initial Vector (iv) use for the AES-GCM
+ * operation
  * @param[in] iv_byte_len       length in bytes of iv
- * @param[in] aad               Additional Authenticated Data (aad) use for the AES-GCM operation
+ * @param[in] aad               Additional Authenticated Data (aad) use for the
+ * AES-GCM operation
  * @param[in] aad_byte_len      length in bytes of aad
  * @param[in] mode              type of operation @ref scl_process_t
  * @return 0    in case of SUCCESS
@@ -75,7 +78,8 @@ SCL_FUNCTION int32_t scl_aes_gcm(const metal_scl_t *const scl_ctx,
                                  uint8_t *const dst, const uint8_t *const src,
                                  size_t src_byte_len, const uint8_t *const key,
                                  size_t key_byte_len, const uint8_t *const iv,
-                                 size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len, scl_process_t mode);
+                                 size_t iv_byte_len, const uint8_t *const aad,
+                                 size_t aad_byte_len, scl_process_t mode);
 
 /**
  * @brief Initialize AES-GCM context (according mode parameter)
@@ -84,19 +88,22 @@ SCL_FUNCTION int32_t scl_aes_gcm(const metal_scl_t *const scl_ctx,
  * @param[in,out] ctx           AES authenticate context
  * @param[in] key               Key to use for the AES-GCM operation
  * @param[in] key_byte_len      length in bytes of key
- * @param[in] iv                Initial Vector (iv) use for the AES-GCM operation
+ * @param[in] iv                Initial Vector (iv) use for the AES-GCM
+ * operation
  * @param[in] iv_byte_len       length in bytes of iv
- * @param[in] aad               Additional Authenticated Data (aad) use for the AES-GCM operation
+ * @param[in] aad               Additional Authenticated Data (aad) use for the
+ * AES-GCM operation
  * @param[in] aad_byte_len      length in bytes of aad
  * @param[in] pld_byte_len      length in bytes of data payload
  * @param[in] mode              type of operation @ref scl_process_t
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @ref scl_errors_t
  */
-SCL_FUNCTION int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      const uint8_t *const key,
-                                      size_t key_byte_len, const uint8_t *const iv,
-                                      size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len, size_t pld_byte_len, scl_process_t mode);
+SCL_FUNCTION int32_t scl_aes_gcm_init(
+    const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
+    const uint8_t *const key, size_t key_byte_len, const uint8_t *const iv,
+    size_t iv_byte_len, const uint8_t *const aad, size_t aad_byte_len,
+    size_t pld_byte_len, scl_process_t mode);
 
 /**
  * @brief Perform intermediate AES-GCM comptation of data chunk
@@ -104,15 +111,19 @@ SCL_FUNCTION int32_t scl_aes_gcm_init(const metal_scl_t *const scl_ctx, aes_auth
  * @param[in] scl_ctx           scl context
  * @param[in,out] ctx           AES authenticate context
  * @param[out] dst              output buffer - result of AES-GCM operation
- * @param[out] dst_byte_len     length of data (in bytes) write into output buffer
+ * @param[out] dst_byte_len     length of data (in bytes) write into output
+ * buffer
  * @param[in] pld               data to process
  * @param[in] pld_byte_len      length in bytes of data
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @ref scl_errors_t
  */
-SCL_FUNCTION int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                      uint8_t *const dst, size_t *const dst_byte_len,
-                                      const uint8_t *const pld, size_t pld_byte_len);
+SCL_FUNCTION int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx,
+                                      aes_auth_ctx_t *const ctx,
+                                      uint8_t *const dst,
+                                      size_t *const dst_byte_len,
+                                      const uint8_t *const pld,
+                                      size_t pld_byte_len);
 
 /**
  * @brief Finalize AES-CGM computation and returning Authenticate tag
@@ -125,8 +136,12 @@ SCL_FUNCTION int32_t scl_aes_gcm_core(const metal_scl_t *const scl_ctx, aes_auth
  * @param[in] pld               data to process
  * @param[in] pld_byte_len      length in bytes of data
  */
-SCL_FUNCTION int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx, aes_auth_ctx_t *const ctx,
-                                 uint8_t *const tag, size_t tag_byte_len, uint8_t *const dst, const uint8_t *const pld, size_t pld_byte_len);
+SCL_FUNCTION int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx,
+                                        aes_auth_ctx_t *const ctx,
+                                        uint8_t *const tag, size_t tag_byte_len,
+                                        uint8_t *const dst,
+                                        const uint8_t *const pld,
+                                        size_t pld_byte_len);
 
 /** @}*/
 

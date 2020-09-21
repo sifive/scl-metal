@@ -39,6 +39,8 @@
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
 
+#include <api/asymmetric/ecc/ecc.h>
+#include <api/asymmetric/ecc/ecdsa.h>
 #include <api/bignumbers/bignumbers.h>
 #include <api/blockcipher/aes/aes.h>
 #include <api/hash/sha.h>
@@ -79,8 +81,7 @@ struct __aes_func
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
-    int32_t (*setiv)(const metal_scl_t *const scl,
-                     const uint64_t *const iv);
+    int32_t (*setiv)(const metal_scl_t *const scl, const uint64_t *const iv);
     /**
      * @brief perform AES cipher operation
      *
@@ -113,24 +114,30 @@ struct __aes_func
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
-    int32_t (*auth_init)(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
-                    scl_process_t aes_process, scl_endianness_t data_endianness,
-                    uint32_t auth_option, const uint8_t *const aad,
-                    size_t aad_len, uint64_t payload_len);
+    int32_t (*auth_init)(const metal_scl_t *const scl,
+                         aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
+                         scl_process_t aes_process,
+                         scl_endianness_t data_endianness, uint32_t auth_option,
+                         const uint8_t *const aad, size_t aad_len,
+                         uint64_t payload_len);
     /**
      * @brief perform AES cipher with authentication operation
      *
      * @param[in] scl               metal scl context
      * @param[in,out] ctx           aes authenticate context
      * @param[in] payload           data payload to process
-     * @param[in] payload_len       length of the current data payload to process (in bytes)
+     * @param[in] payload_len       length of the current data payload to
+     * process (in bytes)
      * @param[out] data_out         data output buffer
-     * @param[out] len_out          length of data (in bytes) write into output buffer
+     * @param[out] len_out          length of data (in bytes) write into output
+     * buffer
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
-    int32_t (*auth_core)(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
-                    const uint8_t *const payload, uint64_t payload_len, uint8_t *const data_out, size_t *const len_out);
+    int32_t (*auth_core)(const metal_scl_t *const scl,
+                         aes_auth_ctx_t *const ctx,
+                         const uint8_t *const payload, uint64_t payload_len,
+                         uint8_t *const data_out, size_t *const len_out);
     /**
      * @brief finish AES cipher with authentication operation
      *
@@ -299,8 +306,8 @@ struct __bignum_func
      * @param[in] in_b              Input array b
      * @param[out] out              Output array (addition result)
      * @param[in] nb_32b_words      number of 32 bits words to use in calcul
-     * @return 0 success
-     * @return != 0 otherwise @ref scl_errors_t
+     * @return >= 0  carry from the operation
+     * @return < 0 otherwise @ref scl_errors_t
      * @warning Warning the big number need to be little endian convert if
      * necessary
      * @warning nb_32b_words is limited to 0x3FFFFFFF
@@ -319,14 +326,14 @@ struct __bignum_func
      * @param[in] in_b              Input array b
      * @param[out] out              Output array (substration result)
      * @param[in] nb_32b_words      number of 32 bits words to use in calcul
-     * @return 0 success
-     * @return != 0 otherwise @ref scl_errors_t
+     * @return >= 0  carry from the operation
+     * @return < 0 otherwise @ref scl_errors_t
      * @warning Warning the big number need to be little endian convert if
      * necessary
      * @warning nb_32b_words is limited to 0x3FFFFFFF
      * @warning bignumber in input are considered unsigned
-     * @warning carry is set when in_a < in_b (in case a positive number is
-     * intended, you can do a bitwise not)
+     * @warning borrow is set when in_a < in_b (in case a positive number is
+     * intended, you can use negate function)
      * @note it is safe to reuse any input buffer as output buffer
      */
     int32_t (*sub)(const metal_scl_t *const scl,
@@ -351,6 +358,21 @@ struct __bignum_func
                     /*@in@*/ const uint64_t *const in_a,
                     /*@in@*/ const uint64_t *const in_b,
                     /*@out@*/ uint64_t *const out, size_t nb_32b_words);
+
+    /**
+     * @brief Big integer square
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] input          Input array
+     * @param[out] out          Output array, should be twice the size of input
+     * array
+     * @param[in] nb_32b_words  Number of words, of inputs arrays
+     * @return 0 success
+     * @return != 0 otherwise @ref scl_errors_t
+     * @warning Output should be 2 time the size of Inputs arrays
+     */
+    int32_t (*square)(const metal_scl_t *const scl, const uint64_t *const input,
+                      uint64_t *const out, size_t nb_32b_words);
 
     /**
      * @brief bignumber left shift
@@ -581,6 +603,81 @@ struct __bignum_func
                        /*@in@*/ const bignum_ctx_t *const ctx,
                        /*@in@*/ const uint64_t *const in,
                        /*@out@*/ uint64_t *const out, size_t nb_32b_words);
+
+    int32_t (*mod_square)(const metal_scl_t *const scl,
+                          const bignum_ctx_t *const ctx,
+                          const uint64_t *const in, uint64_t *const out,
+                          size_t nb_32b_words);
+};
+
+/*! @brief ECDSA (Elliptic Curve Digital Signature Algorithm) low level API
+ * entry points */
+struct __ecdsa_func
+{
+    /**
+     * @brief ECDSA signature
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
+     *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[in] priv_key      private key
+     * @param[out] signature    signature structure that will hold results
+     * @param[in] hash          hash value to sign
+     * @param[in] hash_len      hash value length
+     * @return O in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     * @note Private key shall be big endian
+     * @note Signature elements will be big endian
+     * @note Hash value shall be big endian
+     * @note In case of doubt on the endianess of elements, big endian is the
+     * natural representation for such elements, this is what you will find in
+     * literature
+     * @note private key shall be curve_params->curve_bsize
+     * @note signature elements buffer shall be at least
+     * curve_params->curve_bsize long
+     * @warning For security purpose, the hash length should be equal to
+     * superior to curve_params->curve_bsize. Otherwise, the strength of the
+     * signature is reduce to the lowest strength between the hash or the
+     * signature.
+     */
+    int32_t (*signature)(const metal_scl_t *const scl,
+                         const ecc_curve_t *const curve_params,
+                         const uint8_t *const priv_key,
+                         const ecdsa_signature_t *const signature,
+                         const uint8_t *const hash, size_t hash_len);
+
+    /**
+     * @brief ECDSA signature verification
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
+     *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[in] pub_key       public key
+     * @param[in] signature     signature to check
+     * @param[in] hash          hash value on which the signature has been
+     * performed
+     * @param[in] hash_len      hash value length
+     * @return O in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     * @note Public key elements shall be big endian
+     * @note Signature elements shall be big endian
+     * @note Hash value shall be big endian
+     * @note In case of doubt on the endianess of elements, big endian is the
+     * natural representation for such elements, this is what you will find in
+     * literature
+     * @note public key shall be curve_params->curve_bsize
+     * @note signature elements shall be at least curve_params->curve_bsize
+     * long
+     * @warning For security purpose, the hash length should be equal to
+     * superior to curve_params->curve_bsize. Otherwise, the strength of the
+     * signature is reduce to the lowest strength between the hash or the
+     * signature.
+     */
+    int32_t (*verification)(const metal_scl_t *const scl,
+                            const ecc_curve_t *const curve_params,
+                            const ecc_affine_const_point_t *const pub_key,
+                            const ecdsa_signature_const_t *const signature,
+                            const uint8_t *const hash, size_t hash_len);
 };
 
 /*! @see _metal_scl_struct */
@@ -595,6 +692,7 @@ struct _metal_scl_struct
     const struct __hash_func hash_func;
     const struct __trng_func trng_func;
     const struct __bignum_func bignum_func;
+    const struct __ecdsa_func ecdsa_func;
 };
 
 /*@unused@*/ static __inline__ int32_t
@@ -610,9 +708,8 @@ default_aes_setkey(const metal_scl_t *const scl, scl_aes_key_type_t type,
     return SCL_ERROR;
 }
 
-/*@unused@*/ static __inline__ int32_t 
-default_aes_setiv(const metal_scl_t *const scl,
-                  const uint64_t *const iv)
+/*@unused@*/ static __inline__ int32_t
+default_aes_setiv(const metal_scl_t *const scl, const uint64_t *const iv)
 {
     /*@-noeffect@*/
     (void)scl;
@@ -623,8 +720,7 @@ default_aes_setiv(const metal_scl_t *const scl,
 
 /*@unused@*/ static __inline__ int32_t
 default_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
-                   scl_process_t aes_process,
-                   scl_endianness_t data_endianness,
+                   scl_process_t aes_process, scl_endianness_t data_endianness,
                    const uint8_t *const data_in, size_t data_len,
                    uint8_t *const data_out)
 {
@@ -640,11 +736,12 @@ default_aes_cipher(const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
     return SCL_ERROR;
 }
 
-/*@unused@*/ static __inline__ int32_t 
-default_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx, scl_aes_mode_t aes_mode,
-                      scl_process_t aes_process, scl_endianness_t data_endianness,
-                      uint32_t auth_option, const uint8_t *const aad,
-                      size_t aad_len, uint64_t payload_len)
+/*@unused@*/ static __inline__ int32_t
+default_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ctx,
+                      scl_aes_mode_t aes_mode, scl_process_t aes_process,
+                      scl_endianness_t data_endianness, uint32_t auth_option,
+                      const uint8_t *const aad, size_t aad_len,
+                      uint64_t payload_len)
 {
     /*@-noeffect@*/
     (void)scl;

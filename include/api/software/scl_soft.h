@@ -36,6 +36,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include <api/software/asymmetric/ecc/soft_ecc.h>
+#include <api/software/asymmetric/ecc/soft_ecdsa.h>
 #include <api/software/bignumbers/soft_bignumbers.h>
 #include <api/software/hash/soft_sha.h>
 

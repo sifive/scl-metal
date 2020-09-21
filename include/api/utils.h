@@ -118,6 +118,26 @@ void memset_u64(uint64_t *const array, uint64_t value, size_t word_size);
 void memcpy_u64(uint64_t *const dest, const uint64_t *const source,
                 size_t word_size);
 
+/**
+ * @brief copy and swap the whole array
+ *
+ * @param[out] dest         output array
+ * @param[in] source        input array
+ * @param[in] length        array length
+ */
+void copy_swap_array(uint8_t *const dest, const uint8_t *const source,
+                     size_t length);
+
+/**
+ * @brief truncate an byte array to a specified bit count
+ *
+ * @param array             array to truncate
+ * @param array_size        array size in byte
+ * @param max_bit_count     max bit count (number of bits to keep)
+ */
+void truncate_array(uint8_t *const array, size_t array_size,
+                    size_t max_bit_count);
+
 /** @}*/
 
 #endif /* SCL_BACKEND_UTILS_H */

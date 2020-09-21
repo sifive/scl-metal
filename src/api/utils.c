@@ -32,6 +32,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
+#include <limits.h>
+
 #include <api/utils.h>
 #include <scl/scl_retdefs.h>
 
@@ -164,4 +166,42 @@ void memcpy_u64(uint64_t *const dest, const uint64_t *const source,
     {
         dest[i] = source[i];
     }
+}
+
+void copy_swap_array(uint8_t *const dest, const uint8_t *const source,
+                     size_t length)
+{
+    size_t i;
+
+    for (i = 0; i < length; i++)
+    {
+        dest[i] = source[length - 1 - i];
+    }
+}
+
+void truncate_array(uint8_t *const array, size_t array_size,
+                    size_t max_bit_count)
+{
+    size_t i;
+
+    if (array_size * CHAR_BIT <= max_bit_count)
+    {
+        return;
+    }
+
+    i = max_bit_count / CHAR_BIT;
+
+    if (0 != max_bit_count % CHAR_BIT)
+    {
+        array[i] &= (uint8_t)(0xFF >> (CHAR_BIT - (max_bit_count % CHAR_BIT)));
+    }
+
+    i++;
+
+    for (; i < array_size; i++)
+    {
+        array[i] = 0;
+    }
+
+    return;
 }

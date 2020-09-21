@@ -36,7 +36,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-/** 
+/**
  * @addtogroup COMMON
  * @addtogroup SHA
  * @ingroup COMMON

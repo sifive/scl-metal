@@ -114,6 +114,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_negate(const metal_scl_t *const scl,
 
 /**
  * @brief Increment big number by one
+ * @details perform : array = array + 1
  *
  * @param[in] scl           metal scl context
  * @param[in,out] array     Input array a
@@ -129,6 +130,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_inc(const metal_scl_t *const scl,
 
 /**
  * @brief Do big number addition
+ * @details perform : out = in_a + in_b
  *
  * @param[in] scl           metal scl context
  * @param[in] in_a              Input array a
@@ -148,7 +150,8 @@ CRYPTO_FUNCTION int32_t soft_bignum_add(const metal_scl_t *const scl,
                                         size_t nb_32b_words);
 
 /**
- * @brief Do big number ber subtraction
+ * @brief Do big number subtraction
+ * @details perform : out = in_a - in_b
  *
  * @param[in] scl           metal scl context
  * @param[in] in_a              Input array a
@@ -172,6 +175,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_sub(const metal_scl_t *const scl,
 
 /**
  * @brief Big integer multiplication
+ * @details perform : out = in_a * in_b
  *
  * @param[in] scl           metal scl context
  * @param[in] in_a          Input array a
@@ -190,7 +194,45 @@ CRYPTO_FUNCTION int32_t soft_bignum_mult(const metal_scl_t *const scl,
                                          size_t nb_32b_words);
 
 /**
+ * @brief Big integer square
+ * @details perform : out = in * in
+ *
+ * @param[in] scl           metal scl context
+ * @param[in] in            Input array
+ * @param[out] out          Output array, should be twice the size of input
+ * array
+ * @param[in] nb_32b_words  Number of words, of inputs arrays
+ * @return 0 success
+ * @return != 0 otherwise @ref scl_errors_t
+ * @warning Output should be 2 time the size of Inputs arrays
+ * @note implementation based on Handbook of applied Cryptography $14.16
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_square(const metal_scl_t *const scl,
+                                           const uint64_t *const in,
+                                           uint64_t *const out,
+                                           size_t nb_32b_words);
+
+/**
+ * @brief Big integer square using soft_bignum_mult
+ * @details perform : out = in * in
+ *
+ * @param[in] scl           metal scl context
+ * @param[in] in            Input array
+ * @param[out] out          Output array, should be twice the size of input
+ * array
+ * @param[in] nb_32b_words  Number of words, of inputs arrays
+ * @return 0 success
+ * @return != 0 otherwise @ref scl_errors_t
+ * @warning Output should be 2 time the size of Inputs arrays
+ * @note implementation based on Handbook of applied Cryptography $14.16
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_square_with_mult(
+    const metal_scl_t *const scl, const uint64_t *const in, uint64_t *const out,
+    size_t nb_32b_words);
+
+/**
  * @brief bignumber left shift
+ * @details perform : out = in << shift
  *
  * @param[in] scl           metal scl context
  * @param[in] in            big integer array to left shift
@@ -208,6 +250,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_leftshift(const metal_scl_t *const scl,
 
 /**
  * @brief bignumber right shift
+ * @details perform : out = in >> shift
  *
  * @param[in] scl           metal scl context
  * @param[in] in            big integer array to right shift
@@ -264,6 +307,9 @@ CRYPTO_FUNCTION int32_t soft_bignum_set_bit(const metal_scl_t *const scl,
 
 /**
  * @brief perform big integer division
+ * @details perform : remainder = dividend % divisor and quotient = dividend %
+ * divisor
+ *
  *
  * @param[in] scl                   metal scl context
  * @param[in] dividend              dividend array (big integer)
@@ -346,7 +392,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_clear_modulus(const metal_scl_t *const scl,
 
 /**
  * @brief Modular negate
- * @details out = -in mod modulus
+ * @details out = -in mod ctx->modulus
  *
  * @param[in] scl               metal scl context
  * @param[out] ctx              bignumber context that will be updated
@@ -366,6 +412,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_neg(const metal_scl_t *const scl,
 
 /**
  * @brief Modular addition
+ * @details out = (in_a + in_b) mod ctx->modulus
  *
  * @param[in] scl               metal scl context
  * @param[in] ctx               bignumber context (contain modulus info)
@@ -388,6 +435,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_add(const metal_scl_t *const scl,
 
 /**
  * @brief Modular subtraction
+ * @details out = (in_a - in_b) mod ctx->modulus
  *
  * @param[in] scl               metal scl context
  * @param[in] ctx               bignumber context (contain modulus info)
@@ -410,6 +458,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_sub(const metal_scl_t *const scl,
 
 /**
  * @brief Modular multiplication
+ * @details out = (in_a * in_b) mod ctx->modulus
  *
  * @param[in] scl           metal scl context
  * @param[in] ctx           bignumber context (contain modulus info)
@@ -432,6 +481,7 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_mult(const metal_scl_t *const scl,
 
 /**
  * @brief Modular inverse
+ * @details compute out to have : (out * in) mod ctx->modulus = 1
  *
  * @param[in] scl           metal scl context
  * @param[in] ctx           bignumber context (contain modulus info)
@@ -449,6 +499,27 @@ CRYPTO_FUNCTION int32_t soft_bignum_mod_inv(const metal_scl_t *const scl,
                                             const uint64_t *const in,
                                             uint64_t *const out,
                                             size_t nb_32b_words);
+
+/**
+ * @brief Big integer modular square
+ * @details out = (in * in) mod ctx->modulus
+ *
+ * @param[in] scl           metal scl context
+ * @param[in] ctx           bignumber context (contain modulus info)
+ * @param[in] in            Input array
+ * @param[out] out          Output array
+ * @param[in] nb_32b_words  Number of words, of inputs arrays and output array
+ * @return >= 0 success
+ * @return < 0 in case of errors @ref scl_errors_t
+ * @warning the modulus used should be of nb_32b_words size
+ * @warning This function allocates internally 1 buffer on stack that can reach
+ * 2 * nb_32b_words and the ones from @ref soft_bignum_mod
+ */
+CRYPTO_FUNCTION int32_t soft_bignum_mod_square(const metal_scl_t *const scl,
+                                               const bignum_ctx_t *const ctx,
+                                               const uint64_t *const in,
+                                               uint64_t *const out,
+                                               size_t nb_32b_words);
 
 /*@+exportlocal@*/
 

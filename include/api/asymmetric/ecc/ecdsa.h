@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- * 
+ *
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -23,37 +23,48 @@
  ******************************************************************************/
 
 /**
- * @file sha384.h
- * @brief sha384 implementation/wrapper
+ * @file ecdsa.h
+ * @brief Elliptic curve cryptography implementation/wrapper
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef SCL_BACKEND_SHA384_H
-#define SCL_BACKEND_SHA384_H
+#ifndef SCL_BACKEND_ECDSA_H
+#define SCL_BACKEND_ECDSA_H
 
-#include <stddef.h>
 #include <stdint.h>
-
-#include <api/hash/sha512.h>
 
 /**
  * @addtogroup COMMON
- * @addtogroup SHA
+ * @addtogroup ECC
  * @ingroup COMMON
  *  @{
  */
 
-#define SHA384_BYTE_HASHSIZE 48
+/**
+ * @brief ECDSA structure to contains signature elements (r,s)
+ */
+typedef struct ecdsa_signature_s
+{
+    /*! @brief pointer to r element */
+    uint8_t *r;
+    /*! @brief pointer to s element */
+    uint8_t *s;
+} ecdsa_signature_t;
 
 /**
- * @brief SHA384 context
- * @note Since SHA384 use SHA512 block computation, it can also use the same
- * context
+ * @brief ECDSA structure to contains signature elements (r,s) when there
+ * constants
  */
-typedef sha512_ctx_t sha384_ctx_t;
+typedef struct ecdsa_signature_const_s
+{
+    /*! @brief pointer to r element */
+    const uint8_t *r;
+    /*! @brief pointer to s element */
+    const uint8_t *s;
+} ecdsa_signature_const_t;
 
 /** @}*/
 
-#endif /* SCL_BACKEND_SHA384_H */
+#endif /* SCL_BACKEND_ECDSA_H */
