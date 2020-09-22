@@ -214,15 +214,10 @@ void hca_sha512_append_bit_len(uint8_t *const buffer, uint64_t *const length)
 
 int32_t hca_sha512_read(const metal_scl_t *const scl, uint8_t *const data_out)
 {
-    uint64_t *out64 = (uint64_t *)data_out;
-    register uint64_t val;
     // Read hash
-#if __riscv_xlen == 64
-    if ((uint64_t)data_out & 0x7)
-#elif __riscv_xlen == 32
-    if ((uint32_t)data_out & 0x7)
-#endif
+    if ( ! IS_ALIGNED_8_BYTES(data_out) )
     {
+        register uint64_t val;
         val = METAL_REG64(scl->hca_base, METAL_SIFIVE_HCA_HASH);
         data_out[63] = (uint8_t)val;
         data_out[62] = (uint8_t)(val >> 8);
@@ -305,6 +300,11 @@ int32_t hca_sha512_read(const metal_scl_t *const scl, uint8_t *const data_out)
     }
     else
     {
+        #pragma GCC diagnostic push
+        // data_out is known to be aligned on uint64_t
+        #pragma GCC diagnostic ignored "-Wcast-align"
+        uint64_t *out64 = (uint64_t *)data_out;
+        #pragma GCC diagnostic pop
         *out64++ = bswap64(METAL_REG64(
             scl->hca_base, (METAL_SIFIVE_HCA_HASH + 7 * sizeof(uint64_t))));
         *out64++ = bswap64(METAL_REG64(

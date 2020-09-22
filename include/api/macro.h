@@ -99,6 +99,33 @@
     })
 #endif
 
+#ifndef IS_ALIGNED_4_BYTES
+/**
+ * @brief Test is a pointer is aliged on a 4-byte address
+ */
+#define IS_ALIGNED_4_BYTES(p)   (!(((uintptr_t)(p)) & 0x3u))
+#endif
+
+#ifndef IS_ALIGNED_8_BYTES
+/**
+ * @brief Test is a pointer is aliged on a 8-byte address
+ */
+#define IS_ALIGNED_8_BYTES(p)   (!(((uintptr_t)(p)) & 0x7u))
+#endif
+
+
+#ifndef ASSERT_COMPILE
+/**
+ * @brief Compile-time assertion.
+ * @details Aborts the compilation if the c' constant expression expression evaluates
+ * to false
+ */
+#define _JOIN_(_x_,_y_) _DO_JOIN_(_x_,_y_)
+#define _DO_JOIN_(_x_,_y_) _x_##_y_
+#define ASSERT_COMPILE(c) \
+  void _JOIN_(assert_compile, __LINE__)(int assert_compile[(c)?1:-1])
+#endif // ASSERT_COMPILE
+
 /** @}*/
 
 #endif /* SCL_BACKEND_MACRO_H */

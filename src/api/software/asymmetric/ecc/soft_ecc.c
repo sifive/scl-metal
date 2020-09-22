@@ -435,7 +435,7 @@ soft_ecc_infinite_jacobian(const metal_scl_t *const scl,
 
     for (i = 1; i < nb_32b_words; i++)
     {
-        if ((((uint32_t *)point->y)[i] != 0) ||
+        if ((((uint32_t *)point->x)[i] != 0) ||
             (((uint32_t *)point->y)[i] != 0))
         {
             result = false;
