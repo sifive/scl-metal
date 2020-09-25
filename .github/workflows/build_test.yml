@@ -1,0 +1,19 @@
+name: SCL-metal
+
+on: [push]
+
+jobs:
+  trigger-event:
+    runs-on: ubuntu-latest
+    env:
+        # post the event to the remote action on the following branch
+        FREEDOM_METAL_BRANCH: gh_remote_event
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run trigger script
+      run: /bin/sh .github/events/trigger_build_test.sh
+            ${ FREEDOM_METAL_BRANCH }
+            ${{ secrets.FREEDOM_METAL_EVENT_USERNAME }}
+            ${{ secrets.FREEDOM_METAL_EVENT_TOKEN }}
+            ${GITHUB_SHA}
+
