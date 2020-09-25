@@ -60,10 +60,9 @@ CRYPTO_CONST_DATA static const metal_scl_t scl = {
         },
 };
 
-int32_t get_data_for_test(const metal_scl_t *const scl, uint32_t *data_out)
+int32_t get_data_for_test(const metal_scl_t *const scl_ctx, uint32_t *data_out)
 {
-    (void)scl;
-    // *data_out = 0x7F7F7F7F;
+    (void)scl_ctx;
     *data_out = 0xA5A5A5A5;
     return (SCL_OK);
 }
