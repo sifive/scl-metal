@@ -90,11 +90,11 @@ override CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual \
 					-Wconversion -Wsign-conversion -Wmissing-include-dirs \
 					-Wduplicated-branches -Wduplicated-cond -Warray-bounds \
 					-Wlogical-op -Wrestrict -Wnull-dereference \
-					-Wjump-misses-init -Wdouble-promotion -Wformat=2
+					-Wjump-misses-init -Wdouble-promotion -Wformat=2 \
+					-Wmissing-declarations -Wmissing-prototypes
 
 LIBSCL_METAL_CFLAGS += -fstack-protector-all
 
-# override CFLAGS += -I $(CURRENT_DIR)
 override ASFLAGS = $(CFLAGS)
 
 override LDFLAGS  += -Wl,--defsym,__stack_size=0x2000
