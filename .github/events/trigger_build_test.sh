@@ -3,7 +3,8 @@
 URL="https://api.github.com/repos/sifive/testenv-metal/actions/workflows/build_test.yml/dispatches"
 
 if [ $# -ne 4 ]; then
-    echo "Invalid arguments" >&2
+    # Do not print the arguments as they may contain sensitive tokens
+    echo "Invalid arguments (count: $#)" >&2
     exit 1
 fi
 
