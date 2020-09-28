@@ -1,8 +1,10 @@
 name: SCL-metal
 
-on: [push]
+on:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
 
-jobs:
+    jobs:
   trigger-event:
     runs-on: ubuntu-latest
     env:
