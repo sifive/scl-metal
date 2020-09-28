@@ -14,8 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run trigger script
-      run:  echo "Trigger build for ${GITHUB_SHA} ${GITHUB_EVENT_NAME}";
-            /bin/sh .github/events/trigger_build_test.sh
+      run:  /bin/sh .github/events/trigger_build_test.sh
             ${TESTENV_METAL_BRANCH}
             ${GITHUB_EVENT_NAME}
             "${GITHUB_SHA}:${{ github.event.pull_request.head.sha }}"
