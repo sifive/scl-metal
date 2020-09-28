@@ -9,9 +9,10 @@ if [ $# -ne 4 ]; then
 fi
 
 GH_BRANCH="$1"
-SCL_REF="$2"
-GH_USER="$3"
-GH_TOKEN="$4"
+GH_EVENT="$2"
+GH_REF="$3"
+GH_USER="$4"
+GH_TOKEN="$5"
 
 CURL_LOG=""
 
@@ -22,6 +23,21 @@ cleanup () {
 }
 
 set -eu
+
+SCL_REF=""
+if [ "${GH_EVENT}" = "push" ]; then
+    SCL_REF=$(echo "${GH_REF}" | cut -d: -f1)
+elif [ "${GH_EVENT}" = "pull_request" ]; then
+    SCL_REF=$(echo "${GH_REF}" | cut -d: -f2)
+else
+    echo "Unsupported event: ${GH_EVENT}" >&2
+    exit 1
+fi
+
+if [ -z "${SCL_REF}" ]; then
+    echo "Undefined SCL SHA" >&2
+    exit 1
+fi
 
 PAYLOAD="{\"ref\": \"${GH_BRANCH}\", \"inputs\": {\"scl_ref\": \"${SCL_REF}\"}}"
 
