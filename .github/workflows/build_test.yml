@@ -15,6 +15,6 @@ jobs:
     - name: Run trigger script
       run: /bin/sh .github/events/trigger_build_test.sh
             ${FREEDOM_METAL_BRANCH}
-            ${{ secrets.FREEDOM_METAL_EVENT_USERNAME }}
-            ${{ secrets.FREEDOM_METAL_EVENT_TOKEN }}
+            ${{ secrets.TESTENV_METAL_EVENT_USERNAME }}
+            ${{ secrets.TESTENV_METAL_EVENT_TOKEN }}
             ${GITHUB_SHA}

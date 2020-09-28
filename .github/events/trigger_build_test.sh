@@ -1,6 +1,6 @@
 #!/bin/sh
 
-URL="https://api.github.com/repos/sifive-eblot/freedom-metal/actions/workflows/build_test.yml/dispatches"
+URL="https://api.github.com/repos/sifive/testenv-metal/actions/workflows/build_test.yml/dispatches"
 
 if [ $# -ne 4 ]; then
     echo "Invalid arguments" >&2
