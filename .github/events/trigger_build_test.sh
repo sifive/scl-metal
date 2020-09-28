@@ -9,9 +9,9 @@ if [ $# -ne 4 ]; then
 fi
 
 GH_BRANCH="$1"
-GH_USER="$2"
-GH_TOKEN="$3"
-SCL_REF="$4"
+SCL_REF="$2"
+GH_USER="$3"
+GH_TOKEN="$4"
 
 CURL_LOG=""
 
