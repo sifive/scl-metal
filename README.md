@@ -25,3 +25,19 @@ A cleaning mechanism will be added in the future.
 Computation speed can be improved by placing **crypto_const_data** section/symbol into RAM. This avoid Flash access and speed up computation (on ecdsa).
 Placing **crypto_const_data** in RAM should be done with special care (Security issues if constant are modified). Reserving a non writable/executable section protected by PMP might be a good idea.
 This is only an improvment if the rodata are located in Flash.
+
+## Standalone download
+
+```
+git clone --recursive https://github.com/sifive/scl-metal.git
+```
+
+The `--recursive` option is required to clone the git submodules included in the
+repository. If at first you omit the `--recursive` option, you can achieve
+the same effect by updating submodules using the command:
+
+
+In case the test framework reference have been updated (which should not occur very often)
+```
+git submodule update --init --recursive
+```

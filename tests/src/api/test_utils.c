@@ -1,0 +1,87 @@
+/**
+ * @file test_utils.c
+ * @brief test suite for utils.c
+ * 
+ * @copyright Copyright (c) 2020 SiFive, Inc
+ * @copyright SPDX-License-Identifier: MIT
+ * 
+ */
+
+#include "unity.h"
+#include "unity_fixture.h"
+
+#include <string.h>
+
+#include <api/utils.h>
+
+TEST_GROUP(utils);
+
+TEST_SETUP(utils) {}
+
+TEST_TEAR_DOWN(utils) {}
+
+TEST(utils, memcpy_u64_success)
+{
+    int result = 0;
+    size_t word_size;
+    uint64_t dest[24] = {0};
+    static const uint64_t source[24] = {
+        0xF1A731C16826B112UL, 0xC2D6C36F322ADB31UL, 0xADF814D04293621AUL,
+        0x99257956ACB04888UL, 0x213CB160A56E652BUL, 0x5EA07B4C36F5E742UL,
+        0x7C6EA7AFFD28FD8CUL, 0x60A8B22AC65FF673UL, 0x35299037A28056EEUL,
+        0xA6396CA2E6D640CAUL, 0x1BAACCE52D040622UL, 0x780D9E8F08E3822EUL,
+        0x67EF2D9DD4D5E501UL, 0x62EE9A2018317A61UL, 0xFB1B54732E3EA55FUL,
+        0x31B582608D37B9AEUL, 0xE661A5C8F4AFCDADUL, 0x6FB02950DC6A0F66UL,
+        0x47FE18A5DA8C7F52UL, 0x9C0BB95DD4E9D4ABUL, 0xBB734830CFEAE7A3UL,
+        0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
+    };
+
+    word_size = sizeof(source) / sizeof(*source);
+
+    /* just in case */
+    result = memcmp(dest, source, sizeof(source));
+    TEST_ASSERT_FALSE(0 == result);
+
+    memcpy_u64(dest, source, word_size);
+
+    result = memcmp(dest, source, sizeof(source));
+    TEST_ASSERT_TRUE(0 == result);
+}
+
+TEST(utils, memset_u64_success)
+{
+    int result = 0;
+    size_t word_size;
+    uint64_t array[24] = {
+        0xF1A731C16826B112UL, 0xC2D6C36F322ADB31UL, 0xADF814D04293621AUL,
+        0x99257956ACB04888UL, 0x213CB160A56E652BUL, 0x5EA07B4C36F5E742UL,
+        0x7C6EA7AFFD28FD8CUL, 0x60A8B22AC65FF673UL, 0x35299037A28056EEUL,
+        0xA6396CA2E6D640CAUL, 0x1BAACCE52D040622UL, 0x780D9E8F08E3822EUL,
+        0x67EF2D9DD4D5E501UL, 0x62EE9A2018317A61UL, 0xFB1B54732E3EA55FUL,
+        0x31B582608D37B9AEUL, 0xE661A5C8F4AFCDADUL, 0x6FB02950DC6A0F66UL,
+        0x47FE18A5DA8C7F52UL, 0x9C0BB95DD4E9D4ABUL, 0xBB734830CFEAE7A3UL,
+        0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
+    };
+
+    static const uint64_t expected_array[24] = {
+        0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL,
+        0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL,
+        0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL,
+        0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL,
+        0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL,
+        0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL,
+        0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL,
+        0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL, 0xA5A5A5A5A5A5A5A5UL,
+    };
+
+    word_size = sizeof(expected_array) / sizeof(*expected_array);
+
+    /* just in case */
+    result = memcmp(array, expected_array, sizeof(array));
+    TEST_ASSERT_FALSE(0 == result);
+
+    memset_u64(array, 0xA5A5A5A5A5A5A5A5UL, word_size);
+
+    result = memcmp(array, expected_array, sizeof(array));
+    TEST_ASSERT_TRUE(0 == result);
+}
