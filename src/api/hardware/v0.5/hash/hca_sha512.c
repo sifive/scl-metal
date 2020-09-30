@@ -89,16 +89,21 @@ int32_t hca_sha512_core(const metal_scl_t *const scl, sha_ctx_t *const ctx,
         // block has been fully processed,so block buffer is empty
         block_buffer_index = 0;
 
-        //  compute the number of 512 bits block (sha256 has 512 bits block)
-        nb_blocks = (data_byte_len - block_remain) / SHA256_BYTE_BLOCKSIZE;
+        /**
+         * Compute the number of 512 bits block (sha256 has 512 bits block),
+         * sha 384 and 512 have an 1024, which result in an even number of block
+        */
+        
+        nb_blocks = ((data_byte_len - block_remain) / SHA512_BYTE_BLOCKSIZE) * 2;
 
-        // processing full blocks as long as data are available
-        result = hca_sha_block(scl, ctx->mode, nb_blocks, &data[block_remain]);
-        if (SCL_OK != result)
-        {
-            return (result);
+        if(0 != nb_blocks) {
+            // processing full blocks as long as data are available
+            result = hca_sha_block(scl, ctx->mode, nb_blocks, &data[block_remain]);
+            if (SCL_OK != result)
+            {
+                return (result);
+            }
         }
-
         data_index = (nb_blocks * SHA256_BYTE_BLOCKSIZE) + block_remain;
     }
 
