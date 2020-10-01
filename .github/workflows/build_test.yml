@@ -1,0 +1,23 @@
+name: SCL-metal
+
+on:
+  push:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+
+jobs:
+  trigger-event:
+    runs-on: ubuntu-latest
+    env:
+        # post the event to the remote action on the following branch
+        TESTENV_METAL_BRANCH: slack_notification
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run trigger script
+      run:  /bin/sh .github/events/trigger_build_test.sh
+            ${TESTENV_METAL_BRANCH}
+            ${GITHUB_EVENT_NAME}
+            "${GITHUB_SHA}:${{ github.event.pull_request.head.sha }}"
+            ${{ secrets.TESTENV_METAL_EVENT_USERNAME }}
+            ${{ secrets.TESTENV_METAL_EVENT_TOKEN }}
+
