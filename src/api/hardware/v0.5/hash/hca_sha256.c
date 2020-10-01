@@ -91,13 +91,14 @@ int32_t hca_sha256_core(const metal_scl_t *const scl, sha_ctx_t *const ctx,
 
         nb_blocks = (data_byte_len - block_remain) / SHA256_BYTE_BLOCKSIZE;
 
-        // processing full blocks as long as data are available
-        result = hca_sha_block(scl, ctx->mode, nb_blocks, &data[block_remain]);
-        if (SCL_OK != result)
-        {
-            return (result);
+        if(0 != nb_blocks) {
+            // processing full blocks as long as data are available
+            result = hca_sha_block(scl, ctx->mode, nb_blocks, &data[block_remain]);
+            if (SCL_OK != result)
+            {
+                return (result);
+            }
         }
-
         data_index = (nb_blocks * SHA256_BYTE_BLOCKSIZE) + block_remain;
     }
 
