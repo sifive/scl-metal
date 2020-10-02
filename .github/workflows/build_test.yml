@@ -119,7 +119,7 @@ jobs:
       UTEST_TESTS: 0
       UTEST_FAILURES: 0
       UTEST_IGNORED: 0
-      TESTENV_BRANCH: ""
+      SCL_METAL_BRANCH: ""
 
     steps:
       - name: Checkout Test environment for Metal
@@ -152,19 +152,19 @@ jobs:
         run:  echo "Unit test fatal sessions ${UTEST_ABORTS}/${UTEST_SESSIONS}";
               echo "${UTEST_TESTS} Tests ${UTEST_FAILURES} Failures ${UTEST_IGNORED} Ignored"
 
-#      - name: Extract git meta data
-#        run:  BRANCH="$(echo ${GITHUB_REF} | rev | cut -d/ -f1 | rev)";
-#              echo "TESTENV_BRANCH=${BRANCH}" >> $GITHUB_ENV;
-#
-#      - name: Slack Notification
-#        uses: rtCamp/action-slack-notify@master
-#        # Only notify slack channel if the build is triggered from SCL-metal
-#        # or if the local commit is in the master branch
-#        if: ${{ github.event_name == 'workflow_dispatch' || env.TESTENV_BRANCH == 'master' }}
-#        env:
-#            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#            SLACK_USERNAME: GitHub CI/CD
-#            SLACK_ICON: https://github.com/sifive.png?size=48
+      - name: Extract git meta data
+        run:  BRANCH="$(echo ${GITHUB_REF} | rev | cut -d/ -f1 | rev)";
+              echo "SCL_METAL_BRANCH=${BRANCH}" >> $GITHUB_ENV;
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@master
+        # Only notify slack channel if the build is triggered from SCL-metal
+        # or if the local commit is in the master branch
+        # if: ${{ github.event_name == 'pull_request' || env.SCL_METAL_BRANCH == 'master' }}
+        env:
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_USERNAME: GitHub CI/CD
+            SLACK_ICON: https://github.com/sifive.png?size=48
 
       - name: Overall result
         run:  test ${BUILD_FAILURES} -eq 0 &&
