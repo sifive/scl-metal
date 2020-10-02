@@ -43,17 +43,17 @@
  */
 
 #ifndef bswap16
-/*! @brief swap 16 bits words  */
+/*! @brief swap 16 bit words  */
 #define bswap16(x) __bswap16(x)
 #endif
 
 #ifndef bswap32
-/*! @brief swap 32 bits words  */
+/*! @brief swap 32 bit words  */
 #define bswap32(x) __bswap32(x)
 #endif
 
 #ifndef bswap64
-/*! @brief swap 64 bits words  */
+/*! @brief swap 64 bit words  */
 #define bswap64(x) __bswap64(x)
 #endif
 
@@ -113,6 +113,19 @@
 #define IS_ALIGNED_8_BYTES(p)   (!(((uintptr_t)(p)) & 0x7u))
 #endif
 
+#ifndef NB_32BIT_WORDS
+/**
+ * @brief Number of 32 bit words
+ */
+#define NB_32BIT_WORDS(array)   (sizeof(array)/(sizeof(uint32_t)))
+#endif
+
+#ifndef NB_64BIT_WORDS
+/**
+ * @brief Number of 64 bit words
+ */
+#define NB_64BIT_WORDS(array)   (sizeof(array)/(sizeof(uint64_t)))
+#endif
 
 #ifndef ASSERT_COMPILE
 /**
