@@ -115,14 +115,14 @@
 
 #ifndef NB_32BITS_WORDS
 /**
- * @brief Number of 32 bits blocks in array
+ * @brief Number of 32-bit words
  */
 #define NB_32BITS_WORDS(array)   (sizeof(array)/(sizeof(uint32_t)))
 #endif
 
 #ifndef NB_64BITS_WORDS
 /**
- * @brief Number of 64 bits blocks in array
+ * @brief Number of 64-bit words
  */
 #define NB_64BITS_WORDS(array)   (sizeof(array)/(sizeof(uint64_t)))
 #endif
