@@ -141,7 +141,10 @@ jobs:
             name: utest_result
 
       - name: Load statuses
-        run:  scripts/gh_setenv.sh build_status utest_status
+        run:  scripts/gh_setenv.sh
+                "${GITHUB_EVENT_NAME}"
+                "${GITHUB_SHA}:${{ github.event.pull_request.head.sha }}"
+                build_status utest_status
 
       - name: Report build status
         run:  echo "Build failures ${BUILD_FAILURES}/${BUILD_SESSIONS}";
