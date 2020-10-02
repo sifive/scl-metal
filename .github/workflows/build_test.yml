@@ -142,7 +142,7 @@ jobs:
 
       - name: Load statuses
         run:  scripts/gh_setenv.sh
-                "${GITHUB_EVENT_NAME}"
+                "${GITHUB_EVENT_NAME}" ":${GITHUB_REF}"
                 "${GITHUB_SHA}:${{ github.event.pull_request.head.sha }}"
                 build_status utest_status
 
