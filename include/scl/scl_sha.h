@@ -42,8 +42,8 @@
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
 
-#include <api/hash/sha.h>
-#include <api/scl_api.h>
+#include <backend/api/hash/sha/sha.h>
+#include <backend/api/scl_backend_api.h>
 
 /**
  * @addtogroup SCL

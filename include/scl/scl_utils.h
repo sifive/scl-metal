@@ -39,7 +39,7 @@
 
 #include <stdint.h>
 
-#include <api/scl_api.h>
+#include <backend/api/scl_backend_api.h>
 #include <scl_cfg.h>
 
 SCL_FUNCTION int32_t scl_format_key(const uint8_t *const key,

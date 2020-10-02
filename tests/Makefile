@@ -11,16 +11,24 @@ BUILD_DIRECTORY ?= $(CURRENT_DIR)/$(CONFIGURATION)/build
 override SOURCE_DIR = $(CURRENT_DIR)/src
 
 override SOURCE_DIRS := $(SOURCE_DIR)
-override SOURCE_DIRS += $(SOURCE_DIR)/scl/sha
-override SOURCE_DIRS += $(SOURCE_DIR)/scl/aes
-override SOURCE_DIRS += $(SOURCE_DIR)/scl/asymmetric/ecc
-override SOURCE_DIRS += $(SOURCE_DIR)/api
-override SOURCE_DIRS += $(SOURCE_DIR)/api/bignumbers/software
-override SOURCE_DIRS += $(SOURCE_DIR)/api/asymmetric/ecc/software
-override SOURCE_DIRS += $(SOURCE_DIR)/api/sha/software
-override SOURCE_DIRS += $(SOURCE_DIR)/api/sha/hardware
-override SOURCE_DIRS += $(SOURCE_DIR)/api/aes/hardware
+
+override SOURCE_DIRS += $(SOURCE_DIR)/backend/hardware/blockcipher/aes
+override SOURCE_DIRS += $(SOURCE_DIR)/backend/hardware/hash/sha
+
+override SOURCE_DIRS += $(SOURCE_DIR)/backend/software/hash/sha
+override SOURCE_DIRS += $(SOURCE_DIR)/backend/software/bignumbers
+override SOURCE_DIRS += $(SOURCE_DIR)/backend/software/asymmetric/ecc/
+
+override SOURCE_DIRS += $(SOURCE_DIR)/blockcipher/aes
+override SOURCE_DIRS += $(SOURCE_DIR)/hash/sha
+override SOURCE_DIRS += $(SOURCE_DIR)/asymmetric/ecc
+
 override SOURCE_DIRS += $(SOURCE_DIR)/test_runners
+override SOURCE_DIRS += $(SOURCE_DIR)/test_runners/backend/hardware
+override SOURCE_DIRS += $(SOURCE_DIR)/test_runners/backend/software
+override SOURCE_DIRS += $(SOURCE_DIR)/test_runners/blockcipher
+override SOURCE_DIRS += $(SOURCE_DIR)/test_runners/hash
+override SOURCE_DIRS += $(SOURCE_DIR)/test_runners/asymmetric
 
 
 override C_SOURCES = $(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
@@ -82,7 +90,7 @@ override LDLIBS := $(filter-out $(FILTER_PATTERN),$(LDLIBS)) -Wl,--end-group
 # ----------------------------------------------------------------------
 # Common def
 # ----------------------------------------------------------------------
-override INCLUDE_DIRS := 	$(CURRENT_DIR)/include
+override INCLUDE_DIRS := 	$(CURRENT_DIR)
 
 override CFLAGS += $(foreach dir,$(INCLUDE_DIRS),-I $(dir))
 override CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual \

@@ -42,9 +42,9 @@
 #include <scl/scl_defs.h>
 #include <scl/scl_retdefs.h>
 
-#include <api/asymmetric/ecc/ecc.h>
-#include <api/asymmetric/ecc/ecdsa.h>
-#include <api/scl_api.h>
+#include <backend/api/asymmetric/ecc/ecc.h>
+#include <backend/api/asymmetric/ecc/ecdsa.h>
+#include <backend/api/scl_backend_api.h>
 
 /**
  * @addtogroup SCL
