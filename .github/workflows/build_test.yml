@@ -5,19 +5,171 @@ on:
   pull_request:
     types: [assigned, opened, synchronize, reopened]
 
-jobs:
-  trigger-event:
-    runs-on: ubuntu-latest
-    env:
-        # post the event to the remote action on the following branch
-        TESTENV_METAL_BRANCH: master
-    steps:
-    - uses: actions/checkout@v2
-    - name: Run trigger script
-      run:  /bin/sh .github/events/trigger_build_test.sh
-            ${TESTENV_METAL_BRANCH}
-            ${GITHUB_EVENT_NAME}
-            "${GITHUB_SHA}:${{ github.event.pull_request.head.sha }}"
-            ${{ secrets.TESTENV_METAL_EVENT_USERNAME }}
-            ${{ secrets.TESTENV_METAL_EVENT_TOKEN }}
+env:
+  TESTENV_METAL_BRANCH: master
 
+jobs:
+  build:
+    name: Build Metal & Unit Tests
+    runs-on: ubuntu-latest
+
+    env:
+      TARGETS: qemu-sifive_e_rv64 qemu-sifive_e_rv32
+      BUILD_SESSIONS: 0
+      BUILD_FAILURES: 0
+      BUILD_WARNINGS: 0
+      BUILD_ERRORS: 0
+
+    steps:
+      - name: Checkout Test environment for Metal
+        uses: actions/checkout@v2
+        with:
+          repository: sifive/testenv-metal
+          ref: ${{ env.TESTENV_METAL_BRANCH }}
+          path: .
+          submodules: true
+
+      - name: Checkout SCL-Metal
+        uses: actions/checkout@v2
+        with:
+          path: scl-metal
+          submodules: false
+
+      - name: Report submodule status
+        run:  git submodule status
+
+      - name: Fetch Docker image
+        run: docker/bin/dock.sh build /bin/true
+
+      - name: Build all targets
+        run:  docker/bin/dock.sh build scripts/buildall.sh -g -r -s $TARGETS;
+              touch build/.phony
+
+      - name: Store build status
+        run:  echo "${BUILD_SESSIONS}|${BUILD_FAILURES}|${BUILD_ERRORS}|${BUILD_WARNINGS}" > build_status
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v2
+        with:
+            name: utests
+            path: |
+                build/**/*.elf
+                build/.phony
+
+      - name: Upload build status
+        uses: actions/upload-artifact@v2
+        with:
+            name: build_result
+            path: build_status
+
+  utest:
+    name: Run Unit Tests on QEMU
+    runs-on: ubuntu-latest
+    needs: build
+
+    env:
+      UTEST_SESSIONS: 0
+      UTEST_ABORTS: 0
+      UTEST_TESTS: 0
+      UTEST_FAILURES: 0
+      UTEST_IGNORED: 0
+
+    steps:
+      - name: Checkout Test environment for Metal
+        uses: actions/checkout@v2
+        with:
+          repository: sifive/testenv-metal
+          ref: ${{ env.TESTENV_METAL_BRANCH }}
+          path: .
+          submodules: false
+
+      - name: Fetch Docker image
+        run: docker/bin/dock.sh utest /bin/true
+
+      - name: Download test artifacts
+        uses: actions/download-artifact@v2
+        with:
+            name: utests
+            path: build
+
+      - name: Test all targets
+        run:  docker/bin/dock.sh utest scripts/utestall.sh -g build
+
+      - name: Store utest status
+        run: echo "${UTEST_SESSIONS}|${UTEST_ABORTS}|${UTEST_TESTS}|${UTEST_FAILURES}|${UTEST_IGNORED}" > utest_status
+
+      - name: Upload utest status
+        uses: actions/upload-artifact@v2
+        with:
+            name: utest_result
+            path: utest_status
+
+  status:
+    name: Overall status
+    runs-on: ubuntu-latest
+    needs: [build, utest]
+
+    env:
+      BUILD_SESSIONS: 0
+      BUILD_FAILURES: 0
+      BUILD_WARNINGS: 0
+      BUILD_ERRORS: 0
+      UTEST_SESSIONS: 0
+      UTEST_ABORTS: 0
+      UTEST_TESTS: 0
+      UTEST_FAILURES: 0
+      UTEST_IGNORED: 0
+      SCL_METAL_BRANCH: ""
+
+    steps:
+      - name: Checkout Test environment for Metal
+        uses: actions/checkout@v2
+        with:
+          repository: sifive/testenv-metal
+          ref: ${{ env.TESTENV_METAL_BRANCH }}
+          path: .
+          submodules: false
+
+      - name: Download build result
+        uses: actions/download-artifact@v2
+        with:
+            name: build_result
+
+      - name: Download utest result
+        uses: actions/download-artifact@v2
+        with:
+            name: utest_result
+
+      - name: Load statuses
+        run:  scripts/gh_setenv.sh
+                "${GITHUB_EVENT_NAME}"
+                "${GITHUB_SHA}:${{ github.event.pull_request.head.sha }}"
+                build_status utest_status
+
+      - name: Report build status
+        run:  echo "Build failures ${BUILD_FAILURES}/${BUILD_SESSIONS}";
+              echo "Build error count ${BUILD_ERRORS}";
+              echo "Build warning count ${BUILD_WARNINGS}"
+
+      - name: Report unit test status
+        run:  echo "Unit test fatal sessions ${UTEST_ABORTS}/${UTEST_SESSIONS}";
+              echo "${UTEST_TESTS} Tests ${UTEST_FAILURES} Failures ${UTEST_IGNORED} Ignored"
+
+      - name: Extract git meta data
+        run:  BRANCH="$(echo ${GITHUB_REF} | rev | cut -d/ -f1 | rev)";
+              echo "SCL_METAL_BRANCH=${BRANCH}" >> $GITHUB_ENV;
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@master
+        # Only notify slack channel if the build is triggered from SCL-metal
+        # or if the local commit is in the master branch
+        if: ${{ github.event_name == 'pull_request' || env.SCL_METAL_BRANCH == 'master' }}
+        env:
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_USERNAME: GitHub CI/CD
+            SLACK_ICON: https://github.com/sifive.png?size=48
+
+      - name: Overall result
+        run:  test ${BUILD_FAILURES} -eq 0 &&
+              test ${UTEST_ABORTS} -eq 0 &&
+              test ${UTEST_FAILURES} -eq 0
