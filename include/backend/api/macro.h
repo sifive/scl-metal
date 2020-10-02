@@ -113,6 +113,19 @@
 #define IS_ALIGNED_8_BYTES(p)   (!(((uintptr_t)(p)) & 0x7u))
 #endif
 
+#ifndef NB_32BITS_WORDS
+/**
+ * @brief Number of 32 bits blocks in array
+ */
+#define NB_32BITS_WORDS(array)   (sizeof(array)/(sizeof(uint32_t)))
+#endif
+
+#ifndef NB_64BITS_WORDS
+/**
+ * @brief Number of 64 bits blocks in array
+ */
+#define NB_64BITS_WORDS(array)   (sizeof(array)/(sizeof(uint64_t)))
+#endif
 
 #ifndef ASSERT_COMPILE
 /**
