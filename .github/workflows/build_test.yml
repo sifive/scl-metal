@@ -24,7 +24,7 @@ jobs:
       - name: Checkout Test environment for Metal
         uses: actions/checkout@v2
         with:
-          repository: ${GITHUB_SERVER_URL}/sifive/testenv-metal
+          repository: sifive/testenv-metal
           ref: ${TESTENV_METAL_BRANCH}
           path: .
           submodules: true
@@ -87,7 +87,7 @@ jobs:
       - name: Checkout Test environment for Metal
         uses: actions/checkout@v2
         with:
-          repository: ${GITHUB_SERVER_URL}/sifive/testenv-metal
+          repository: sifive/testenv-metal
           ref: ${TESTENV_METAL_BRANCH}
           path: .
           submodules: false
@@ -134,7 +134,7 @@ jobs:
       - name: Checkout Test environment for Metal
         uses: actions/checkout@v2
         with:
-          repository: ${GITHUB_SERVER_URL}/sifive/testenv-metal
+          repository: sifive/testenv-metal
           ref: ${TESTENV_METAL_BRANCH}
           path: .
           submodules: false
