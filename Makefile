@@ -89,7 +89,8 @@ override CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual \
 					-Wconversion -Wsign-conversion -Wmissing-include-dirs \
 					-Wduplicated-branches -Wduplicated-cond -Warray-bounds \
 					-Wlogical-op -Wrestrict -Wnull-dereference \
-					-Wjump-misses-init -Wdouble-promotion -Wformat=2
+					-Wjump-misses-init -Wdouble-promotion -Wformat=2 \
+					-Wsizeof-pointer-div
 
 override ASFLAGS = $(CFLAGS)
 

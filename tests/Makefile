@@ -99,7 +99,8 @@ override CFLAGS += -Wall -Wextra -Wpedantic -Wshadow -Wcast-qual \
 					-Wduplicated-branches -Wduplicated-cond -Warray-bounds \
 					-Wlogical-op -Wrestrict -Wnull-dereference \
 					-Wjump-misses-init -Wdouble-promotion -Wformat=2 \
-					-Wmissing-declarations -Wmissing-prototypes
+					-Wmissing-declarations -Wmissing-prototypes \
+					-Wsizeof-pointer-div
 
 LIBSCL_METAL_CFLAGS += -fstack-protector-all
 
