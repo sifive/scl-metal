@@ -379,6 +379,10 @@ int32_t soft_ecc_convert_jacobian_to_affine(
         result =
             scl->bignum_func.mod_mult(scl, &bignum_ctx, in->z, (uint64_t *)tmp,
                                       (uint64_t *)tmp, nb_32b_words);
+        if (SCL_OK > result)
+        {
+            return (result);
+        }
 
         // z^-3 (modular inversion)
         result = scl->bignum_func.mod_inv(scl, &bignum_ctx, (uint64_t *)tmp,
