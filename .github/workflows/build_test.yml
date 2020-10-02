@@ -132,7 +132,7 @@ jobs:
 
     steps:
       - name: Checkout Test environment for Metal
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
           repository: ${GITHUB_SERVER_URL}/sifive/testenv-metal
           ref: ${TESTENV_METAL_BRANCH}
