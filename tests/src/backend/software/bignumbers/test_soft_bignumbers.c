@@ -1929,9 +1929,7 @@ TEST(soft_bignumbers, soft_bignum_div_by_0)
 TEST(soft_bignumbers, soft_bignum_div_dividend_null_ptr)
 {
     int32_t result = 0;
-    uint64_t dividend[6] = {0x0000000000000001, 0x0000000000000000,
-                            0x0000000000000000, 0x0000000000000000,
-                            0x0000000000000000, 0x0000000000000000};
+    uint64_t dividend[6];
     uint64_t divisor[3] = {0x0000000000000000, 0x0000000000000000,
                            0x0000000000000000};
     uint64_t quotient[6] = {0x0000000000000000, 0x0000000000000000,
@@ -1963,8 +1961,7 @@ TEST(soft_bignumbers, soft_bignum_div_divisor_null_ptr)
     uint64_t dividend[6] = {0x0000000000000001, 0x0000000000000000,
                             0x0000000000000000, 0x0000000000000000,
                             0x0000000000000000, 0x0000000000000000};
-    uint64_t divisor[3] = {0x0000000000000001, 0x0000000000000000,
-                           0x0000000000000000};
+    uint64_t divisor[3];
     uint64_t quotient[6] = {0x0000000000000000, 0x0000000000000000,
                             0x0000000000000000, 0x0000000000000000,
                             0x0000000000000000, 0x0000000000000000};
@@ -2127,9 +2124,7 @@ TEST(soft_bignumbers, soft_bignum_mod_modulus_0)
 TEST(soft_bignumbers, soft_bignum_mod_input_null_ptr)
 {
     int32_t result = 0;
-    uint64_t input[6] = {0x0000000000000001, 0x0000000000000000,
-                         0x0000000000000000, 0x0000000000000000,
-                         0x0000000000000000, 0x0000000000000000};
+    uint64_t input[6];
     uint64_t modulus[3] = {0x0000000000000000, 0x0000000000000000,
                            0x0000000000000000};
 
@@ -2154,8 +2149,7 @@ TEST(soft_bignumbers, soft_bignum_mod_modulus_null_ptr)
     uint64_t input[6] = {0x0000000000000001, 0x0000000000000000,
                          0x0000000000000000, 0x0000000000000000,
                          0x0000000000000000, 0x0000000000000000};
-    uint64_t modulus[3] = {0x0000000000000001, 0x0000000000000000,
-                           0x0000000000000000};
+    uint64_t modulus[3];
     uint64_t remainder[3] = {0x0000000000000000, 0x0000000000000000,
                              0x0000000000000000};
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
