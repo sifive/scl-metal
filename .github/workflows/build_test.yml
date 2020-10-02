@@ -6,7 +6,7 @@ on:
    #  types: [assigned, opened, synchronize, reopened]
 
 env:
-    TESTENV_METAL_BRANCH: project_slave
+  TESTENV_METAL_BRANCH: project_slave
 
 jobs:
   build:
@@ -20,54 +20,56 @@ jobs:
       BUILD_WARNINGS: 0
       BUILD_ERRORS: 0
 
-  steps:
-    - uses: actions/checkout@v2
-      with:
-        repository: ${GITHUB_SERVER_URL}/sifive/testenv-metal
-        ref: ${TESTENV_METAL_BRANCH}
-        path: .
-        submodules: true
+    steps:
+      - name: Checkout Test environment for Metal
+        uses: actions/checkout@v2
+        with:
+          repository: ${GITHUB_SERVER_URL}/sifive/testenv-metal
+          ref: ${TESTENV_METAL_BRANCH}
+          path: .
+          submodules: true
 
-    - uses: actions/checkout@v2
-      with:
-        path: scl-metal
-        submodules: false
+      - name: Checkout SCL-Metal
+        uses: actions/checkout@v2
+        with:
+          path: scl-metal
+          submodules: false
 
-    - name: Store scl-metal info
-      run:  (cd scl-metal && git log -1 --pretty=%H:%cn:%B | head -1) > scl_metal_status
+      - name: Store scl-metal info
+        run:  (cd scl-metal && git log -1 --pretty=%H:%cn:%B | head -1) > scl_metal_status
 
-    - name: Report submodule status
-      run:  git submodule status
+      - name: Report submodule status
+        run:  git submodule status
 
-    - name: Fetch Docker image
-      run: docker/bin/dock.sh build /bin/true
+      - name: Fetch Docker image
+        run: docker/bin/dock.sh build /bin/true
 
-    - name: Build all targets
-      run:  docker/bin/dock.sh build scripts/buildall.sh -g -r -s $TARGETS;
-            touch build/.phony
+      - name: Build all targets
+        run:  docker/bin/dock.sh build scripts/buildall.sh -g -r -s $TARGETS;
+              touch build/.phony
 
-    - name: Store build status
-      run:  echo "${BUILD_TOTAL}|${BUILD_FAILURES}|${BUILD_ERRORS}|${BUILD_WARNINGS}" > build_status
+      - name: Store build status
+        run:  echo "${BUILD_TOTAL}|${BUILD_FAILURES}|${BUILD_ERRORS}|${BUILD_WARNINGS}" > build_status
 
-    - name: Upload test artifacts
-      uses: actions/upload-artifact@v2
-      with:
-          name: utests
-          path: |
-              build/**/*.elf
-              build/.phony
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v2
+        with:
+            name: utests
+            path: |
+                build/**/*.elf
+                build/.phony
 
-    - name: Upload build status
-      uses: actions/upload-artifact@v2
-      with:
-          name: build_result
-          path: build_status
+      - name: Upload build status
+        uses: actions/upload-artifact@v2
+        with:
+            name: build_result
+            path: build_status
 
-    - name: Upload SCL metal info
-      uses: actions/upload-artifact@v2
-      with:
-          name: scl_info
-          path: scl_metal_status
+      - name: Upload SCL metal info
+        uses: actions/upload-artifact@v2
+        with:
+            name: scl_info
+            path: scl_metal_status
 
   utest:
     name: Run Unit Tests on QEMU
@@ -82,7 +84,8 @@ jobs:
       UTEST_IGNORED: 0
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Test environment for Metal
+        uses: actions/checkout@v2
         with:
           repository: ${GITHUB_SERVER_URL}/sifive/testenv-metal
           ref: ${TESTENV_METAL_BRANCH}
@@ -128,6 +131,7 @@ jobs:
       TESTENV_BRANCH: ""
 
     steps:
+      - name: Checkout Test environment for Metal
       - uses: actions/checkout@v2
         with:
           repository: ${GITHUB_SERVER_URL}/sifive/testenv-metal
