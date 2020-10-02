@@ -2,11 +2,11 @@ name: SCL-metal
 
 on:
   push:
-  # pull_request:
-   #  types: [assigned, opened, synchronize, reopened]
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
 
 env:
-  TESTENV_METAL_BRANCH: project_slave
+  TESTENV_METAL_BRANCH: master
 
 jobs:
   build:
@@ -163,7 +163,7 @@ jobs:
         uses: rtCamp/action-slack-notify@master
         # Only notify slack channel if the build is triggered from SCL-metal
         # or if the local commit is in the master branch
-        # if: ${{ github.event_name == 'pull_request' || env.SCL_METAL_BRANCH == 'master' }}
+        if: ${{ github.event_name == 'pull_request' || env.SCL_METAL_BRANCH == 'master' }}
         env:
             SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
             SLACK_USERNAME: GitHub CI/CD
