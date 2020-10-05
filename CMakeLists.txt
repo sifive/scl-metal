@@ -25,7 +25,8 @@ ADD_LIBRARY (scl
   src/blockcipher/aes/scl_aes_ofb.c
   src/hash/sha/scl_sha.c
   src/asymmetric/ecc/scl_ecdsa.c
-  src/selftests/scl_selftests.c
+  src/selftests/scl_ecdsa_selftests.c
+  src/selftests/scl_sha_selftests.c
   src/backend/hardware/v0.5/blockcipher/aes/hca_aes.c
   src/backend/hardware/v0.5/hash/sha/hca_sha_miscellaneous.c
   src/backend/hardware/v0.5/hash/sha/hca_sha512.c
