@@ -12,6 +12,7 @@ ADD_LIBRARY (scl-tests
   src/test_runners/test_utils_runner.c
   src/test_runners/asymmetric/test_scl_ecdsa_runner.c
   src/test_runners/blockcipher/test_scl_aes_runner.c
+  src/test_runners/selftests/test_scl_selftests_runner.c
   src/test_runners/backend/hardware/test_hca_sha_runner.c
   src/test_runners/backend/hardware/test_hca_aes_runner.c
   src/test_runners/hash/test_scl_sha_runner.c
@@ -41,6 +42,7 @@ ADD_LIBRARY (scl-tests
   src/hash/sha/test_scl_sha_384.c
   src/hash/sha/test_scl_sha_256.c
   src/hash/sha/test_scl_sha_224.c
+  src/selftests/test_scl_selftests.c
   src/test_utils.c
 )
 
