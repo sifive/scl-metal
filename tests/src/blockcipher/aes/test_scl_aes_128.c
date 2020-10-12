@@ -3,10 +3,10 @@
  * @brief test suite for scl_aes_{cbc, ccm, cfb, ctr, ecb, gcm, ofb}.c on 192
  * bits key length
  * @note These tests use HCA (Hardware Cryptographic Accelerator)
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  */
 
 #include "unity.h"

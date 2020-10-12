@@ -645,7 +645,8 @@ TEST(soft_sha_384, msg_and_hash_twice)
         0xE3, 0xFA, 0xF9, 0x5E, 0xDF, 0x89, 0x24, 0x2A, 0x64, 0x94, 0x77, 0x42,
         0x7C, 0x9F, 0x05, 0xDB, 0x50, 0x7B, 0xBD, 0x6E, 0x96, 0x98, 0x6B, 0x77};
 
-    result = soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result =
+        soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     /* here uncomplete block */
@@ -656,7 +657,7 @@ TEST(soft_sha_384, msg_and_hash_twice)
 
     result =
         soft_sha_core(NULL, &sha_ctx, &message[SHA512_BYTE_BLOCKSIZE / 2 - 1],
-                     sizeof(message) - (SHA512_BYTE_BLOCKSIZE / 2 - 1));
+                      sizeof(message) - (SHA512_BYTE_BLOCKSIZE / 2 - 1));
 
     TEST_ASSERT_TRUE(0 == result);
 
@@ -667,7 +668,8 @@ TEST(soft_sha_384, msg_and_hash_twice)
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 
-    result = soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result =
+        soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     /* here uncomplete block */
@@ -678,7 +680,7 @@ TEST(soft_sha_384, msg_and_hash_twice)
 
     result =
         soft_sha_core(NULL, &sha_ctx, &message_2[SHA512_BYTE_BLOCKSIZE / 2 - 1],
-                     sizeof(message_2) - (SHA512_BYTE_BLOCKSIZE / 2 - 1));
+                      sizeof(message_2) - (SHA512_BYTE_BLOCKSIZE / 2 - 1));
 
     TEST_ASSERT_TRUE(0 == result);
 
@@ -717,7 +719,8 @@ TEST(soft_sha_384, msg_1_block_in_3_pieces_digest_aligned)
         0xB6, 0xE4, 0xB9, 0xB1, 0xC1, 0x74, 0xBB, 0xE9, 0xFE, 0x59, 0xBF, 0xA4,
         0x1D, 0x53, 0x1B, 0x8E, 0x95, 0x54, 0xBF, 0xFC, 0xFF, 0xA2, 0xA0, 0x9E};
 
-    result = soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
+    result =
+        soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA384, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     /* here uncomplete block */
@@ -728,7 +731,7 @@ TEST(soft_sha_384, msg_1_block_in_3_pieces_digest_aligned)
 
     result =
         soft_sha_core(NULL, &sha_ctx, &message[SHA512_BYTE_BLOCKSIZE / 3 - 1],
-                     SHA512_BYTE_BLOCKSIZE / 3 - 1);
+                      SHA512_BYTE_BLOCKSIZE / 3 - 1);
 
     TEST_ASSERT_TRUE(0 == result);
 

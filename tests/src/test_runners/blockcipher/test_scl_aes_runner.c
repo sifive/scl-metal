@@ -1,10 +1,10 @@
 /**
  * @file test_scl_aes_runner.c
  * @brief test runner for test_scl_aes.c
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  */
 
 #include "unity.h"

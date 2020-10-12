@@ -1,10 +1,10 @@
 /**
  * @file test_soft_bignumbers_runner.c
  * @brief test runner for test_soft_bignumbers.c
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  */
 
 #include "unity.h"

@@ -473,7 +473,7 @@ TEST(soft_sha_256, msg_96B_digest_aligned)
     TEST_ASSERT_TRUE(0 == result);
 
     result = soft_sha_finish(NULL, &sha_ctx, digest, &digest_len);
-    
+
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
     TEST_ASSERT_TRUE(0 ==
@@ -583,7 +583,8 @@ TEST(soft_sha_256, msg_and_hash_twice)
         0x7A, 0xDD, 0x53, 0x84, 0x16, 0x82, 0x8C, 0xBB, 0xA8, 0x1D, 0xB0,
         0xEE, 0x49, 0x89, 0x97, 0x13, 0x3A, 0x83, 0x31, 0xE1, 0xAE};
 
-    result = soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
+    result =
+        soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     /* here uncomplete block */
@@ -594,7 +595,7 @@ TEST(soft_sha_256, msg_and_hash_twice)
 
     result =
         soft_sha_core(NULL, &sha_ctx, &message[SHA256_BYTE_BLOCKSIZE / 2 - 1],
-                     sizeof(message) - (SHA256_BYTE_BLOCKSIZE / 2 - 1));
+                      sizeof(message) - (SHA256_BYTE_BLOCKSIZE / 2 - 1));
 
     TEST_ASSERT_TRUE(0 == result);
 
@@ -605,7 +606,8 @@ TEST(soft_sha_256, msg_and_hash_twice)
     TEST_ASSERT_TRUE(0 ==
                      memcmp(expected_digest, digest, sizeof(expected_digest)));
 
-    result = soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
+    result =
+        soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     /* here uncomplete block */
@@ -616,7 +618,7 @@ TEST(soft_sha_256, msg_and_hash_twice)
 
     result =
         soft_sha_core(NULL, &sha_ctx, &message_2[SHA256_BYTE_BLOCKSIZE / 2 - 1],
-                     sizeof(message_2) - (SHA256_BYTE_BLOCKSIZE / 2 - 1));
+                      sizeof(message_2) - (SHA256_BYTE_BLOCKSIZE / 2 - 1));
 
     TEST_ASSERT_TRUE(0 == result);
 
@@ -624,8 +626,8 @@ TEST(soft_sha_256, msg_and_hash_twice)
 
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == digest_len);
-    TEST_ASSERT_TRUE(0 ==
-                     memcmp(expected_digest_2, digest, sizeof(expected_digest_2)));
+    TEST_ASSERT_TRUE(
+        0 == memcmp(expected_digest_2, digest, sizeof(expected_digest_2)));
 }
 
 TEST(soft_sha_256, msg_1_block_in_3_pieces_digest_aligned)
@@ -649,7 +651,8 @@ TEST(soft_sha_256, msg_1_block_in_3_pieces_digest_aligned)
         0x70, 0xED, 0x13, 0xCC, 0xD2, 0x34, 0xA1, 0xB6, 0x54, 0x17, 0xC6,
         0x57, 0x93, 0x06, 0xDF, 0x58, 0xBE, 0xC8, 0x7A, 0x2C, 0x20};
 
-    result = soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
+    result =
+        soft_sha_init(NULL, &sha_ctx, SCL_HASH_SHA256, SCL_BIG_ENDIAN_MODE);
     TEST_ASSERT_TRUE(0 == result);
 
     /* here uncomplete block */
@@ -660,7 +663,7 @@ TEST(soft_sha_256, msg_1_block_in_3_pieces_digest_aligned)
 
     result =
         soft_sha_core(NULL, &sha_ctx, &message[SHA256_BYTE_BLOCKSIZE / 3 - 1],
-                     SHA256_BYTE_BLOCKSIZE / 3 - 1);
+                      SHA256_BYTE_BLOCKSIZE / 3 - 1);
 
     TEST_ASSERT_TRUE(0 == result);
 

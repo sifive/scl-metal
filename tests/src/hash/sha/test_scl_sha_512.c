@@ -1,10 +1,10 @@
 /**
  * @file test_scl_sha_512.c
  * @brief test suite for scl_sha.c on sha 512 algorithm
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  */
 
 #include "unity.h"

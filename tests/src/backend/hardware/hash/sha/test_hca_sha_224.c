@@ -13,9 +13,9 @@
 
 #include <string.h>
 
-#include <backend/hardware/scl_hca.h>
 #include <backend/api/hash/sha/sha.h>
 #include <backend/api/scl_backend_api.h>
+#include <backend/hardware/scl_hca.h>
 
 #include <metal/machine/platform.h>
 

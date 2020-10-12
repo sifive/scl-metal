@@ -2,10 +2,10 @@
 /**
  * @file test_soft_bignumbers.c
  * @brief test suite for hca_sha.c on sha 224 algorithm
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  */
 
 #include "unity_fixture.h"
@@ -13,8 +13,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <backend/software/scl_soft.h>
 #include <backend/api/macro.h>
+#include <backend/software/scl_soft.h>
 
 static const metal_scl_t scl = {
     .hca_base = 0,
@@ -178,8 +178,7 @@ TEST(soft_bignumbers, soft_bignum_add_summ_all_FF)
         0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL, 0xFFFFFFFFFFFFFFFFUL,
         0xFFFFFFFFFFFFFFFFUL};
 
-    result =
-        soft_bignum_add(NULL, in_a, in_b, out, NB_32BIT_WORDS(in_a));
+    result = soft_bignum_add(NULL, in_a, in_b, out, NB_32BIT_WORDS(in_a));
 
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
@@ -218,8 +217,7 @@ TEST(soft_bignumbers, soft_bignum_add_carry_2)
     uint64_t out[10] = {0};
     static const uint64_t expected_out[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    result =
-        soft_bignum_add(NULL, in_a, in_b, out, NB_32BIT_WORDS(in_a));
+    result = soft_bignum_add(NULL, in_a, in_b, out, NB_32BIT_WORDS(in_a));
 
     TEST_ASSERT_TRUE(1 == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_out, out, sizeof(expected_out));
@@ -1504,8 +1502,8 @@ TEST(soft_bignumbers, soft_bignum_compare_len_diff_a_equals_b)
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
     };
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(0 == result);
 }
@@ -1536,8 +1534,8 @@ TEST(soft_bignumbers, soft_bignum_compare_len_diff_a_greater_than_b_lsb)
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
     };
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(1 == result);
 }
@@ -1568,8 +1566,8 @@ TEST(soft_bignumbers, soft_bignum_compare_len_diff_a_greater_than_b_msb)
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
     };
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(1 == result);
 }
@@ -1600,8 +1598,8 @@ TEST(soft_bignumbers, soft_bignum_compare_len_diff_a_lower_than_b_lsb)
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
     };
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(-1 == result);
 }
@@ -1632,8 +1630,8 @@ TEST(soft_bignumbers, soft_bignum_compare_len_diff_a_lower_than_b_msb)
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
     };
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(-1 == result);
 }
@@ -1663,8 +1661,8 @@ TEST(soft_bignumbers, soft_bignum_compare_len_diff_a_equals_b_len_a_greater)
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
     };
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(0 == result);
 }
@@ -1696,8 +1694,8 @@ TEST(soft_bignumbers,
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
     };
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(1 == result);
 }
@@ -1729,8 +1727,8 @@ TEST(soft_bignumbers,
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
     };
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(-1 == result);
 }
@@ -1760,8 +1758,8 @@ TEST(soft_bignumbers, soft_bignum_compare_len_diff_a_equals_b_len_b_greater)
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
         0x0000000000000000UL};
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(0 == result);
 }
@@ -1793,8 +1791,8 @@ TEST(soft_bignumbers,
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
         0x0000000000000000UL};
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(1 == result);
 }
@@ -1826,8 +1824,8 @@ TEST(soft_bignumbers,
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
         0x0000000000000000UL};
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(-1 == result);
 }
@@ -1857,8 +1855,8 @@ TEST(soft_bignumbers, soft_bignum_compare_len_diff_len_a_greater)
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
     };
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(1 == result);
 }
@@ -1888,8 +1886,8 @@ TEST(soft_bignumbers, soft_bignum_compare_len_diff_len_b_greater)
         0x96F63E471BF5B240UL, 0xAB08087F8E40F50FUL, 0x3E798BF33B755747UL,
         0x0000000000000001UL};
 
-    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a),
-                                          b, NB_32BIT_WORDS(b));
+    result = soft_bignum_compare_len_diff(NULL, a, NB_32BIT_WORDS(a), b,
+                                          NB_32BIT_WORDS(b));
 
     TEST_ASSERT_TRUE(-1 == result);
 }
@@ -1915,9 +1913,8 @@ TEST(soft_bignumbers, soft_bignum_div_by_0)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result = soft_bignum_div(
-        &scl, dividend, NB_32BIT_WORDS(dividend), divisor,
-        NB_32BIT_WORDS(divisor), remainder, quotient);
+    result = soft_bignum_div(&scl, dividend, NB_32BIT_WORDS(dividend), divisor,
+                             NB_32BIT_WORDS(divisor), remainder, quotient);
 
     TEST_ASSERT_TRUE(SCL_ZERO_DIVISION == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -1944,9 +1941,8 @@ TEST(soft_bignumbers, soft_bignum_div_dividend_null_ptr)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result = soft_bignum_div(&scl, NULL, NB_32BIT_WORDS(dividend),
-                             divisor, NB_32BIT_WORDS(divisor),
-                             remainder, quotient);
+    result = soft_bignum_div(&scl, NULL, NB_32BIT_WORDS(dividend), divisor,
+                             NB_32BIT_WORDS(divisor), remainder, quotient);
 
     TEST_ASSERT_TRUE(SCL_INVALID_INPUT == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -1974,9 +1970,8 @@ TEST(soft_bignumbers, soft_bignum_div_divisor_null_ptr)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result = soft_bignum_div(
-        &scl, dividend, NB_32BIT_WORDS(dividend), NULL,
-        NB_32BIT_WORDS(divisor), remainder, quotient);
+    result = soft_bignum_div(&scl, dividend, NB_32BIT_WORDS(dividend), NULL,
+                             NB_32BIT_WORDS(divisor), remainder, quotient);
 
     TEST_ASSERT_TRUE(SCL_INVALID_INPUT == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2005,8 +2000,8 @@ TEST(soft_bignumbers, soft_bignum_div_dividend_size_0)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result = soft_bignum_div(&scl, dividend, 0, divisor, NB_32BIT_WORDS(divisor), remainder,
-                             quotient);
+    result = soft_bignum_div(&scl, dividend, 0, divisor,
+                             NB_32BIT_WORDS(divisor), remainder, quotient);
 
     TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2035,9 +2030,8 @@ TEST(soft_bignumbers, soft_bignum_div_divisor_size_0)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result =
-        soft_bignum_div(&scl, dividend, NB_32BIT_WORDS(dividend),
-                        divisor, 0, remainder, quotient);
+    result = soft_bignum_div(&scl, dividend, NB_32BIT_WORDS(dividend), divisor,
+                             0, remainder, quotient);
 
     TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2063,9 +2057,8 @@ TEST(soft_bignumbers, soft_bignum_div_dividend_lt_divisor)
     uint64_t expected_remainder[3] = {0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
                                       0xEFFFFFFFFFFFFFFF};
 
-    result = soft_bignum_div(
-        &scl, dividend, NB_32BIT_WORDS(dividend), divisor,
-        NB_32BIT_WORDS(divisor), remainder, quotient);
+    result = soft_bignum_div(&scl, dividend, NB_32BIT_WORDS(dividend), divisor,
+                             NB_32BIT_WORDS(divisor), remainder, quotient);
 
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2085,9 +2078,8 @@ TEST(soft_bignumbers, soft_bignum_div_dividend_gt_divisor)
     uint64_t expected_quotient[6] = {0x0E, 0, 0, 0, 0, 0};
     uint64_t expected_remainder[3] = {0x0123456789ABCED, 0, 0};
 
-    result = soft_bignum_div(
-        &scl, dividend, NB_32BIT_WORDS(dividend), divisor,
-         NB_32BIT_WORDS(divisor), remainder, quotient);
+    result = soft_bignum_div(&scl, dividend, NB_32BIT_WORDS(dividend), divisor,
+                             NB_32BIT_WORDS(divisor), remainder, quotient);
 
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2112,9 +2104,8 @@ TEST(soft_bignumbers, soft_bignum_mod_modulus_0)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result =
-        soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), modulus,
-                        NB_32BIT_WORDS(modulus), remainder);
+    result = soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), modulus,
+                             NB_32BIT_WORDS(modulus), remainder);
 
     TEST_ASSERT_TRUE(SCL_ZERO_DIVISION == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2134,9 +2125,8 @@ TEST(soft_bignumbers, soft_bignum_mod_input_null_ptr)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result =
-        soft_bignum_mod(&scl, NULL, NB_32BIT_WORDS(input), modulus,
-                        NB_32BIT_WORDS(modulus), remainder);
+    result = soft_bignum_mod(&scl, NULL, NB_32BIT_WORDS(input), modulus,
+                             NB_32BIT_WORDS(modulus), remainder);
 
     TEST_ASSERT_TRUE(SCL_INVALID_INPUT == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2155,9 +2145,8 @@ TEST(soft_bignumbers, soft_bignum_mod_modulus_null_ptr)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result =
-        soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), NULL,
-                        NB_32BIT_WORDS(modulus), remainder);
+    result = soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), NULL,
+                             NB_32BIT_WORDS(modulus), remainder);
 
     TEST_ASSERT_TRUE(SCL_INVALID_INPUT == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2177,8 +2166,8 @@ TEST(soft_bignumbers, soft_bignum_mod_input_size_0)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result = soft_bignum_mod(&scl, input, 0, modulus,
-                             NB_32BIT_WORDS(modulus), remainder);
+    result = soft_bignum_mod(&scl, input, 0, modulus, NB_32BIT_WORDS(modulus),
+                             remainder);
 
     TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2198,8 +2187,8 @@ TEST(soft_bignumbers, soft_bignum_mod_modulus_size_0)
     uint64_t expected_remainder[3] = {0x0000000000000000, 0x0000000000000000,
                                       0x0000000000000000};
 
-    result = soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input),
-                             modulus, 0, remainder);
+    result = soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), modulus, 0,
+                             remainder);
 
     TEST_ASSERT_TRUE(SCL_INVALID_LENGTH == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2218,9 +2207,8 @@ TEST(soft_bignumbers, soft_bignum_mod_input_lt_modulus)
     uint64_t expected_remainder[3] = {0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
                                       0xEFFFFFFFFFFFFFFF};
 
-    result =
-        soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), modulus,
-                        NB_32BIT_WORDS(modulus), remainder);
+    result = soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), modulus,
+                             NB_32BIT_WORDS(modulus), remainder);
 
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2236,9 +2224,8 @@ TEST(soft_bignumbers, soft_bignum_mod_input_gt_modulus)
 
     uint64_t expected_remainder[3] = {0x0123456789ABCED, 0, 0};
 
-    result =
-        soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), modulus,
-                        NB_32BIT_WORDS(modulus), remainder);
+    result = soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), modulus,
+                             NB_32BIT_WORDS(modulus), remainder);
 
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
@@ -2254,9 +2241,8 @@ TEST(soft_bignumbers, soft_bignum_mod_input_gt_modulus_2)
     uint64_t remainder[2] = {0, 0};
     uint64_t expected_remainder[2] = {0x000000F0FFFFFFFFUL, 0x000000F000000000};
 
-    result =
-        soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), modulus,
-                        NB_32BIT_WORDS(modulus), remainder);
+    result = soft_bignum_mod(&scl, input, NB_32BIT_WORDS(input), modulus,
+                             NB_32BIT_WORDS(modulus), remainder);
 
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_remainder, remainder,
