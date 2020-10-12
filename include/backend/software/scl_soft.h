@@ -37,6 +37,7 @@
 #include <stdio.h>
 
 #include <backend/software/asymmetric/ecc/soft_ecc.h>
+#include <backend/software/asymmetric/ecc/soft_ecc_keygen.h>
 #include <backend/software/asymmetric/ecc/soft_ecdsa.h>
 #include <backend/software/bignumbers/soft_bignumbers.h>
 #include <backend/software/hash/sha/soft_sha.h>

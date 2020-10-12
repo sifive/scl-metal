@@ -94,6 +94,8 @@ typedef enum
     SCL_ERR_SIGNATURE = -21,
     /*! @brief error invalid hash */
     SCL_ERR_HASH = -22,
+    /*! @brief error invalid point (not on ECC curve) */
+    SCL_ERR_POINT = -23,
 
     /*! @brief error functionnality not present */
     SCL_NOT_PRESENT = -30,
