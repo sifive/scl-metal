@@ -39,8 +39,8 @@
 
 #include <crypto_cfg.h>
 
-#include <backend/api/scl_backend_api.h>
 #include <backend/api/hash/sha/sha.h>
+#include <backend/api/scl_backend_api.h>
 
 #include <scl/scl_retdefs.h>
 
@@ -63,8 +63,7 @@
  * @note For SHA384 and SHA512 the number of blocks should be a multiple of 2
  */
 CRYPTO_FUNCTION int32_t hca_sha_block(const metal_scl_t *const scl,
-                                      hash_mode_t hash_mode,
-                                      size_t NbBlocks512,
+                                      hash_mode_t hash_mode, size_t NbBlocks512,
                                       const uint8_t *const data_in);
 
 /** @}*/

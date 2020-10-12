@@ -624,7 +624,7 @@ struct __ecdsa_func
      * @param[out] signature    signature structure that will hold results
      * @param[in] hash          hash value to sign
      * @param[in] hash_len      hash value length
-     * @return O in case of success
+     * @return 0 in case of success
      * @return > 0 in case of failure @ref scl_errors_t
      * @note Private key shall be big endian
      * @note Signature elements will be big endian
@@ -657,7 +657,7 @@ struct __ecdsa_func
      * @param[in] hash          hash value on which the signature has been
      * performed
      * @param[in] hash_len      hash value length
-     * @return O in case of success
+     * @return 0 in case of success
      * @return > 0 in case of failure @ref scl_errors_t
      * @note Public key elements shall be big endian
      * @note Signature elements shall be big endian

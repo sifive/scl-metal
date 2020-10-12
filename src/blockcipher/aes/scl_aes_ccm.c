@@ -31,8 +31,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#include <string.h>
 #include <limits.h>
+#include <string.h>
 
 #include <scl_cfg.h>
 
@@ -87,12 +87,12 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
 
     // determine ccmq value
     // 2^16
-    if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(2u) )
+    if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(2u))
     {
         ccmq = 2;
     }
     // 2^24
-    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(3u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(3u))
     {
         ccmq = 3;
     }
@@ -103,22 +103,22 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     }
 #else
     // 2^32
-    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(4u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(4u))
     {
         ccmq = 4;
     }
     // 2^40
-    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(5u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(5u))
     {
         ccmq = 5;
     }
     // 2^48
-    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(6u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(6u))
     {
         ccmq = 6;
     }
     // 2^56
-    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(7u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(7u))
     {
         ccmq = 7;
     }

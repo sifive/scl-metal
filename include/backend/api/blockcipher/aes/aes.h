@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- * 
+ *
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
 
 /**
  * @file aes.h
- * @brief 
+ * @brief
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -42,19 +42,20 @@
  *  @{
  */
 
-#define BLOCK128_NB_BYTE        16
+#define BLOCK128_NB_BYTE 16
 
-#define BLOCK128_NB_UINT64      2
-#define BLOCK128_NB_UINT32      4
+#define BLOCK128_NB_UINT64 2
+#define BLOCK128_NB_UINT32 4
 
 /*! @brief AES context for AES auth modes */
-typedef struct { 
+typedef struct
+{
     /*! Total Hash lenght */
     uint64_t pld_len;
     /*! lenght of data stored into buffer */
     size_t buf_len;
     /*! buffer storage for incomplet data */
-    uint64_t buf[BLOCK128_NB_UINT64]                __attribute__ ((aligned (8)));
+    uint64_t buf[BLOCK128_NB_UINT64] __attribute__((aligned(8)));
     /*! buffer storage for incomplet data */
     scl_endianness_t data_endianness;
 } aes_auth_ctx_t;
