@@ -32,8 +32,6 @@ static void RunAllTests(void)
 {
     UnityFixture.Verbose = 1;
 
-    UnityFixture.GroupFilter = "soft_ecc_keygen";
-
     // soft implementation
     RUN_TEST_GROUP(soft_sha_224);
     RUN_TEST_GROUP(soft_sha_256);
@@ -55,6 +53,7 @@ static void RunAllTests(void)
     /* ECC */
     RUN_TEST_GROUP(soft_ecc);
     RUN_TEST_GROUP(soft_ecc_keygen);
+    RUN_TEST_GROUP(scl_ecc_keygen);
 
     /* ECDSA */
     RUN_TEST_GROUP(soft_ecdsa);
