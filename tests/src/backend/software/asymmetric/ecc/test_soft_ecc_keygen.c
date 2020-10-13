@@ -432,9 +432,9 @@ TEST(soft_ecc_keygen, soft_ecc_keypair_generation_secp521r1_success)
 
     TEST_ASSERT_TRUE(SCL_OK == result);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_point_x, point_x,
-                                 ECC_SECP384R1_BYTESIZE);
+                                 ECC_SECP521R1_BYTESIZE);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_point_y, point_y,
-                                 ECC_SECP384R1_BYTESIZE);
+                                 ECC_SECP521R1_BYTESIZE);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_priv_key, priv_key,
-                                 ECC_SECP384R1_BYTESIZE);
+                                 ECC_SECP521R1_BYTESIZE);
 }
