@@ -680,6 +680,54 @@ struct __ecdsa_func
                             const uint8_t *const hash, size_t hash_len);
 };
 
+/*! @brief ECC (Elliptic Curve Cryptography) low level API entry points */
+struct __ecc_func
+{
+    /**
+     * @brief checking an affine point is on the provided curve
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
+     *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[in]  point        Affine point to check
+     * @return 0 in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     */
+    int32_t (*point_on_curve)(
+        const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+        const ecc_affine_const_point_t *const point);
+
+    /**
+     * @brief compute public key from private key and curve parameters
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
+     *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[in] priv_key              private key
+     * @param[out] pub_key              public key
+     * @return 0 in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     */
+    int32_t (*pubkey_generation)(
+        const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+        const uint8_t *const priv_key, ecc_affine_point_t *const pub_key);
+
+    /**
+     * @brief generate a new ECC keypair
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
+     *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[out] priv_key         private key
+     * @param[out] pub_key          public key
+     * @return 0 in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     */
+    int32_t (*keypair_generation)(
+        const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+        uint8_t *const priv_key, ecc_affine_point_t *const pub_key);
+};
+
 /*! @see _metal_scl_struct */
 struct _metal_scl_struct
 {
@@ -693,6 +741,7 @@ struct _metal_scl_struct
     const struct __trng_func trng_func;
     const struct __bignum_func bignum_func;
     const struct __ecdsa_func ecdsa_func;
+    const struct __ecc_func ecc_func;
 };
 
 /*@unused@*/ static __inline__ int32_t
