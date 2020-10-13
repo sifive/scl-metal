@@ -23,9 +23,9 @@
  ******************************************************************************/
 
 /**
- * @file scl_aes.h
- * @brief defines the AES.
- * AES is NIST FIPS-197
+ * @file scl_ecdsa.h
+ * @brief defines the generic ECDSA function interface, where the hash function
+ * is transmitted as a parameter.
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
