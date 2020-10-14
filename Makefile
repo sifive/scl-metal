@@ -34,7 +34,8 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/bignumbers \
 		$(SOURCE_DIR)/random \
 		$(SOURCE_DIR)/asymmetric \
-		$(SOURCE_DIR)/asymmetric/ecc
+		$(SOURCE_DIR)/asymmetric/ecc \
+		$(SOURCE_DIR)/selftests
 
 SCL_DIR = $(CURRENT_DIR)
 include $(CURRENT_DIR)/scripts/scl.mk

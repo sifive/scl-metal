@@ -57,6 +57,8 @@ static void RunAllTests(void)
     RUN_TEST_GROUP(soft_ecdsa);
     RUN_TEST_GROUP(scl_ecdsa);
 
+    RUN_TEST_GROUP(scl_selftests);
+
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
     // hardware implementation
     RUN_TEST_GROUP(hca_sha_224);
