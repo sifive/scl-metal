@@ -36,12 +36,14 @@ ADD_LIBRARY (scl
   src/backend/hardware/hca_utils.c
   src/backend/software/asymmetric/ecc/soft_ecdsa.c
   src/backend/software/asymmetric/ecc/soft_ecc.c
+  src/backend/software/asymmetric/ecc/soft_ecc_keygen.c
   src/backend/software/bignumbers/soft_bignumbers.c
   src/backend/software/hash/sha/soft_sha.c
   src/backend/software/hash/sha/soft_sha224.c
   src/backend/software/hash/sha/soft_sha256.c
   src/backend/software/hash/sha/soft_sha384.c
   src/backend/software/hash/sha/soft_sha512.c
+  src/backend/software/message_auth/soft_hmac.c
   src/backend/utils.c
   src/scl_init.c
   src/scl_utils.c

@@ -16,8 +16,10 @@ ADD_LIBRARY (scl-tests
   src/test_runners/backend/hardware/test_hca_aes_runner.c
   src/test_runners/hash/test_scl_sha_runner.c
   src/test_runners/backend/software/test_soft_sha_runner.c
+  src/test_runners/backend/software/test_soft_hmac_runner.c
   src/test_runners/backend/software/test_soft_ecdsa_runner.c
   src/test_runners/backend/software/test_soft_ecc_runner.c
+  src/test_runners/backend/software/test_soft_ecc_keygen_runner.c
   src/test_runners/backend/software/test_soft_bignumbers_runner.c
   src/asymmetric/ecc/test_scl_ecdsa.c
   src/backend/hardware/blockcipher/aes/test_hca_aes_256.c
@@ -29,11 +31,13 @@ ADD_LIBRARY (scl-tests
   src/backend/hardware/hash/sha/test_hca_sha_224.c
   src/backend/software/asymmetric/ecc/test_soft_ecdsa.c
   src/backend/software/asymmetric/ecc/test_soft_ecc.c
+  src/backend/software/asymmetric/ecc/test_soft_ecc_keygen.c
   src/backend/software/bignumbers/test_soft_bignumbers.c
   src/backend/software/hash/sha/test_soft_sha_512.c
   src/backend/software/hash/sha/test_soft_sha_384.c
   src/backend/software/hash/sha/test_soft_sha_256.c
   src/backend/software/hash/sha/test_soft_sha_224.c
+  src/backend/software/message_auth/test_soft_hmac.c
   src/blockcipher/aes/test_scl_aes_256.c
   src/blockcipher/aes/test_scl_aes_192.c
   src/blockcipher/aes/test_scl_aes_128.c
