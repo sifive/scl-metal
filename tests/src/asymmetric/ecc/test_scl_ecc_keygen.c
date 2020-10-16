@@ -125,12 +125,14 @@ TEST(scl_ecc_keygen, scl_ecc_keygen_secp256r1_all_in_one)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_point_y, point_y,
                                  ECC_SECP256R1_BYTESIZE);
 
-    result = scl_ecc_key_on_curve(&scl, &ecc_secp256r1, (ecc_affine_const_point_t *)&pub_key);
+    result = scl_ecc_key_on_curve(&scl, &ecc_secp256r1,
+                                  (ecc_affine_const_point_t *)&pub_key);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     point_x[0] = 0x01;
 
-    result = scl_ecc_key_on_curve(&scl, &ecc_secp256r1, (ecc_affine_const_point_t *)&pub_key);
+    result = scl_ecc_key_on_curve(&scl, &ecc_secp256r1,
+                                  (ecc_affine_const_point_t *)&pub_key);
     TEST_ASSERT_TRUE(SCL_ERR_POINT == result);
 }
 
@@ -183,12 +185,14 @@ TEST(scl_ecc_keygen, scl_ecc_keygen_secp384r1_all_in_one)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_point_y, point_y,
                                  ECC_SECP384R1_BYTESIZE);
 
-    result = scl_ecc_key_on_curve(&scl, &ecc_secp384r1, (ecc_affine_const_point_t *)&pub_key);
+    result = scl_ecc_key_on_curve(&scl, &ecc_secp384r1,
+                                  (ecc_affine_const_point_t *)&pub_key);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     point_x[0] = 0x01;
 
-    result = scl_ecc_key_on_curve(&scl, &ecc_secp384r1, (ecc_affine_const_point_t *)&pub_key);
+    result = scl_ecc_key_on_curve(&scl, &ecc_secp384r1,
+                                  (ecc_affine_const_point_t *)&pub_key);
     TEST_ASSERT_TRUE(SCL_ERR_POINT == result);
 }
 
@@ -247,11 +251,13 @@ TEST(scl_ecc_keygen, scl_ecc_keygen_secp521r1_all_in_one)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_point_y, point_y,
                                  ECC_SECP521R1_BYTESIZE);
 
-    result = scl_ecc_key_on_curve(&scl, &ecc_secp521r1, (ecc_affine_const_point_t *)&pub_key);
+    result = scl_ecc_key_on_curve(&scl, &ecc_secp521r1,
+                                  (ecc_affine_const_point_t *)&pub_key);
     TEST_ASSERT_TRUE(SCL_OK == result);
 
     point_x[0] = 0x01;
 
-    result = scl_ecc_key_on_curve(&scl, &ecc_secp521r1, (ecc_affine_const_point_t *)&pub_key);
+    result = scl_ecc_key_on_curve(&scl, &ecc_secp521r1,
+                                  (ecc_affine_const_point_t *)&pub_key);
     TEST_ASSERT_TRUE(SCL_ERR_POINT == result);
 }
