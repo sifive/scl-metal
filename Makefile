@@ -12,7 +12,8 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/backend/software \
 		$(SOURCE_DIR)/backend/software/hash/sha \
 		$(SOURCE_DIR)/backend/software/bignumbers \
-		$(SOURCE_DIR)/backend/software/asymmetric/ecc
+		$(SOURCE_DIR)/backend/software/asymmetric/ecc \
+		$(SOURCE_DIR)/backend/software/message_auth
 		
 # the version management will be improved, this is just a draft to test
 # compilation of the version specific files
@@ -48,10 +49,12 @@ override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/backend/api/bignumbers \
 	$(CURRENT_DIR)/include/backend/api/blockcipher/aes \
 	$(CURRENT_DIR)/include/backend/api/hash/sha \
+	$(CURRENT_DIR)/include/backend/api/message_auth \
 	$(CURRENT_DIR)/include/backend/software \
 	$(CURRENT_DIR)/include/backend/software/hash/sha \
 	$(CURRENT_DIR)/include/backend/software/bignumbers \
 	$(CURRENT_DIR)/include/backend/software/asymmetric/ecc \
+	$(CURRENT_DIR)/include/backend/software/message_auth \
 	$(CURRENT_DIR)/include/backend/hardware \
 	$(CURRENT_DIR)/include/backend/hardware/v0.5 \
 	$(CURRENT_DIR)/include/backend/hardware/v0.5/blockcipher/aes \

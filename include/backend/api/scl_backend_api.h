@@ -44,6 +44,7 @@
 #include <backend/api/bignumbers/bignumbers.h>
 #include <backend/api/blockcipher/aes/aes.h>
 #include <backend/api/hash/sha/sha.h>
+#include <backend/api/message_auth/hmac.h>
 
 /**
  * @addtogroup COMMON
@@ -726,6 +727,59 @@ struct __ecc_func
     int32_t (*keypair_generation)(
         const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
         uint8_t *const priv_key, ecc_affine_point_t *const pub_key);
+};
+
+/*! @brief HMAC low level API entry points */
+struct __hmac_func
+{
+    /**
+     * @brief Initialize HMAC computation
+     *
+     * @param[in] scl_ctx           scl context
+     * @param[in/out] hmac_ctx      hmac context
+     * @param[in/out] sha_ctx       sha context (this will be referenced into hmac
+     * context)
+     * @param[in] hash_mode         hash mode to use
+     * @param[in] key               Key to use for HMAC computation
+     * @param[in] key_len           Key length (in byte)
+     * @return 0    in case of SUCCESS
+     * @return != 0 in case of errors @ref scl_errors_t
+     * @warning Do not override sha_ctx before calling soft_hmac_finish()
+     */
+    int32_t (*init)(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
+                        sha_ctx_t *const sha_ctx, hash_mode_t hash_mode,
+                        const uint8_t *const key, size_t key_len);
+
+    /**
+     * @brief Compute a chunk of data
+     *
+     * @param[in] scl_ctx           scl context
+     * @param[in/out] hmac_ctx      hmac context
+     * @param[in] data              data chunk to process
+     * @param[in] data_len          data chunk length
+     * @return 0    in case of SUCCESS
+     * @return != 0 in case of errors @ref scl_errors_t
+     * @note Can be called several time
+     * @warning Do not override sha_ctx before calling soft_hmac_finish()
+     */
+    int32_t (*core)(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
+                        const uint8_t *const data, size_t data_len);
+
+    /**
+     * @brief Finish HMAC computation
+     *
+     * @param[in] scl_ctx           scl context
+     * @param[in/out] hmac_ctx      hmac context
+     * @param[in] mac               HMAC computation result
+     * @param[in/out] mac_len       HMAC buffer length (in byte)/HMAC length (in
+     * byte)
+     * @return 0    in case of SUCCESS
+     * @return != 0 in case of errors @ref scl_errors_t
+     * @warning Do not override sha_ctx before calling soft_hmac_finish()
+     */
+    int32_t (*finish)(const metal_scl_t *const scl,
+                            hmac_ctx_t *const hmac_ctx, uint8_t *const mac,
+                            size_t *const mac_len);
 };
 
 /*! @see _metal_scl_struct */
