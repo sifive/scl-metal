@@ -32,6 +32,8 @@ static void RunAllTests(void)
 {
     UnityFixture.Verbose = 1;
 
+    UnityFixture.GroupFilter = "soft_hmac";
+
     // soft implementation
     RUN_TEST_GROUP(soft_sha_224);
     RUN_TEST_GROUP(soft_sha_256);
@@ -44,7 +46,10 @@ static void RunAllTests(void)
     RUN_TEST_GROUP(scl_soft_sha_384);
     RUN_TEST_GROUP(scl_soft_sha_512);
 
-    // utils
+    /* HMAC */
+    RUN_TEST_GROUP(soft_hmac);
+
+    /* utils */
     RUN_TEST_GROUP(utils);
 
     // software bignumbers
