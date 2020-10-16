@@ -53,6 +53,48 @@
 #error "Unexpected __riscv_xlen"
 #endif
 
+typedef struct _hca_trng_data
+{
+    const metal_scl_t *scl;
+    uint32_t *data;
+    void (*callback)(int32_t);
+} hca_trng_data_t;
+
+CRYPTO_DATA static hca_trng_data_t hca_trng_isr_data;
+
+CRYPTO_FUNCTION static void hca_trng_isr(int id, void * priv_data)
+{
+    hca_trng_data_t *hca_trng_isr_data_ptr = (hca_trng_data_t *)priv_data;
+    
+    /* Remove compiler warning about unused variables */
+	( void ) id;
+
+    if (NULL == hca_trng_isr_data_ptr) {
+        // we can do nothing, just return
+        return;
+    }
+
+    if (NULL == hca_trng_isr_data_ptr->scl) {
+        // we can do nothing, just return
+        return;
+    }
+
+    // read TRNG_DATA register
+    *hca_trng_isr_data_ptr->data = 
+        METAL_REG32(hca_trng_isr_data_ptr->scl->hca_base, 
+                    METAL_SIFIVE_HCA_TRNG_DATA);
+
+    // Disable interrupt
+    hca_setfield32(hca_trng_isr_data_ptr->scl, METAL_SIFIVE_HCA_TRNG_CR, 0,
+                HCA_REGISTER_TRNG_CR_RNDIRQEN_OFFSET,
+                HCA_REGISTER_TRNG_CR_RNDIRQEN_MASK);
+    
+    if (NULL == hca_trng_isr_data_ptr->callback)
+    {
+        hca_trng_isr_data_ptr->callback(SCL_OK);
+    }
+}
+
 int32_t hca_trng_init(const metal_scl_t *const scl)
 {
     int ret = SCL_OK;
@@ -133,4 +175,40 @@ int32_t hca_trng_getdata(const metal_scl_t *const scl, uint32_t *data_out)
 
     return SCL_OK;
 }
+
+int32_t hca_trng_getdata_with_irq(const metal_scl_t *const scl, 
+                                  uint32_t *data_out, 
+                                  void (*callback)(int32_t))
+{
+    if (NULL == scl)
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if (NULL == scl->system_register_handler)
+    {
+        return (SCL_INVALID_INPUT);
+    }
+
+    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_REV))
+    {
+        // revision of TRNG is Zero so the TRNG is not present.
+        return SCL_ERROR;
+    }
+
+    hca_trng_isr_data.scl = scl;
+    hca_trng_isr_data.data = data_out;
+    hca_trng_isr_data.callback = callback;
+
+    // Register Handler
+    scl->system_register_handler(scl, &hca_trng_isr, &hca_trng_isr_data);
+
+    // enable interrupt
+    hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_CR, 1,
+                HCA_REGISTER_TRNG_CR_RNDIRQEN_OFFSET,
+                HCA_REGISTER_TRNG_CR_RNDIRQEN_MASK);
+
+    return SCL_OK;
+}
+
 #endif /* METAL_SIFIVE_HCA_VERSION */

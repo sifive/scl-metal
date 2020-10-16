@@ -109,7 +109,8 @@ else
 endif
 
 FILTER_PATTERN = -O0 -Os
-override CFLAGS := $(filter-out $(FILTER_PATTERN),$(CFLAGS)) -Ofast
+##override CFLAGS := $(filter-out $(FILTER_PATTERN),$(CFLAGS)) -Ofast
+override CFLAGS := $(filter-out $(FILTER_PATTERN),$(CFLAGS)) -O0
 
 ################################################################################
 #                               MACROS

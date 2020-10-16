@@ -95,6 +95,27 @@ CRYPTO_FUNCTION int32_t hca_aes_cipher(
     const uint8_t *const data_in, size_t data_len, uint8_t *const data_out);
 
 /**
+ * @brief perform AES cipher operation
+ *
+ * @param[in] scl               metal scl context @ref metal_scl_t
+ * @param[in] aes_mode          AES mode @ref scl_aes_mode_t
+ * @param[in] aes_process       AES process (encrypt or decrypt)
+ * @param[in] data_endianness   endianess of the input data
+ * @param[in] data_in           data to process
+ * @param[in] data_len          length of the data to process (in byte)
+ * @param[out] data_out         data output buffer
+ * @param[in] callback          Callback is a function to call when operation is
+ * finished (in case of no NULL parameter the IRQ will be enable)
+ * @return 0                    SUCCESS
+ * @return != 0                 otherwise @ref scl_errors_t
+ */
+CRYPTO_FUNCTION int32_t hca_aes_cipher_with_dma(
+    const metal_scl_t *const scl, scl_aes_mode_t aes_mode,
+    scl_process_t aes_process, scl_endianness_t data_endianness,
+    const uint8_t *const data_in, size_t data_len, uint8_t *const data_out,
+    void (*callback)(int32_t));
+
+/**
  * @brief initiliaze AES cipher with authentication operation
  *
  * @param[in] scl               metal scl context @ref metal_scl_t

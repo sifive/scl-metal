@@ -52,6 +52,9 @@
 /*! @brief Macro to access a 32 bits register */
 #define METAL_REG32(base, offset)                                              \
     (__METAL_ACCESS_ONCE((uint32_t *)((base) + (offset))))
+/*! @brief Macro to access a 8 bits register */
+#define METAL_REG8(base, offset)                                              \
+    (__METAL_ACCESS_ONCE((uint8_t *)((base) + (offset))))
 
 /*! @brief Macro to copy 32 (no alignement constraint) to 32 (aligned) */
 #define GET_32BITS(data, k)                                                    \

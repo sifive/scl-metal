@@ -11,6 +11,7 @@ enable_warnings_except (
     cast-align  # clang seems not able to always check the actual alignment
     EXCEPT_DEBUG # the following warnings are disabled in all builds but DEBUG
     sizeof-array-div # this one could be fixed to increase readibility
+    documentation # freedom-metal have some documentation issue
 )
 
 enable_static_analysis ()

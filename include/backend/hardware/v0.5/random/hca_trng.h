@@ -54,7 +54,9 @@ CRYPTO_FUNCTION int32_t hca_trng_init(const metal_scl_t *const scl);
 
 CRYPTO_FUNCTION int32_t hca_trng_getdata(const metal_scl_t *const scl,
                                          uint32_t *data_out);
-
+CRYPTO_FUNCTION int32_t hca_trng_getdata_with_irq(const metal_scl_t *const scl, 
+                                                  uint32_t *data_out, 
+                                                  void (*callback)(int32_t));
 /** @}*/
 
 #endif /* SCL_BACKEND_HCA_TRNG_H */

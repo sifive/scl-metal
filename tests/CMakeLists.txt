@@ -23,6 +23,7 @@ ADD_LIBRARY (scl-tests
   src/backend/hardware/blockcipher/aes/test_hca_aes_256.c
   src/backend/hardware/blockcipher/aes/test_hca_aes_192.c
   src/backend/hardware/blockcipher/aes/test_hca_aes_128.c
+  src/backend/hardware/blockcipher/aes/test_hca_aes_dma.c
   src/backend/hardware/hash/sha/test_hca_sha_512.c
   src/backend/hardware/hash/sha/test_hca_sha_384.c
   src/backend/hardware/hash/sha/test_hca_sha_256.c

@@ -23,7 +23,7 @@
  ******************************************************************************/
 
 /**
- * @file hca_aes.c
+ * @file hca_utils.c
  * @brief
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
@@ -35,7 +35,8 @@
 void hca_setfield32(const metal_scl_t *const scl, uint32_t reg, uint32_t value,
                     size_t offset, uint32_t mask)
 {
-    uint32_t reg32;
+    register uint32_t reg32;
+
     reg32 = METAL_REG32(scl->hca_base, reg);
     reg32 &= ~(mask << offset);
     reg32 |= ((value & mask) << offset);

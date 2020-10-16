@@ -34,6 +34,15 @@ TEST_GROUP_RUNNER(hca_aes_128)
     RUN_TEST_CASE(hca_aes_128, gcm_3);
 }
 
+TEST_GROUP_RUNNER(hca_aes_dma)
+{
+    RUN_TEST_CASE(hca_aes_dma, ecb_F_1_12);
+//    RUN_TEST_CASE(hca_aes_dma, ecb_F_1_12_half);
+    RUN_TEST_CASE(hca_aes_dma, ecb_F_1_12_unalign);
+//    RUN_TEST_CASE(hca_aes_dma, ecb_F_1_12_le);
+    RUN_TEST_CASE(hca_aes_dma, ecb_F_1_12_le_unalign);
+}
+
 // AES 192
 TEST_GROUP_RUNNER(hca_aes_192)
 {

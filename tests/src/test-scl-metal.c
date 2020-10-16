@@ -31,7 +31,9 @@ void __stack_chk_fail(void) { TEST_FAIL_MESSAGE("Stack smashing detected"); }
 static void RunAllTests(void)
 {
     UnityFixture.Verbose = 1;
-    
+    UnityFixture.GroupFilter = "hca_aes_dma";
+    //UnityFixture.NameFilter = "ecb_F_1_12";
+
     // soft implementation
     RUN_TEST_GROUP(soft_sha_224);
     RUN_TEST_GROUP(soft_sha_256);
@@ -68,6 +70,8 @@ static void RunAllTests(void)
     RUN_TEST_GROUP(hca_aes_128);
     RUN_TEST_GROUP(hca_aes_192);
     RUN_TEST_GROUP(hca_aes_256);
+
+    RUN_TEST_GROUP(hca_aes_dma);
 
     // scl api implementation
     RUN_TEST_GROUP(scl_aes_128);

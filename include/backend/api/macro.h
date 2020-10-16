@@ -113,6 +113,20 @@
 #define IS_ALIGNED_8_BYTES(p)   (!(((uintptr_t)(p)) & 0x7u))
 #endif
 
+#ifndef IS_ALIGNED_16_BYTES
+/**
+ * @brief Test is a pointer is aliged on a 8-byte address
+ */
+#define IS_ALIGNED_16_BYTES(p)   (!(((uintptr_t)(p)) & 0xfu))
+#endif
+
+#ifndef IS_ALIGNED_32_BYTES
+/**
+ * @brief Test is a pointer is aliged on a 8-byte address
+ */
+#define IS_ALIGNED_32_BYTES(p)   (!(((uintptr_t)(p)) & 0x1fu))
+#endif
+
 #ifndef NB_32BIT_WORDS
 /**
  * @brief Number of 32 bit words

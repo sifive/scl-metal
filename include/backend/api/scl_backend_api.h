@@ -100,6 +100,24 @@ struct __aes_func
                       const uint8_t *const data_in, size_t data_len,
                       uint8_t *const data_out);
     /**
+     * @brief perform AES cipher operation
+     *
+     * @param[in] scl               metal scl context
+     * @param[in] aes_mode          AES mode
+     * @param[in] data_endianness   endianess of the input data
+     * @param[in] data_in           data to process
+     * @param[in] data_len          length of the data to process (in byte)
+     * @param[out] data_out         data output buffer
+     * @return 0                    SUCCESS
+     * @return != 0                 otherwise @ref scl_errors_t
+     */
+    int32_t (*cipher_with_dma)(const metal_scl_t *const scl, 
+                      scl_aes_mode_t aes_mode,
+                      scl_process_t aes_process,
+                      scl_endianness_t data_endianness,
+                      const uint8_t *const data_in, size_t data_len,
+                      uint8_t *const data_out, void (*callback)(int32_t));
+    /**
      * @brief initialize AES cipher with authentication operation
      *
      * @param[in] scl               metal scl context
@@ -211,10 +229,23 @@ struct __trng_func
      * @brief get 32bits random value
      *
      * @param[in] scl               metal scl context
+     * @param[out] data_out         32bits output value
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
     int32_t (*get_data)(const metal_scl_t *const scl, uint32_t *data_out);
+    /**
+     * @brief get 32bits random value under irq
+     *
+     * @param[in] scl               metal scl context
+     * @param[out] data_out         32bits output value
+     * @param[out] callback         function call when irq treatment is finish
+     * (parameter of this function is @ref scl_errors_t)
+     * @return 0                    SUCCESS
+     * @return != 0                 otherwise @ref scl_errors_t
+     */
+    int32_t (*getdata_with_irq)(const metal_scl_t *const scl,
+                                uint32_t *data_out, void (*callback)(int32_t));
 };
 
 /*! @brief Big integer arithmetic low level API entry points */
@@ -680,6 +711,8 @@ struct __ecdsa_func
                             const uint8_t *const hash, size_t hash_len);
 };
 
+typedef void (*metal_isr_t)(int, void *);
+
 /*! @see _metal_scl_struct */
 struct _metal_scl_struct
 {
@@ -693,6 +726,7 @@ struct _metal_scl_struct
     const struct __trng_func trng_func;
     const struct __bignum_func bignum_func;
     const struct __ecdsa_func ecdsa_func;
+    int32_t (*system_register_handler)(const metal_scl_t *const, metal_isr_t, void *);
 };
 
 /*@unused@*/ static __inline__ int32_t
@@ -840,6 +874,18 @@ default_trng_getdata(const metal_scl_t *const scl, uint32_t *data_out)
     /*@-noeffect@*/
     (void)scl;
     (void)data_out;
+    /*@+noeffect@*/
+    return SCL_ERROR;
+}
+
+/*@unused@*/ static __inline__ int32_t
+default_trng_getdata_with_irq(const metal_scl_t *const scl, uint32_t *data_out,
+                              void (*callback)(int32_t))
+{
+    /*@-noeffect@*/
+    (void)scl;
+    (void)data_out;
+    (void)callback;
     /*@+noeffect@*/
     return SCL_ERROR;
 }
