@@ -24,8 +24,7 @@
 
 /**
  * @file soft_hmac.h
- * @brief software elliptic curve cryptography implementation (mostly operation
- * on elliptic curves)
+ * @brief software HMAC implementation 
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -42,9 +41,9 @@
 #include <backend/api/scl_backend_api.h>
 
 /**
- * @addtogroup COMMON
- * @addtogroup MAC
- * @ingroup COMMON
+ * @addtogroup SOFTWARE
+ * @addtogroup SOFT_HMAC
+ * @ingroup SOFTWARE
  *  @{
  */
 

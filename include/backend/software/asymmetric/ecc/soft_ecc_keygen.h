@@ -24,8 +24,7 @@
 
 /**
  * @file soft_ecc.h
- * @brief software elliptic curve cryptography implementation (mostly operation
- * on elliptic curves)
+ * @brief software elliptic curve cryptography key generationimplementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
@@ -42,9 +41,9 @@
 #include <backend/api/scl_backend_api.h>
 
 /**
- * @addtogroup COMMON
- * @addtogroup ECC
- * @ingroup COMMON
+ * @addtogroup SOFTWARE
+ * @addtogroup SOFT_ECC_KEYGEN
+ * @ingroup SOFTWARE
  *  @{
  */
 

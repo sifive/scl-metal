@@ -43,9 +43,9 @@
 #include <backend/api/scl_backend_api.h>
 
 /**
- * @addtogroup COMMON
- * @addtogroup ECC
- * @ingroup COMMON
+ * @addtogroup SOFTWARE
+ * @addtogroup SOFT_ECDSA
+ * @ingroup SOFTWARE
  *  @{
  */
 
