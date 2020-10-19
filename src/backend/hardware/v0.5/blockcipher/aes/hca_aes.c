@@ -33,6 +33,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <limits.h>
+#include <string.h>
 
 #include <scl/scl_retdefs.h>
 
@@ -465,8 +466,7 @@ int32_t hca_aes_auth_init(const metal_scl_t *const scl, aes_auth_ctx_t *const ct
         i = aad_byte_len % BLOCK128_NB_BYTE;
         if (0 != i)
         {
-            tmp[0] = 0;
-            tmp[1] = 0;
+            memset(tmp, 0, sizeof(tmp));
 
             /* we take 2 uint64_t */
             if (i < sizeof(uint64_t))
