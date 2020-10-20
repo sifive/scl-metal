@@ -50,9 +50,9 @@
 /**
  * @brief Initialize HMAC computation
  *
- * @param[in] scl_ctx           scl context
- * @param[in/out] hmac_ctx      hmac context
- * @param[in/out] sha_ctx       sha context (this will be referenced into hmac
+ * @param[in] scl               scl context
+ * @param[in,out] hmac_ctx      hmac context
+ * @param[in,out] sha_ctx       sha context (this will be referenced into hmac
  * context)
  * @param[in] hash_mode         hash mode to use
  * @param[in] key               Key to use for HMAC computation
@@ -68,8 +68,8 @@ int32_t soft_hmac_init(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
 /**
  * @brief Compute a chunk of data
  *
- * @param[in] scl_ctx           scl context
- * @param[in/out] hmac_ctx      hmac context
+ * @param[in] scl               scl context
+ * @param[in,out] hmac_ctx      hmac context
  * @param[in] data              data chunk to process
  * @param[in] data_len          data chunk length
  * @return 0    in case of SUCCESS
@@ -83,10 +83,10 @@ int32_t soft_hmac_core(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
 /**
  * @brief Finish HMAC computation
  *
- * @param[in] scl_ctx           scl context
- * @param[in/out] hmac_ctx      hmac context
+ * @param[in] scl               scl context
+ * @param[in,out] hmac_ctx      hmac context
  * @param[in] mac               HMAC computation result
- * @param[in/out] mac_len       HMAC buffer length (in byte)/HMAC length (in
+ * @param[in,out] mac_len       HMAC buffer length (in byte)/HMAC length (in
  * byte)
  * @return 0    in case of SUCCESS
  * @return != 0 in case of errors @ref scl_errors_t
