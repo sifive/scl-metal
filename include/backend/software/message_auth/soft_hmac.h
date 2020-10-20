@@ -24,7 +24,7 @@
 
 /**
  * @file soft_hmac.h
- * @brief software HMAC implementation 
+ * @brief software HMAC implementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT

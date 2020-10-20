@@ -42,7 +42,7 @@
  *  @{
  */
 
-// /*! @brief Unified HMAC context */
+/*! @brief Unified HMAC context */
 typedef struct
 {
     /*! @brief HMAC preprocessing buffer */
