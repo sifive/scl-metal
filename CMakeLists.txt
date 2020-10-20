@@ -25,6 +25,7 @@ ADD_LIBRARY (scl
   src/blockcipher/aes/scl_aes_ofb.c
   src/hash/sha/scl_sha.c
   src/asymmetric/ecc/scl_ecdsa.c
+  src/asymmetric/ecc/scl_ecc_keygen.c
   src/backend/hardware/v0.5/blockcipher/aes/hca_aes.c
   src/backend/hardware/v0.5/hash/sha/hca_sha_miscellaneous.c
   src/backend/hardware/v0.5/hash/sha/hca_sha512.c
@@ -44,6 +45,7 @@ ADD_LIBRARY (scl
   src/backend/software/hash/sha/soft_sha384.c
   src/backend/software/hash/sha/soft_sha512.c
   src/backend/software/message_auth/soft_hmac.c
+  src/backend/software/key_derivation_functions/soft_kdf_x963.c
   src/backend/utils.c
   src/scl_init.c
   src/scl_utils.c
