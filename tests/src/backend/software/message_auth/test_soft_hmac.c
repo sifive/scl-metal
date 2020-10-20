@@ -68,7 +68,7 @@ TEST(soft_hmac, soft_hmac_sha224_keysize_shorter_than_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA224_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 TEST(soft_hmac, soft_hmac_sha224_keysize_equal_blocksize)
@@ -109,7 +109,7 @@ TEST(soft_hmac, soft_hmac_sha224_keysize_equal_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA224_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 TEST(soft_hmac, soft_hmac_sha224_keysize_greater_than_blocksize)
@@ -150,7 +150,7 @@ TEST(soft_hmac, soft_hmac_sha224_keysize_greater_than_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA224_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 /* HMAC sha 256 */
@@ -192,7 +192,7 @@ TEST(soft_hmac, soft_hmac_sha256_keysize_shorter_than_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 TEST(soft_hmac, soft_hmac_sha256_keysize_equal_blocksize)
@@ -233,7 +233,7 @@ TEST(soft_hmac, soft_hmac_sha256_keysize_equal_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 TEST(soft_hmac, soft_hmac_sha256_keysize_greater_than_blocksize)
@@ -274,7 +274,7 @@ TEST(soft_hmac, soft_hmac_sha256_keysize_greater_than_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA256_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 /* HMAC sha 384 */
@@ -322,7 +322,7 @@ TEST(soft_hmac, soft_hmac_sha384_keysize_shorter_than_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 TEST(soft_hmac, soft_hmac_sha384_keysize_equal_blocksize)
@@ -369,7 +369,7 @@ TEST(soft_hmac, soft_hmac_sha384_keysize_equal_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 TEST(soft_hmac, soft_hmac_sha384_keysize_greater_than_blocksize)
@@ -416,7 +416,7 @@ TEST(soft_hmac, soft_hmac_sha384_keysize_greater_than_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA384_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 /* HMAC sha 512 */
@@ -466,7 +466,7 @@ TEST(soft_hmac, soft_hmac_sha512_keysize_shorter_than_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 TEST(soft_hmac, soft_hmac_sha512_keysize_equal_blocksize)
@@ -515,7 +515,7 @@ TEST(soft_hmac, soft_hmac_sha512_keysize_equal_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
 
 TEST(soft_hmac, soft_hmac_sha512_keysize_greater_than_blocksize)
@@ -564,5 +564,5 @@ TEST(soft_hmac, soft_hmac_sha512_keysize_greater_than_blocksize)
     result = soft_hmac_finish(&scl, &hmac_ctx, mac, &mac_len);
     TEST_ASSERT_TRUE(0 == result);
     TEST_ASSERT_TRUE(SHA512_BYTE_HASHSIZE == mac_len);
-    TEST_ASSERT_TRUE(0 == memcmp(expected_mac, mac, sizeof(expected_mac)));
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected_mac, mac, sizeof(expected_mac));
 }
