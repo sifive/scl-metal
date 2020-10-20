@@ -19,6 +19,7 @@ override SOURCE_DIRS += $(SOURCE_DIR)/backend/software/hash/sha
 override SOURCE_DIRS += $(SOURCE_DIR)/backend/software/bignumbers
 override SOURCE_DIRS += $(SOURCE_DIR)/backend/software/asymmetric/ecc/
 override SOURCE_DIRS += $(SOURCE_DIR)/backend/software/message_auth
+override SOURCE_DIRS += $(SOURCE_DIR)/backend/software/key_derivation_functions
 
 override SOURCE_DIRS += $(SOURCE_DIR)/blockcipher/aes
 override SOURCE_DIRS += $(SOURCE_DIR)/hash/sha
