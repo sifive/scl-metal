@@ -65,10 +65,12 @@
  * @return != 0                 otherwise @ref scl_errors_t
  * @warning Do not override sha_ctx before calling soft_kdf_x963_derive()
  */
-int32_t soft_kdf_x963_init(const metal_scl_t *const scl,
-                           x963kdf_ctx_t *const x963kdf_ctx,
-                           sha_ctx_t *const sha_ctx, hash_mode_t hash_mode,
-                           const uint8_t *const info, size_t info_len);
+CRYPTO_FUNCTION int32_t soft_kdf_x963_init(const metal_scl_t *const scl,
+                                           x963kdf_ctx_t *const x963kdf_ctx,
+                                           sha_ctx_t *const sha_ctx,
+                                           hash_mode_t hash_mode,
+                                           const uint8_t *const info,
+                                           size_t info_len);
 
 /**
  * @brief derive key based on kdf x9.63 algorithm
@@ -82,11 +84,12 @@ int32_t soft_kdf_x963_init(const metal_scl_t *const scl,
  * @return 0                        SUCCESS
  * @return != 0                     otherwise @ref scl_errors_t
  */
-int32_t soft_kdf_x963_derive(const metal_scl_t *const scl,
-                             x963kdf_ctx_t *const x963kdf_ctx,
-                             const uint8_t *const input_key,
-                             size_t input_key_len, uint8_t *const derivated_key,
-                             size_t derivated_key_length);
+CRYPTO_FUNCTION int32_t soft_kdf_x963_derive(const metal_scl_t *const scl,
+                                             x963kdf_ctx_t *const x963kdf_ctx,
+                                             const uint8_t *const input_key,
+                                             size_t input_key_len,
+                                             uint8_t *const derivated_key,
+                                             size_t derivated_key_length);
 
 /** @}*/
 

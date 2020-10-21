@@ -61,9 +61,12 @@
  * @return != 0 in case of errors @ref scl_errors_t
  * @warning Do not override sha_ctx before calling soft_hmac_finish()
  */
-int32_t soft_hmac_init(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
-                       sha_ctx_t *const sha_ctx, hash_mode_t hash_mode,
-                       const uint8_t *const key, size_t key_len);
+CRYPTO_FUNCTION int32_t soft_hmac_init(const metal_scl_t *const scl,
+                                       hmac_ctx_t *const hmac_ctx,
+                                       sha_ctx_t *const sha_ctx,
+                                       hash_mode_t hash_mode,
+                                       const uint8_t *const key,
+                                       size_t key_len);
 
 /**
  * @brief Compute a chunk of data
@@ -77,8 +80,10 @@ int32_t soft_hmac_init(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
  * @note Can be called several time
  * @warning Do not override sha_ctx before calling soft_hmac_finish()
  */
-int32_t soft_hmac_core(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
-                       const uint8_t *const data, size_t data_len);
+CRYPTO_FUNCTION int32_t soft_hmac_core(const metal_scl_t *const scl,
+                                       hmac_ctx_t *const hmac_ctx,
+                                       const uint8_t *const data,
+                                       size_t data_len);
 
 /**
  * @brief Finish HMAC computation
@@ -92,9 +97,10 @@ int32_t soft_hmac_core(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
  * @return != 0 in case of errors @ref scl_errors_t
  * @warning Do not override sha_ctx before calling soft_hmac_finish()
  */
-int32_t soft_hmac_finish(const metal_scl_t *const scl,
-                         hmac_ctx_t *const hmac_ctx, uint8_t *const mac,
-                         size_t *const mac_len);
+CRYPTO_FUNCTION int32_t soft_hmac_finish(const metal_scl_t *const scl,
+                                         hmac_ctx_t *const hmac_ctx,
+                                         uint8_t *const mac,
+                                         size_t *const mac_len);
 
 /** @}*/
 
