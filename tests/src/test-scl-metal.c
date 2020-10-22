@@ -62,6 +62,9 @@ static void RunAllTests(void)
     RUN_TEST_GROUP(soft_ecdsa);
     RUN_TEST_GROUP(scl_ecdsa);
 
+    /* ECDH */
+    RUN_TEST_GROUP(soft_ecdh);
+
     /* KDF */
     RUN_TEST_GROUP(soft_kdf_x963);
 
