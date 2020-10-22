@@ -36,6 +36,7 @@ ADD_LIBRARY (scl
   src/backend/hardware/v0.5/random/hca_trng.c
   src/backend/hardware/hca_utils.c
   src/backend/software/asymmetric/ecc/soft_ecdsa.c
+  src/backend/software/asymmetric/ecc/soft_ecdh.c
   src/backend/software/asymmetric/ecc/soft_ecc.c
   src/backend/software/asymmetric/ecc/soft_ecc_keygen.c
   src/backend/software/bignumbers/soft_bignumbers.c

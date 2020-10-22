@@ -20,6 +20,7 @@ ADD_LIBRARY (scl-tests
   src/test_runners/backend/software/test_soft_hmac_runner.c
   src/test_runners/backend/software/test_soft_x963kdf_runner.c
   src/test_runners/backend/software/test_soft_ecdsa_runner.c
+  src/test_runners/backend/software/test_soft_ecdh_runner.c
   src/test_runners/backend/software/test_soft_ecc_runner.c
   src/test_runners/backend/software/test_soft_ecc_keygen_runner.c
   src/test_runners/backend/software/test_soft_bignumbers_runner.c
@@ -31,6 +32,7 @@ ADD_LIBRARY (scl-tests
   src/backend/hardware/hash/sha/test_hca_sha_256.c
   src/backend/hardware/hash/sha/test_hca_sha_224.c
   src/backend/software/asymmetric/ecc/test_soft_ecdsa.c
+  src/backend/software/asymmetric/ecc/test_soft_ecdh.c
   src/backend/software/asymmetric/ecc/test_soft_ecc.c
   src/backend/software/asymmetric/ecc/test_soft_ecc_keygen.c
   src/backend/software/bignumbers/test_soft_bignumbers.c
