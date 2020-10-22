@@ -23,26 +23,52 @@
  ******************************************************************************/
 
 /**
- * @file scl_soft.h
- * @brief
+ * @file soft_ecdh.h
+ * @brief software Elliptic Curve Diffie-Hellman algorithm implementation
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef SCL_BACKEND_SCL_SOFT_H
-#define SCL_BACKEND_SCL_SOFT_H
+#ifndef SCL_BACKEND_SOFT_ECDH_H
+#define SCL_BACKEND_SOFT_ECDH_H
 
+#include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 
-#include <backend/software/asymmetric/ecc/soft_ecc.h>
-#include <backend/software/asymmetric/ecc/soft_ecc_keygen.h>
-#include <backend/software/asymmetric/ecc/soft_ecdh.h>
-#include <backend/software/asymmetric/ecc/soft_ecdsa.h>
-#include <backend/software/bignumbers/soft_bignumbers.h>
-#include <backend/software/hash/sha/soft_sha.h>
-#include <backend/software/key_derivation_functions/soft_kdf_x963.h>
-#include <backend/software/message_auth/soft_hmac.h>
+#include <crypto_cfg.h>
 
-#endif /* SCL_BACKEND_SCL_SOFT_H */
+#include <backend/api/asymmetric/ecc/ecc.h>
+#include <backend/api/asymmetric/ecc/ecdh.h>
+#include <backend/api/scl_backend_api.h>
+
+/**
+ * @addtogroup SOFTWARE
+ * @addtogroup SOFT_ECDH
+ * @ingroup SOFTWARE
+ *  @{
+ */
+
+/**
+ * @brief compute shared secret with ECDH
+ *
+ * @param[in] scl                   metal scl context
+ * @param[in] curve_params          ECC curve parameters (use @ref
+ * ecc_secp256r1,
+ *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+ * @param[in] priv_key              private key
+ * @param[in] pub_key               peer public key
+ * @param[out] shared_secret        shared secret buffer
+ * @param[in,out] shared_secret_len output buffer length/ shared_secret length
+ * @return 0 in case of success
+ * @return > 0 in case of failure @ref scl_errors_t
+ */
+CRYPTO_FUNCTION int32_t
+soft_ecdh(const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+          const uint8_t *const priv_key,
+          const ecc_affine_const_point_t *const peer_pub_key,
+          uint8_t *const shared_secret, size_t *const shared_secret_len);
+
+/** @}*/
+
+#endif /* SCL_BACKEND_SOFT_ECDH_H */

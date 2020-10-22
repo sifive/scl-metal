@@ -23,26 +23,25 @@
  ******************************************************************************/
 
 /**
- * @file scl_soft.h
- * @brief
+ * @file ecdh.h
+ * @brief Elliptic curve Diffie-Hellman implementation/wrapper
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#ifndef SCL_BACKEND_SCL_SOFT_H
-#define SCL_BACKEND_SCL_SOFT_H
+#ifndef SCL_BACKEND_ECDH_H
+#define SCL_BACKEND_ECDH_H
 
 #include <stdint.h>
-#include <stdio.h>
 
-#include <backend/software/asymmetric/ecc/soft_ecc.h>
-#include <backend/software/asymmetric/ecc/soft_ecc_keygen.h>
-#include <backend/software/asymmetric/ecc/soft_ecdh.h>
-#include <backend/software/asymmetric/ecc/soft_ecdsa.h>
-#include <backend/software/bignumbers/soft_bignumbers.h>
-#include <backend/software/hash/sha/soft_sha.h>
-#include <backend/software/key_derivation_functions/soft_kdf_x963.h>
-#include <backend/software/message_auth/soft_hmac.h>
+/**
+ * @addtogroup COMMON
+ * @addtogroup ECC
+ * @ingroup COMMON
+ *  @{
+ */
 
-#endif /* SCL_BACKEND_SCL_SOFT_H */
+/** @}*/
+
+#endif /* SCL_BACKEND_ECDH_H */

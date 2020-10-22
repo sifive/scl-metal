@@ -730,6 +730,27 @@ struct __ecc_func
                                   const ecc_curve_t *const curve_params,
                                   uint8_t *const priv_key,
                                   ecc_affine_point_t *const pub_key);
+
+    /**
+     * @brief compute shared secret with ECDH
+     *
+     * @param[in] scl                   metal scl context
+     * @param[in] curve_params          ECC curve parameters (use @ref
+     * ecc_secp256r1, @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[in] priv_key              private key
+     * @param[in] pub_key               peer public key
+     * @param[out] shared_secret        shared secret buffer
+     * @param[in,out] shared_secret_len output buffer length/ shared_secret
+     * length
+     * @return 0 in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     */
+    int32_t (*ecdh)(const metal_scl_t *const scl,
+                    const ecc_curve_t *const curve_params,
+                    const uint8_t *const priv_key,
+                    const ecc_affine_const_point_t *const peer_pub_key,
+                    uint8_t *const shared_secret,
+                    size_t *const shared_secret_len);
 };
 
 /*! @brief HMAC low level API entry points */
