@@ -48,6 +48,20 @@
  */
 
 /**
+ * @brief checking an affine point is on the provided curve (internal)
+ *
+ * @param[in] scl           metal scl context
+ * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
+ *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+ * @param[in]  point        Affine point to check (big integer format)
+ * @return 0 in case of success
+ * @return > 0 in case of failure @ref scl_errors_t
+ */
+CRYPTO_FUNCTION int32_t soft_ecc_point_on_curve_internal(
+    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
+    const ecc_bignum_affine_const_point_t *const point);
+
+/**
  * @brief checking an affine point is on the provided curve
  *
  * @param[in] scl           metal scl context

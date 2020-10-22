@@ -43,20 +43,6 @@
 #include <backend/software/asymmetric/ecc/soft_ecc_keygen.h>
 
 /**
- * @brief checking an affine point is on the provided curve
- *
- * @param[in] scl           metal scl context
- * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
- *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
- * @param[in]  point        Affine point to check (big integer format)
- * @return 0 in case of success
- * @return > 0 in case of failure @ref scl_errors_t
- */
-static int32_t soft_ecc_point_on_curve_internal(
-    const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
-    const ecc_bignum_affine_const_point_t *const point);
-
-/**
  * @brief compute public key from private key and curve parameters
  *
  * @param[in] scl           metal scl context
@@ -71,7 +57,7 @@ static int32_t soft_ecc_pubkey_generation_internal(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
     const uint64_t *const priv_key, ecc_bignum_affine_point_t *const pub_key);
 
-static int32_t soft_ecc_point_on_curve_internal(
+int32_t soft_ecc_point_on_curve_internal(
     const metal_scl_t *const scl, const ecc_curve_t *const curve_params,
     const ecc_bignum_affine_const_point_t *const point)
 {
