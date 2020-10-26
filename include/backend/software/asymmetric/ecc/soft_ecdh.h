@@ -57,7 +57,7 @@
  * ecc_secp256r1,
  *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
  * @param[in] priv_key              private key
- * @param[in] pub_key               peer public key
+ * @param[in] peer_pub_key          peer public key
  * @param[out] shared_secret        shared secret buffer
  * @param[in,out] shared_secret_len output buffer length/ shared_secret length
  * @return 0 in case of success
