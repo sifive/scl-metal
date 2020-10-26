@@ -48,6 +48,13 @@ int32_t scl_sha(const metal_scl_t *const scl_ctx, scl_hash_mode_t algo,
         return (SCL_INVALID_INPUT);
     }
 
+    if ((NULL == scl_ctx->hash_func.sha_init) ||
+        (NULL == scl_ctx->hash_func.sha_core) ||
+        (NULL == scl_ctx->hash_func.sha_finish))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
     result =
         scl_ctx->hash_func.sha_init(scl_ctx, &ctx, algo, SCL_BIG_ENDIAN_MODE);
     if (SCL_OK != result)
@@ -78,6 +85,11 @@ int32_t scl_sha_init(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx,
         return (SCL_INVALID_INPUT);
     }
 
+    if ((NULL == scl_ctx->hash_func.sha_init))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
     return (
         scl_ctx->hash_func.sha_init(scl_ctx, ctx, algo, SCL_BIG_ENDIAN_MODE));
 }
@@ -90,6 +102,11 @@ int32_t scl_sha_core(const metal_scl_t *const scl_ctx, scl_sha_ctx_t *const ctx,
         return (SCL_INVALID_INPUT);
     }
 
+    if ((NULL == scl_ctx->hash_func.sha_core))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
+    }
+
     return (scl_ctx->hash_func.sha_core(scl_ctx, ctx, data, data_len));
 }
 
@@ -100,6 +117,11 @@ int32_t scl_sha_finish(const metal_scl_t *const scl_ctx,
     if (NULL == scl_ctx)
     {
         return (SCL_INVALID_INPUT);
+    }
+
+    if ((NULL == scl_ctx->hash_func.sha_finish))
+    {
+        return (SCL_ERROR_API_ENTRY_POINT);
     }
 
     return (scl_ctx->hash_func.sha_finish(scl_ctx, ctx, hash, hash_len));
