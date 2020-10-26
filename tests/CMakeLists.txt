@@ -9,8 +9,6 @@ ADD_DEFINITIONS (-Wno-extra-semi-stmt)
 #  this enables running the static analyzer on all the test files, w/o to try
 #  to produce an executable
 ADD_LIBRARY (scl-tests
-  src/cmdline.c
-  src/secmain.S
   src/test_runners/test_utils_runner.c
   src/test_runners/asymmetric/test_scl_ecdsa_runner.c
   src/test_runners/blockcipher/test_scl_aes_runner.c
