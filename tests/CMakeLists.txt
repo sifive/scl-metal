@@ -12,7 +12,10 @@ ADD_LIBRARY (scl-tests
   src/test_runners/test_utils_runner.c
   src/test_runners/asymmetric/test_scl_ecdsa_runner.c
   src/test_runners/asymmetric/test_scl_ecc_keygen_runner.c
+  src/test_runners/asymmetric/test_scl_ecdh_runner.c
   src/test_runners/blockcipher/test_scl_aes_runner.c
+  src/test_runners/message_auth/test_scl_hmac_runner.c
+  src/test_runners/key_derivation_functions/test_scl_kdf_runner.c
   src/test_runners/backend/hardware/test_hca_sha_runner.c
   src/test_runners/backend/hardware/test_hca_aes_runner.c
   src/test_runners/hash/test_scl_sha_runner.c
@@ -46,11 +49,14 @@ ADD_LIBRARY (scl-tests
   src/blockcipher/aes/test_scl_aes_192.c
   src/blockcipher/aes/test_scl_aes_128.c
   src/asymmetric/ecc/test_scl_ecdsa.c
+  src/asymmetric/ecc/test_scl_ecdh.c
   src/asymmetric/ecc/test_scl_ecc_keygen.c
   src/hash/sha/test_scl_sha_512.c
   src/hash/sha/test_scl_sha_384.c
   src/hash/sha/test_scl_sha_256.c
   src/hash/sha/test_scl_sha_224.c
+  src/key_derivation_functions/test_scl_kdf.c
+  src/message_auth/test_scl_hmac.c
   src/test_utils.c
 )
 

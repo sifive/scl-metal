@@ -46,6 +46,7 @@ static void RunAllTests(void)
 
     /* HMAC */
     RUN_TEST_GROUP(soft_hmac);
+    RUN_TEST_GROUP(scl_hmac);
 
     /* utils */
     RUN_TEST_GROUP(utils);
@@ -64,9 +65,11 @@ static void RunAllTests(void)
 
     /* ECDH */
     RUN_TEST_GROUP(soft_ecdh);
+    RUN_TEST_GROUP(scl_ecdh);
 
     /* KDF */
     RUN_TEST_GROUP(soft_kdf_x963);
+    RUN_TEST_GROUP(scl_kdf);
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
     // hardware implementation
