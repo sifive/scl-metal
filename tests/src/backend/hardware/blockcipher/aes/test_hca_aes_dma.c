@@ -420,6 +420,69 @@ TEST(hca_aes_dma, ecb_F_1_12_unalign)
     TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
 }
 
+TEST(hca_aes_dma, ecb_F_1_12_unalign_2)
+{
+    /* NIST[nistspecialpublication800-38a.pdf]
+     * F.1.1 ECB-AES128.Encrypt
+     * F.1.2 ECB-AES128.Decrypt
+     * key: 2b7e151628aed2a6abf7158809cf4f3c
+     * Plaintext:
+     *     block1 = 6bc1bee22e409f96 e93d7e117393172a
+     *     block2 = ae2d8a571e03ac9c 9eb76fac45af8e51
+     *     block3 = 30c81c46a35ce411 e5fbc1191a0a52ef
+     *     block4 = f69f2445df4f9b17 ad2b417be66c3710
+     * Ciphertext:
+     *     block1 = 3ad77bb40d7a3660 a89ecaf32466ef97
+     *     block2 = f5d3d58503b9699d e785895a96fdbaaf
+     *     block3 = 43b1cd7f598ece23 881b00e3ed030688
+     *     block4 = 7b0c785e27e8ad3f 8223207104725dd4
+     */
+    static const uint64_t key128[4] = {0, 0, 0xabf7158809cf4f3c,
+                                       0x2b7e151628aed2a6};
+
+    static const uint8_t plaintext_be[67] __attribute__((aligned(32))) = {
+        0x00, 0x00, 0x00, 
+        0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73,
+        0x93, 0x17, 0x2a, 0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45,
+        0xaf, 0x8e, 0x51, 0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a,
+        0x0a, 0x52, 0xef, 0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6,
+        0x6c, 0x37, 0x10};
+
+    static const uint8_t ciphertext_be[64] __attribute__((aligned(8))) = {
+        0x3a, 0xd7, 0x7b, 0xb4, 0x0d, 0x7a, 0x36, 0x60, 0xa8, 0x9e, 0xca,
+        0xf3, 0x24, 0x66, 0xef, 0x97, 0xf5, 0xd3, 0xd5, 0x85, 0x03, 0xb9,
+        0x69, 0x9d, 0xe7, 0x85, 0x89, 0x5a, 0x96, 0xfd, 0xba, 0xaf, 0x43,
+        0xb1, 0xcd, 0x7f, 0x59, 0x8e, 0xce, 0x23, 0x88, 0x1b, 0x00, 0xe3,
+        0xed, 0x03, 0x06, 0x88, 0x7b, 0x0c, 0x78, 0x5e, 0x27, 0xe8, 0xad,
+        0x3f, 0x82, 0x23, 0x20, 0x71, 0x04, 0x72, 0x5d, 0xd4};
+
+    uint8_t tmp[64] __attribute__((aligned(32))) = {0};
+    int32_t result = 0;
+
+    result = hca_aes_setkey(&scl, SCL_AES_KEY128, key128, SCL_ENCRYPT);
+    TEST_ASSERT_TRUE(SCL_OK == result);
+
+    /* F.1.1 ECB-AES128.Encrypt */
+    result = hca_aes_cipher_with_dma(&scl, SCL_AES_ECB, SCL_ENCRYPT, 
+                                     SCL_BIG_ENDIAN_MODE, &plaintext_be[3],
+                                     64, tmp, NULL);
+     TEST_ASSERT_TRUE(SCL_OK == result);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
+    memset(tmp, 0, sizeof(tmp));
+    /* Setup a timeout just in case */
+    set_timeout(TIMEOUT);
+
+    /* F.1.2 ECB-AES128.Encrypt */
+    result = hca_aes_cipher_with_dma(&scl, SCL_AES_ECB, SCL_ENCRYPT, 
+                                     SCL_BIG_ENDIAN_MODE, &plaintext_be[3],
+                                     64, tmp, finish_callback);
+    TEST_ASSERT_TRUE(SCL_OK == result);
+    while (0 == unlock);
+    TEST_ASSERT_TRUE(SCL_OK == status);
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(ciphertext_be, tmp, sizeof(ciphertext_be));
+}
+
 TEST(hca_aes_dma, ecb_F_1_12_le_unalign)
 {
     /* NIST[nistspecialpublication800-38a.pdf]

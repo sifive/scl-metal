@@ -41,6 +41,7 @@ TEST_GROUP_RUNNER(hca_aes_dma)
     RUN_TEST_CASE(hca_aes_dma, ecb_F_1_12_unalign);
 //    RUN_TEST_CASE(hca_aes_dma, ecb_F_1_12_le);
     RUN_TEST_CASE(hca_aes_dma, ecb_F_1_12_le_unalign);
+    RUN_TEST_CASE(hca_aes_dma, ecb_F_1_12_unalign_2);
 }
 
 // AES 192
