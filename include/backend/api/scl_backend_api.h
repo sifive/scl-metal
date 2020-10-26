@@ -860,6 +860,8 @@ struct _metal_scl_struct
     const struct __bignum_func bignum_func;
     const struct __ecdsa_func ecdsa_func;
     const struct __ecc_func ecc_func;
+    const struct __kdf_func kdf_func;
+    const struct __hmac_func hmac_func;
 };
 
 /*@unused@*/ static __inline__ int32_t
