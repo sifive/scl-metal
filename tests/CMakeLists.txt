@@ -49,10 +49,7 @@ ADD_LIBRARY (scl-tests
 IF (NOT DEFINED STATIC_ANALYSIS)
   SET (app test-scl-metal)
 
-  ADD_DEFINITIONS(-DELFNAME="${app}")
   ADD_EXECUTABLE (${app}
-    src/cmdline.c
-    src/secmain.S
     src/test-scl-metal.c
   )
 
