@@ -41,6 +41,9 @@ jobs:
       - name: Fetch Docker image
         run: docker/bin/dock.sh build /bin/true
 
+      - name: Show GIHUB hardly documented new variable style
+        run: echo "GITHUB_ENV [${GITHUB_ENV}] GITHUB_PATH [${GITHUB_PATH}]"
+
       - name: Build all targets
         run:  docker/bin/dock.sh build scripts/buildall.sh -g -r -s $TARGETS;
               touch build/.phony
