@@ -6,7 +6,7 @@ on:
     types: [assigned, opened, synchronize, reopened]
 
 env:
-  TESTENV_METAL_BRANCH: master
+  TESTENV_METAL_BRANCH: gh_cve_2020-15228_local
 
 jobs:
   build:
