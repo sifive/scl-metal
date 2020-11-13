@@ -7,6 +7,7 @@ on:
 
 env:
   TESTENV_METAL_BRANCH: gh_cve_2020-15228_local
+  GITHUB_CI: 1
 
 jobs:
   build:
