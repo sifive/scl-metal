@@ -170,7 +170,9 @@ jobs:
             SLACK_ICON: https://github.com/sifive.png?size=48
 
       - name: Overall result
-        run:  test ${BUILD_FAILURES} -eq 0 &&
+        run:  test ${BUILD_SESSIONS} -ne 0 &&
+              test ${UTEST_SESSIONS} -ne 0 &&
+              test ${BUILD_FAILURES} -eq 0 &&
               test ${BUILD_ERRORS} -eq 0 &&
               test ${UTEST_ABORTS} -eq 0 &&
               test ${UTEST_FAILURES} -eq 0
