@@ -24,12 +24,14 @@
 
 /**
  * @file scl_trng.c
- * @brief implementation of the True Random Number Generator generic high level 
+ * @brief implementation of the True Random Number Generator generic high level
  * interface
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
  */
+
+#include <string.h>
 
 #include <scl/scl_retdefs.h>
 #include <scl/scl_trng.h>
@@ -59,11 +61,15 @@ int32_t scl_trng_init(const metal_scl_t *const scl)
     return (SCL_OK);
 }
 
-int32_t scl_trng_get_data(const metal_scl_t *const scl,  uint32_t *data_out)
+int32_t scl_trng_get_data(const metal_scl_t *const scl, uint8_t *const output,
+                          size_t output_len)
 {
     int32_t result;
+    unsigned int i = 0;
+    uint32_t temp;
+    size_t length_left;
 
-    if (NULL == scl)
+    if ((NULL == scl) || (NULL == output))
     {
         return (SCL_INVALID_INPUT);
     }
@@ -73,10 +79,27 @@ int32_t scl_trng_get_data(const metal_scl_t *const scl,  uint32_t *data_out)
         return (SCL_ERROR_API_ENTRY_POINT);
     }
 
-    result = scl->trng_func.get_data(scl, data_out);
-    if (SCL_OK != result)
+    length_left = output_len;
+
+    while (length_left != 0)
     {
-        return (result);
+        result = scl->trng_func.get_data(scl, &temp);
+        if (SCL_OK != result)
+        {
+            return (result);
+        }
+
+        if (length_left > sizeof(uint32_t))
+        {
+            memcpy(&output[i], &temp, sizeof(uint32_t));
+            length_left -= sizeof(uint32_t);
+        }
+        else
+        {
+            memcpy(&output[i], &temp, length_left);
+            length_left = 0;
+        }
+        i += 4;
     }
 
     return (SCL_OK);

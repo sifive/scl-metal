@@ -62,10 +62,14 @@ SCL_FUNCTION int32_t scl_trng_init(const metal_scl_t *const scl);
  * @brief get 32bits random value
  *
  * @param[in] scl               metal scl context
+ * @param[out] output           output buffer
+ * @param[in] output_len        output length
  * @return 0                    SUCCESS
  * @return != 0                 otherwise @ref scl_errors_t
  */
-SCL_FUNCTION int32_t scl_trng_get_data(const metal_scl_t *const scl,  uint32_t *data_out);
+SCL_FUNCTION int32_t scl_trng_get_data(const metal_scl_t *const scl,
+                                       uint8_t *const output,
+                                       size_t output_len);
 
 /** @}*/
 
