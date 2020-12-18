@@ -42,10 +42,10 @@
  *  @{
  */
 
-#define BLOCK128_NB_BYTE 16
+#define AES_BLOCKSIZE_NB_BYTE 16
 
-#define BLOCK128_NB_UINT64 2
-#define BLOCK128_NB_UINT32 4
+#define AES_BLOCKSIZE_NB_UINT64 2
+#define AES_BLOCKSIZE_NB_UINT32 4
 
 /*! @brief AES context for AES auth modes */
 typedef struct
@@ -55,7 +55,7 @@ typedef struct
     /*! lenght of data stored into buffer */
     size_t buf_len;
     /*! buffer storage for incomplet data */
-    uint64_t buf[BLOCK128_NB_UINT64] __attribute__((aligned(8)));
+    uint64_t buf[AES_BLOCKSIZE_NB_UINT64] __attribute__((aligned(8)));
     /*! buffer storage for incomplet data */
     scl_endianness_t data_endianness;
 } aes_auth_ctx_t;
