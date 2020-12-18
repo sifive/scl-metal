@@ -14,7 +14,7 @@
 #include <stdlib.h>
 
 #include <backend/hardware/scl_hca.h>
-#include <metal/machine/platform.h>
+#include <metal/platform.h>
 
 #if UINT32_MAX == UINTPTR_MAX
 #define STACK_CHK_GUARD 0xe2dee396
