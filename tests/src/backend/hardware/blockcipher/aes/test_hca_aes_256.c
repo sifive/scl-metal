@@ -2,10 +2,10 @@
  * @file test_hca_aes_256.c
  * @brief test suite for scl_hca.c with 256 bits key length on ecb, cdc modes
  * @note These tests use HCA (Hardware Cryptographic Accelerator)
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  */
 
 #include "unity.h"
@@ -14,10 +14,10 @@
 #include <string.h>
 
 #include <backend/api/blockcipher/aes/aes.h>
-#include <backend/hardware/scl_hca.h>
 #include <backend/api/scl_backend_api.h>
+#include <backend/hardware/scl_hca.h>
 
-#include <metal/machine/platform.h>
+#include <metal/platform.h>
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
 

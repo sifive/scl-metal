@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * SiFive Cryptographic Library (SCL)
- * 
+ *
  ******************************************************************************
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -59,7 +59,8 @@ typedef enum
 } hash_mode_t;
 
 /*! @brief Unified SHA context */
-typedef struct { 
+typedef struct
+{
     /*! @brief supported SHA contexts union */
     union {
         sha224_ctx_t sha224;

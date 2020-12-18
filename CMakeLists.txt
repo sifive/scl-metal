@@ -27,6 +27,11 @@ ADD_LIBRARY (scl
   src/asymmetric/ecc/scl_ecdsa.c
   src/selftests/scl_ecdsa_selftests.c
   src/selftests/scl_sha_selftests.c
+  src/asymmetric/ecc/scl_ecdh.c
+  src/asymmetric/ecc/scl_ecc_keygen.c
+  src/key_derivation_functions/scl_kdf.c
+  src/message_auth/scl_hmac.c
+  src/random/scl_trng.c
   src/backend/hardware/v0.5/blockcipher/aes/hca_aes.c
   src/backend/hardware/v0.5/hash/sha/hca_sha_miscellaneous.c
   src/backend/hardware/v0.5/hash/sha/hca_sha512.c
@@ -37,13 +42,17 @@ ADD_LIBRARY (scl
   src/backend/hardware/v0.5/random/hca_trng.c
   src/backend/hardware/hca_utils.c
   src/backend/software/asymmetric/ecc/soft_ecdsa.c
+  src/backend/software/asymmetric/ecc/soft_ecdh.c
   src/backend/software/asymmetric/ecc/soft_ecc.c
+  src/backend/software/asymmetric/ecc/soft_ecc_keygen.c
   src/backend/software/bignumbers/soft_bignumbers.c
   src/backend/software/hash/sha/soft_sha.c
   src/backend/software/hash/sha/soft_sha224.c
   src/backend/software/hash/sha/soft_sha256.c
   src/backend/software/hash/sha/soft_sha384.c
   src/backend/software/hash/sha/soft_sha512.c
+  src/backend/software/message_auth/soft_hmac.c
+  src/backend/software/key_derivation_functions/soft_kdf_x963.c
   src/backend/utils.c
   src/scl_init.c
   src/scl_utils.c

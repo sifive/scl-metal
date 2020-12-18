@@ -44,6 +44,8 @@
 #include <backend/api/bignumbers/bignumbers.h>
 #include <backend/api/blockcipher/aes/aes.h>
 #include <backend/api/hash/sha/sha.h>
+#include <backend/api/key_derivation_functions/kdf.h>
+#include <backend/api/message_auth/hmac.h>
 
 /**
  * @addtogroup COMMON
@@ -211,6 +213,7 @@ struct __trng_func
      * @brief get 32bits random value
      *
      * @param[in] scl               metal scl context
+     * @param[out] data_out         output pointer
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
@@ -436,7 +439,7 @@ struct __bignum_func
      * @brief set one bit in a big integer
      *
      * @param[in] scl           metal scl context
-     * @param[in/out] array     input array (bignumber)
+     * @param[in,out] array     input array (bignumber)
      * @param[in] nb_32b_words  size of the big integer in 32bits words
      * @param[in] bit_2_set     index of the bit to set in the big integer
      * @return >= 0 success
@@ -624,7 +627,7 @@ struct __ecdsa_func
      * @param[out] signature    signature structure that will hold results
      * @param[in] hash          hash value to sign
      * @param[in] hash_len      hash value length
-     * @return O in case of success
+     * @return 0 in case of success
      * @return > 0 in case of failure @ref scl_errors_t
      * @note Private key shall be big endian
      * @note Signature elements will be big endian
@@ -657,7 +660,7 @@ struct __ecdsa_func
      * @param[in] hash          hash value on which the signature has been
      * performed
      * @param[in] hash_len      hash value length
-     * @return O in case of success
+     * @return 0 in case of success
      * @return > 0 in case of failure @ref scl_errors_t
      * @note Public key elements shall be big endian
      * @note Signature elements shall be big endian
@@ -680,6 +683,170 @@ struct __ecdsa_func
                             const uint8_t *const hash, size_t hash_len);
 };
 
+/*! @brief ECC (Elliptic Curve Cryptography) low level API entry points */
+struct __ecc_func
+{
+    /**
+     * @brief checking an affine point is on the provided curve
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
+     *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[in]  point        Affine point to check
+     * @return 0 in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     */
+    int32_t (*point_on_curve)(const metal_scl_t *const scl,
+                              const ecc_curve_t *const curve_params,
+                              const ecc_affine_const_point_t *const point);
+
+    /**
+     * @brief compute public key from private key and curve parameters
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
+     *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[in] priv_key              private key
+     * @param[out] pub_key              public key
+     * @return 0 in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     */
+    int32_t (*pubkey_generation)(const metal_scl_t *const scl,
+                                 const ecc_curve_t *const curve_params,
+                                 const uint8_t *const priv_key,
+                                 ecc_affine_point_t *const pub_key);
+
+    /**
+     * @brief generate a new ECC keypair
+     *
+     * @param[in] scl           metal scl context
+     * @param[in] curve_params  ECC curve parameters (use @ref ecc_secp256r1,
+     *          @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[out] priv_key         private key
+     * @param[out] pub_key          public key
+     * @return 0 in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     */
+    int32_t (*keypair_generation)(const metal_scl_t *const scl,
+                                  const ecc_curve_t *const curve_params,
+                                  uint8_t *const priv_key,
+                                  ecc_affine_point_t *const pub_key);
+
+    /**
+     * @brief compute shared secret with ECDH
+     *
+     * @param[in] scl                   metal scl context
+     * @param[in] curve_params          ECC curve parameters (use @ref
+     * ecc_secp256r1, @ref ecc_secp384r1, @ref ecc_secp521r1, or custom curves)
+     * @param[in] priv_key              private key
+     * @param[in] pub_key               peer public key
+     * @param[out] shared_secret        shared secret buffer
+     * @param[in,out] shared_secret_len output buffer length/ shared_secret
+     * length
+     * @return 0 in case of success
+     * @return > 0 in case of failure @ref scl_errors_t
+     */
+    int32_t (*ecdh)(const metal_scl_t *const scl,
+                    const ecc_curve_t *const curve_params,
+                    const uint8_t *const priv_key,
+                    const ecc_affine_const_point_t *const peer_pub_key,
+                    uint8_t *const shared_secret,
+                    size_t *const shared_secret_len);
+};
+
+/*! @brief HMAC low level API entry points */
+struct __hmac_func
+{
+    /**
+     * @brief Initialize HMAC computation
+     *
+     * @param[in] scl_ctx           scl context
+     * @param[in,out] hmac_ctx      hmac context
+     * @param[in,out] sha_ctx       sha context (this will be referenced into
+     * hmac context)
+     * @param[in] hash_mode         hash mode to use
+     * @param[in] key               Key to use for HMAC computation
+     * @param[in] key_len           Key length (in byte)
+     * @return 0    in case of SUCCESS
+     * @return != 0 in case of errors @ref scl_errors_t
+     * @warning Do not override sha_ctx before calling soft_hmac_finish()
+     */
+    int32_t (*init)(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
+                    sha_ctx_t *const sha_ctx, hash_mode_t hash_mode,
+                    const uint8_t *const key, size_t key_len);
+
+    /**
+     * @brief Compute a chunk of data
+     *
+     * @param[in] scl_ctx           scl context
+     * @param[in,out] hmac_ctx      hmac context
+     * @param[in] data              data chunk to process
+     * @param[in] data_len          data chunk length
+     * @return 0    in case of SUCCESS
+     * @return != 0 in case of errors @ref scl_errors_t
+     * @note Can be called several time
+     * @warning Do not override sha_ctx before calling soft_hmac_finish()
+     */
+    int32_t (*core)(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
+                    const uint8_t *const data, size_t data_len);
+
+    /**
+     * @brief Finish HMAC computation
+     *
+     * @param[in] scl_ctx           scl context
+     * @param[in,out] hmac_ctx      hmac context
+     * @param[in] mac               HMAC computation result
+     * @param[in,out] mac_len       HMAC buffer length (in byte)/HMAC length (in
+     * byte)
+     * @return 0    in case of SUCCESS
+     * @return != 0 in case of errors @ref scl_errors_t
+     * @warning Do not override sha_ctx before calling soft_hmac_finish()
+     */
+    int32_t (*finish)(const metal_scl_t *const scl, hmac_ctx_t *const hmac_ctx,
+                      uint8_t *const mac, size_t *const mac_len);
+};
+
+/*! @brief KDF low level API entry points */
+struct __kdf_func
+{
+    /**
+     * @brief Initiate kdf x9.63 context
+     *
+     * @param[in] scl               metal scl context
+     * @param[in,out] x963kdf_ctx   key derivation function context
+     * @param[in,out] sha_ctx       sha context (this will be referenced into
+     * kdf context)
+     * @param[in] hash_mode         hash mode
+     * @param[in] info              shared information
+     * @param[in] info_len          shared information length
+     * @return 0                    SUCCESS
+     * @return != 0                 otherwise @ref scl_errors_t
+     * @warning Do not override sha_ctx before calling soft_kdf_x963_derive()
+     */
+    int32_t (*x963_init)(const metal_scl_t *const scl,
+                         x963kdf_ctx_t *const x963kdf_ctx,
+                         sha_ctx_t *const sha_ctx, hash_mode_t hash_mode,
+                         const uint8_t *const info, size_t info_len);
+
+    /**
+     * @brief derive key based on kdf x9.63 algorithm
+     *
+     * @param[in] scl                   metal scl context
+     * @param[in,out] x963kdf_ctx       key derivation function context
+     * @param[in] input_key             input key material
+     * @param[in] input_key_len         input key material length
+     * @param[out] derivated_key        derived key
+     * @param[in] derivated_key_length  derived key length
+     * @return 0                        SUCCESS
+     * @return != 0                     otherwise @ref scl_errors_t
+     */
+    int32_t (*x963_derive)(const metal_scl_t *const scl,
+                           x963kdf_ctx_t *const x963kdf_ctx,
+                           const uint8_t *const input_key, size_t input_key_len,
+                           uint8_t *const derivated_key,
+                           size_t derivated_key_length);
+};
+
 /*! @see _metal_scl_struct */
 struct _metal_scl_struct
 {
@@ -693,6 +860,9 @@ struct _metal_scl_struct
     const struct __trng_func trng_func;
     const struct __bignum_func bignum_func;
     const struct __ecdsa_func ecdsa_func;
+    const struct __ecc_func ecc_func;
+    const struct __kdf_func kdf_func;
+    const struct __hmac_func hmac_func;
 };
 
 /*@unused@*/ static __inline__ int32_t

@@ -33,8 +33,8 @@
 #ifndef SCL_BACKEND_API_BIGNUMBERS_H
 #define SCL_BACKEND_API_BIGNUMBERS_H
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 /**
  * @addtogroup COMMON

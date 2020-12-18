@@ -37,8 +37,12 @@
 #include <stdio.h>
 
 #include <backend/software/asymmetric/ecc/soft_ecc.h>
+#include <backend/software/asymmetric/ecc/soft_ecc_keygen.h>
+#include <backend/software/asymmetric/ecc/soft_ecdh.h>
 #include <backend/software/asymmetric/ecc/soft_ecdsa.h>
 #include <backend/software/bignumbers/soft_bignumbers.h>
 #include <backend/software/hash/sha/soft_sha.h>
+#include <backend/software/key_derivation_functions/soft_kdf_x963.h>
+#include <backend/software/message_auth/soft_hmac.h>
 
 #endif /* SCL_BACKEND_SCL_SOFT_H */

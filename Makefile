@@ -12,7 +12,9 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/backend/software \
 		$(SOURCE_DIR)/backend/software/hash/sha \
 		$(SOURCE_DIR)/backend/software/bignumbers \
-		$(SOURCE_DIR)/backend/software/asymmetric/ecc
+		$(SOURCE_DIR)/backend/software/asymmetric/ecc \
+		$(SOURCE_DIR)/backend/software/message_auth \
+		$(SOURCE_DIR)/backend/software/key_derivation_functions
 		
 # the version management will be improved, this is just a draft to test
 # compilation of the version specific files
@@ -36,6 +38,9 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/asymmetric \
 		$(SOURCE_DIR)/asymmetric/ecc \
 		$(SOURCE_DIR)/selftests
+		$(SOURCE_DIR)/key_derivation_functions \
+		$(SOURCE_DIR)/message_auth \
+		$(SOURCE_DIR)/random
 
 SCL_DIR = $(CURRENT_DIR)
 include $(CURRENT_DIR)/scripts/scl.mk
@@ -45,14 +50,19 @@ override INCLUDE_DIRS := $(SCL_INCLUDES)
  # API
 override INCLUDE_DIRS += \
 	$(CURRENT_DIR)/include/backend \
+	$(CURRENT_DIR)/include/backend/api \
 	$(CURRENT_DIR)/include/backend/api/asymmetric/ecc \
 	$(CURRENT_DIR)/include/backend/api/bignumbers \
 	$(CURRENT_DIR)/include/backend/api/blockcipher/aes \
 	$(CURRENT_DIR)/include/backend/api/hash/sha \
+	$(CURRENT_DIR)/include/backend/api/message_auth \
+	$(CURRENT_DIR)/include/backend/api/key_derivation_functions \
 	$(CURRENT_DIR)/include/backend/software \
 	$(CURRENT_DIR)/include/backend/software/hash/sha \
 	$(CURRENT_DIR)/include/backend/software/bignumbers \
 	$(CURRENT_DIR)/include/backend/software/asymmetric/ecc \
+	$(CURRENT_DIR)/include/backend/software/message_auth \
+	$(CURRENT_DIR)/include/backend/software/key_derivation_functions \
 	$(CURRENT_DIR)/include/backend/hardware \
 	$(CURRENT_DIR)/include/backend/hardware/v0.5 \
 	$(CURRENT_DIR)/include/backend/hardware/v0.5/blockcipher/aes \

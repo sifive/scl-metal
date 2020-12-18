@@ -76,11 +76,10 @@
 SCL_FUNCTION int32_t scl_aes_ccm(const metal_scl_t *const scl_ctx,
                                  uint8_t *const tag, size_t tag_byte_len,
                                  uint8_t *const dst, const uint8_t *const pld,
-                                 size_t pld_byte_len,
-                                 const uint8_t *const key, size_t key_byte_len,
-                                 const uint8_t *const iv, size_t iv_byte_len,
-                                 const uint8_t *const aad, size_t aad_byte_len,
-                                 scl_process_t mode);
+                                 size_t pld_byte_len, const uint8_t *const key,
+                                 size_t key_byte_len, const uint8_t *const iv,
+                                 size_t iv_byte_len, const uint8_t *const aad,
+                                 size_t aad_byte_len, scl_process_t mode);
 
 /**
  * @brief Initialize AES-CCM context (according mode parameter)

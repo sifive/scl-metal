@@ -31,8 +31,8 @@
  * @copyright SPDX-License-Identifier: MIT
  */
 
-#include <string.h>
 #include <limits.h>
+#include <string.h>
 
 #include <scl_cfg.h>
 
@@ -63,8 +63,8 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     int32_t ret;
     uint64_t formated[4] = {0};
     uint64_t tmp_iv[2] = {0};
-    int8_t ccmt_tab[BLOCK128_NB_BYTE + 1] = {-1, -1, -1, -1, 1,  -1, 2,  -1, 3,
-                                             -1, 4,  -1, 5,  -1, 6,  -1, 7};
+    int8_t ccmt_tab[AES_BLOCKSIZE_NB_BYTE + 1] = {
+        -1, -1, -1, -1, 1, -1, 2, -1, 3, -1, 4, -1, 5, -1, 6, -1, 7};
     uint8_t ccmt, ccmq;
 
     if (NULL == scl_ctx)
@@ -75,7 +75,7 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     ASSERT_COMPILE(sizeof(size_t) == (__riscv_xlen / CHAR_BIT));
 
     // get ccmt value
-    if (tag_byte_len > BLOCK128_NB_BYTE)
+    if (tag_byte_len > AES_BLOCKSIZE_NB_BYTE)
     {
         return (SCL_INVALID_INPUT);
     }
@@ -87,12 +87,12 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
 
     // determine ccmq value
     // 2^16
-    if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(2u) )
+    if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(2u))
     {
         ccmq = 2;
     }
     // 2^24
-    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(3u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(3u))
     {
         ccmq = 3;
     }
@@ -103,22 +103,22 @@ int32_t scl_aes_ccm_init(const metal_scl_t *const scl_ctx,
     }
 #else
     // 2^32
-    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(4u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(4u))
     {
         ccmq = 4;
     }
     // 2^40
-    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(5u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(5u))
     {
         ccmq = 5;
     }
     // 2^48
-    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(6u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(6u))
     {
         ccmq = 6;
     }
     // 2^56
-    else if ( pld_byte_len <= MAX_VALUE_FROM_N_BYTES(7u) )
+    else if (pld_byte_len <= MAX_VALUE_FROM_N_BYTES(7u))
     {
         ccmq = 7;
     }
@@ -193,7 +193,7 @@ int32_t scl_aes_ccm_finish(const metal_scl_t *const scl_ctx,
                            const uint8_t *const pld, size_t pld_byte_len)
 {
     int32_t ret;
-    uint8_t tmp_tag[BLOCK128_NB_BYTE] __attribute__((aligned(8))) = {0};
+    uint8_t tmp_tag[AES_BLOCKSIZE_NB_BYTE] __attribute__((aligned(8))) = {0};
     size_t i;
     size_t dst_byte_len = 0;
 

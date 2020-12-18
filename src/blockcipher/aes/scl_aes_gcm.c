@@ -126,7 +126,7 @@ int32_t scl_aes_gcm_finish(const metal_scl_t *const scl_ctx,
                            const uint8_t *const src, size_t src_byte_len)
 {
     int32_t ret;
-    uint8_t tmp_tag[BLOCK128_NB_BYTE] __attribute__((aligned(8))) = {0};
+    uint8_t tmp_tag[AES_BLOCKSIZE_NB_BYTE] __attribute__((aligned(8))) = {0};
     size_t i;
     size_t dst_byte_len = 0;
 

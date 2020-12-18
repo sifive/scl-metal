@@ -23,9 +23,9 @@
  ******************************************************************************/
 
 /**
- * @file scl_sha.c
- * @brief implementation of the hash generic interface taking the hash function
- * algo reference as a parameter
+ * @file scl_ecdsa.c
+ * @brief defines the generic ECDSA function interface, where the hash function
+ * is transmitted as a parameter.
  *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT

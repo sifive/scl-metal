@@ -2,10 +2,10 @@
  * @file test-scl-metal.c
  * @brief Main of the scl-metal tests
  * @details This run all test group
- * 
+ *
  * @copyright Copyright (c) 2020 SiFive, Inc
  * @copyright SPDX-License-Identifier: MIT
- * 
+ *
  */
 
 #include "unity_fixture.h"
@@ -14,7 +14,7 @@
 #include <stdlib.h>
 
 #include <backend/hardware/scl_hca.h>
-#include <metal/machine/platform.h>
+#include <metal/platform.h>
 
 #if UINT32_MAX == UINTPTR_MAX
 #define STACK_CHK_GUARD 0xe2dee396
@@ -31,7 +31,7 @@ void __stack_chk_fail(void) { TEST_FAIL_MESSAGE("Stack smashing detected"); }
 static void RunAllTests(void)
 {
     UnityFixture.Verbose = 1;
-    
+
     // soft implementation
     RUN_TEST_GROUP(soft_sha_224);
     RUN_TEST_GROUP(soft_sha_256);
@@ -44,7 +44,11 @@ static void RunAllTests(void)
     RUN_TEST_GROUP(scl_soft_sha_384);
     RUN_TEST_GROUP(scl_soft_sha_512);
 
-    // utils
+    /* HMAC */
+    RUN_TEST_GROUP(soft_hmac);
+    RUN_TEST_GROUP(scl_hmac);
+
+    /* utils */
     RUN_TEST_GROUP(utils);
 
     // software bignumbers
@@ -52,12 +56,21 @@ static void RunAllTests(void)
 
     /* ECC */
     RUN_TEST_GROUP(soft_ecc);
+    RUN_TEST_GROUP(soft_ecc_keygen);
+    RUN_TEST_GROUP(scl_ecc_keygen);
 
     /* ECDSA */
     RUN_TEST_GROUP(soft_ecdsa);
     RUN_TEST_GROUP(scl_ecdsa);
 
     RUN_TEST_GROUP(scl_selftests);
+    /* ECDH */
+    RUN_TEST_GROUP(soft_ecdh);
+    RUN_TEST_GROUP(scl_ecdh);
+
+    /* KDF */
+    RUN_TEST_GROUP(soft_kdf_x963);
+    RUN_TEST_GROUP(scl_kdf);
 
 #if METAL_SIFIVE_HCA_VERSION >= HCA_VERSION(0, 5, 0)
     // hardware implementation

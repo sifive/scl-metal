@@ -103,40 +103,40 @@
 /**
  * @brief Test is a pointer is aliged on a 4-byte address
  */
-#define IS_ALIGNED_4_BYTES(p)   (!(((uintptr_t)(p)) & 0x3u))
+#define IS_ALIGNED_4_BYTES(p) (!(((uintptr_t)(p)) & 0x3u))
 #endif
 
 #ifndef IS_ALIGNED_8_BYTES
 /**
  * @brief Test is a pointer is aliged on a 8-byte address
  */
-#define IS_ALIGNED_8_BYTES(p)   (!(((uintptr_t)(p)) & 0x7u))
+#define IS_ALIGNED_8_BYTES(p) (!(((uintptr_t)(p)) & 0x7u))
 #endif
 
 #ifndef NB_32BIT_WORDS
 /**
  * @brief Number of 32 bit words
  */
-#define NB_32BIT_WORDS(array)   (sizeof(array)/(sizeof(uint32_t)))
+#define NB_32BIT_WORDS(array) (sizeof(array) / (sizeof(uint32_t)))
 #endif
 
 #ifndef NB_64BIT_WORDS
 /**
  * @brief Number of 64 bit words
  */
-#define NB_64BIT_WORDS(array)   (sizeof(array)/(sizeof(uint64_t)))
+#define NB_64BIT_WORDS(array) (sizeof(array) / (sizeof(uint64_t)))
 #endif
 
 #ifndef ASSERT_COMPILE
 /**
  * @brief Compile-time assertion.
- * @details Aborts the compilation if the c' constant expression expression evaluates
- * to false
+ * @details Aborts the compilation if the c' constant expression expression
+ * evaluates to false
  */
-#define _JOIN_(_x_,_y_) _DO_JOIN_(_x_,_y_)
-#define _DO_JOIN_(_x_,_y_) _x_##_y_
-#define ASSERT_COMPILE(c) \
-  void _JOIN_(assert_compile, __LINE__)(int assert_compile[(c)?1:-1])
+#define _JOIN_(_x_, _y_) _DO_JOIN_(_x_, _y_)
+#define _DO_JOIN_(_x_, _y_) _x_##_y_
+#define ASSERT_COMPILE(c)                                                      \
+    void _JOIN_(assert_compile, __LINE__)(int assert_compile[(c) ? 1 : -1])
 #endif // ASSERT_COMPILE
 
 /** @}*/

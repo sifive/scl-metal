@@ -125,7 +125,7 @@ int32_t scl_aes_cbc(const metal_scl_t *const scl_ctx, uint8_t *const dst,
         return (SCL_INVALID_INPUT);
     }
 
-    if ((src_byte_len % BLOCK128_NB_BYTE) != 0)
+    if ((src_byte_len % AES_BLOCKSIZE_NB_BYTE) != 0)
     {
         return (SCL_INVALID_INPUT);
     }
