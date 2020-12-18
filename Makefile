@@ -37,7 +37,7 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/random \
 		$(SOURCE_DIR)/asymmetric \
 		$(SOURCE_DIR)/asymmetric/ecc \
-		$(SOURCE_DIR)/selftests
+		$(SOURCE_DIR)/selftests \
 		$(SOURCE_DIR)/key_derivation_functions \
 		$(SOURCE_DIR)/message_auth \
 		$(SOURCE_DIR)/random

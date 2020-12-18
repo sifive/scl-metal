@@ -38,7 +38,7 @@
 #include <scl/scl_retdefs.h>
 
 #include <metal/io.h>
-#include <metal/platform.h>
+#include  <metal/machine/platform.h>
 
 #include <backend/api/macro.h>
 #include <backend/hardware/hca_macro.h>

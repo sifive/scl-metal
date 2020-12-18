@@ -37,7 +37,7 @@
 #include <stdio.h>
 
 #include <metal/io.h>
-#include <metal/platform.h>
+#include  <metal/machine/platform.h>
 
 #include <backend/hardware/hca_macro.h>
 

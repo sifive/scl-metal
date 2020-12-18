@@ -38,7 +38,7 @@
 #include <backend/api/hash/sha/sha.h>
 
 #include <metal/io.h>
-#include <metal/platform.h>
+#include  <metal/machine/platform.h>
 
 #include <backend/hardware/scl_hca.h>
 #include <backend/hardware/hca_macro.h>
