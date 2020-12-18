@@ -213,6 +213,7 @@ struct __trng_func
      * @brief get 32bits random value
      *
      * @param[in] scl               metal scl context
+     * @param[out] data_out         output pointer
      * @return 0                    SUCCESS
      * @return != 0                 otherwise @ref scl_errors_t
      */
