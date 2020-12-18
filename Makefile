@@ -38,7 +38,8 @@ override SOURCE_DIRS += \
 		$(SOURCE_DIR)/asymmetric \
 		$(SOURCE_DIR)/asymmetric/ecc \
 		$(SOURCE_DIR)/key_derivation_functions \
-		$(SOURCE_DIR)/message_auth
+		$(SOURCE_DIR)/message_auth \
+		$(SOURCE_DIR)/random
 
 SCL_DIR = $(CURRENT_DIR)
 include $(CURRENT_DIR)/scripts/scl.mk

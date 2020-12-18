@@ -29,6 +29,7 @@ ADD_LIBRARY (scl
   src/asymmetric/ecc/scl_ecc_keygen.c
   src/key_derivation_functions/scl_kdf.c
   src/message_auth/scl_hmac.c
+  src/random/scl_trng.c
   src/backend/hardware/v0.5/blockcipher/aes/hca_aes.c
   src/backend/hardware/v0.5/hash/sha/hca_sha_miscellaneous.c
   src/backend/hardware/v0.5/hash/sha/hca_sha512.c
