@@ -53,31 +53,82 @@
 #error "Unexpected __riscv_xlen"
 #endif
 
+//int32_t hca_trng_init(const metal_scl_t *const scl)
+//{
+//    int ret = SCL_OK;
+//
+//    if (NULL == scl)
+//    {
+//        return (SCL_INVALID_INPUT);
+//    }
+//
+//    if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_REV))
+//    {
+//        // revision of TRNG is Zero so the TRNG is not present.
+//        return SCL_ERROR;
+//    }
+//
+//    // Lock Trim Value
+//    hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_TRIM, 1,
+//                   HCA_REGISTER_TRNG_TRIM_LOCK_OFFSET,
+//                   HCA_REGISTER_TRNG_TRIM_LOCK_MASK);
+//
+//    // start on-demand health test
+//    hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_CR, 1,
+//                   HCA_REGISTER_TRNG_CR_HTSTART_OFFSET,
+//                   HCA_REGISTER_TRNG_CR_HTSTART_MASK);
+//
+//    while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>
+//            HCA_REGISTER_TRNG_SR_HTR_OFFSET) &
+//           HCA_REGISTER_TRNG_SR_HTR_MASK)
+//    {
+//        // test that all 0's are read back from TRNG_DATA during startup health
+//        // test
+//        if (METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_DATA) != 0)
+//        {
+//            if ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>
+//                 HCA_REGISTER_TRNG_SR_HTR_OFFSET) &
+//                HCA_REGISTER_TRNG_SR_HTR_MASK)
+//            {
+//                return SCL_RNG_ERROR;
+//            }
+//        }
+//    }
+//
+//    // Test Heath test status
+//    if (((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>
+//          HCA_REGISTER_TRNG_SR_HTS_OFFSET) &
+//         HCA_REGISTER_TRNG_SR_HTS_MASK) != 0)
+//    {
+//        ret = SCL_RNG_ERROR;
+//    }
+//
+//    hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_CR, 0,
+//                   HCA_REGISTER_TRNG_CR_HTSTART_OFFSET,
+//                   HCA_REGISTER_TRNG_CR_HTSTART_MASK);
+//    return ret;
+//}
+
 int32_t hca_trng_init(const metal_scl_t *const scl)
 {
     int ret = SCL_OK;
-
     if (NULL == scl)
     {
         return (SCL_INVALID_INPUT);
     }
-
     if (0 == METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_REV))
     {
         // revision of TRNG is Zero so the TRNG is not present.
         return SCL_ERROR;
     }
-
     // Lock Trim Value
     hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_TRIM, 1,
                    HCA_REGISTER_TRNG_TRIM_LOCK_OFFSET,
                    HCA_REGISTER_TRNG_TRIM_LOCK_MASK);
-
     // start on-demand health test
     hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_CR, 1,
                    HCA_REGISTER_TRNG_CR_HTSTART_OFFSET,
                    HCA_REGISTER_TRNG_CR_HTSTART_MASK);
-
     while ((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>
             HCA_REGISTER_TRNG_SR_HTR_OFFSET) &
            HCA_REGISTER_TRNG_SR_HTR_MASK)
@@ -90,19 +141,11 @@ int32_t hca_trng_init(const metal_scl_t *const scl)
                  HCA_REGISTER_TRNG_SR_HTR_OFFSET) &
                 HCA_REGISTER_TRNG_SR_HTR_MASK)
             {
-                return SCL_RNG_ERROR;
+                ret = SCL_RNG_ERROR;
+                break;
             }
         }
     }
-
-    // Test Heath test status
-    if (((METAL_REG32(scl->hca_base, METAL_SIFIVE_HCA_TRNG_SR) >>
-          HCA_REGISTER_TRNG_SR_HTS_OFFSET) &
-         HCA_REGISTER_TRNG_SR_HTS_MASK) != 0)
-    {
-        ret = SCL_RNG_ERROR;
-    }
-
     hca_setfield32(scl, METAL_SIFIVE_HCA_TRNG_CR, 0,
                    HCA_REGISTER_TRNG_CR_HTSTART_OFFSET,
                    HCA_REGISTER_TRNG_CR_HTSTART_MASK);

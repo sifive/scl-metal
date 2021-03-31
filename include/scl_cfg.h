@@ -33,7 +33,8 @@
 #ifndef SCL_CFG_H
 #define SCL_CFG_H
 
-#define SCL_FUNCTION __attribute__((section("scl_functions")))
+//#define SCL_FUNCTION __attribute__((section("scl_functions")))
+#define SCL_FUNCTION
 #define SCL_DATA __attribute__((section("scl_data")))
 
 #endif /* SCL_CFG_H */

@@ -33,7 +33,8 @@
 #ifndef SCL_CRYPTO_CFG_H
 #define SCL_CRYPTO_CFG_H
 
-#define CRYPTO_FUNCTION __attribute__((section("crypto_functions")))
+//#define CRYPTO_FUNCTION __attribute__((section("crypto_functions")))
+#define CRYPTO_FUNCTION
 #define CRYPTO_DATA __attribute__((section("crypto_data")))
 
 /**
