@@ -88,6 +88,8 @@ static void RunAllTests(void)
     RUN_TEST_GROUP(scl_aes_128);
     RUN_TEST_GROUP(scl_aes_192);
     RUN_TEST_GROUP(scl_aes_256);
+
+    RUN_TEST_GROUP(scl_trng);
 #endif
 }
 

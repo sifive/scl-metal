@@ -27,6 +27,7 @@ override SOURCE_DIRS += $(SOURCE_DIR)/asymmetric/ecc
 override SOURCE_DIRS += $(SOURCE_DIR)/selftests
 override SOURCE_DIRS += $(SOURCE_DIR)/key_derivation_functions
 override SOURCE_DIRS += $(SOURCE_DIR)/message_auth
+override SOURCE_DIRS += $(SOURCE_DIR)/random
 
 override SOURCE_DIRS += $(SOURCE_DIR)/test_runners
 override SOURCE_DIRS += $(SOURCE_DIR)/test_runners/backend/hardware
@@ -40,13 +41,13 @@ override SOURCE_DIRS += $(SOURCE_DIR)/test_runners/key_derivation_functions
 
 
 override C_SOURCES = $(foreach dir,$(SOURCE_DIRS),$(wildcard $(dir)/*.c))
-					
+
 override ASM_SOURCES = $(wildcard *.S)
 override OBJS :=	$(subst $(SOURCE_DIR),$(BUILD_DIRECTORY),$(C_SOURCES:.c=.o)) \
 					$(subst $(SOURCE_DIR),$(BUILD_DIRECTORY),$(ASM_SOURCES:.S=.o))
 
 # ----------------------------------------------------------------------
-# Add custom flags for libscl 
+# Add custom flags for libscl
 # ----------------------------------------------------------------------
 LIBSCL_METAL_CFLAGS := $(CFLAGS)
 
