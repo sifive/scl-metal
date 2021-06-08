@@ -180,12 +180,12 @@ int32_t soft_ecdsa_signature(const metal_scl_t *const scl,
             /**
              * let's start !
              * 4.1 compute the extended scalar,i.e. scalar with a leading 1
-             * so, determine the k msb and the k msw
+             * so, determine the modulus msb
              * depending on the curve, this value may require a new word
              * a. determine the n msb position
              */
 
-            result = scl->bignum_func.get_msb_set(scl, (uint64_t *)k,
+            result = scl->bignum_func.get_msb_set(scl, curve_params->n,
                                                   curve_params->curve_wsize);
             if (SCL_OK > result)
             {
